@@ -1,0 +1,4283 @@
+日時: 2025-12-04 19:20:44,981
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-04 19:20:44,982
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-04 19:20:45,663
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-04 19:23:13,269
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-04 19:23:13,271
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-04 19:23:14,360
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-04 19:23:15,313
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: a6d58a39d63806ca86a4c95bbc9384fb).
+-------------------------------
+日時: 2025-12-04 20:40:02,296
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session a6d58a39d63806ca86a4c95bbc9384fb.
+-------------------------------
+日時: 2025-12-04 20:48:37,339
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-04 20:48:37,340
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-04 20:48:37,958
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-04 20:48:38,589
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: e01176d2a51e48c29cfedbf5c0942666).
+-------------------------------
+日時: 2025-12-04 20:49:32,881
+ファイル名: profile.py
+関数名: profile_all_save
+ログレベル: INFO
+行番号: 59
+メッセージ: [プロフィール保存] チャンネル読み込み開始: 1423778874893799566
+-------------------------------
+日時: 2025-12-04 20:49:33,379
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-04 20:49:33,391
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-04 20:49:33,513
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-04 20:49:33,515
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-04 20:49:33,658
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-04 20:49:33,718
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1377782115571073175
+-------------------------------
+日時: 2025-12-04 20:49:33,789
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426720524397973654 updated with author 1377782115571073175.
+-------------------------------
+日時: 2025-12-04 20:49:33,831
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 943819696212410388
+-------------------------------
+日時: 2025-12-04 20:49:33,895
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426720586549428295 updated with author 943819696212410388.
+-------------------------------
+日時: 2025-12-04 20:49:33,938
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1070463024823013386
+-------------------------------
+日時: 2025-12-04 20:49:33,990
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426720726014230551 updated with author 1070463024823013386.
+-------------------------------
+日時: 2025-12-04 20:49:34,030
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 779737686835462154
+-------------------------------
+日時: 2025-12-04 20:49:34,089
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426722599471415378 updated with author 779737686835462154.
+-------------------------------
+日時: 2025-12-04 20:49:34,126
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 710047577743032363
+-------------------------------
+日時: 2025-12-04 20:49:34,181
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426723115802693703 updated with author 710047577743032363.
+-------------------------------
+日時: 2025-12-04 20:49:34,219
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 872516451410522113
+-------------------------------
+日時: 2025-12-04 20:49:34,270
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426724041733046283 updated with author 872516451410522113.
+-------------------------------
+日時: 2025-12-04 20:49:34,308
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 598883092198850560
+-------------------------------
+日時: 2025-12-04 20:49:34,359
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426744861033496677 updated with author 598883092198850560.
+-------------------------------
+日時: 2025-12-04 20:49:34,399
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 835120313858785328
+-------------------------------
+日時: 2025-12-04 20:49:34,454
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426749181275537469 updated with author 835120313858785328.
+-------------------------------
+日時: 2025-12-04 20:49:34,493
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 778092585133801472
+-------------------------------
+日時: 2025-12-04 20:49:34,531
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426756272182788166 updated with author 778092585133801472.
+-------------------------------
+日時: 2025-12-04 20:49:34,569
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1106998270468829295
+-------------------------------
+日時: 2025-12-04 20:49:34,635
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1427212014190596096 updated with author 1106998270468829295.
+-------------------------------
+日時: 2025-12-04 20:49:34,674
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 480009230947057685
+-------------------------------
+日時: 2025-12-04 20:49:34,714
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1427650241670414396 updated with author 480009230947057685.
+-------------------------------
+日時: 2025-12-04 20:49:34,750
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 789823106566717451
+-------------------------------
+日時: 2025-12-04 20:49:34,797
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1431980590835699722 updated with author 789823106566717451.
+-------------------------------
+日時: 2025-12-04 20:49:34,831
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 975515082429714472
+-------------------------------
+日時: 2025-12-04 20:49:34,871
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1432264071499223101 updated with author 975515082429714472.
+-------------------------------
+日時: 2025-12-04 20:49:34,896
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1363320411437142046
+-------------------------------
+日時: 2025-12-04 20:49:34,944
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1438699203512631316 updated with author 1363320411437142046.
+-------------------------------
+日時: 2025-12-04 20:49:34,979
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 622543181636173826
+-------------------------------
+日時: 2025-12-04 20:49:35,064
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1441364007331041372 updated with author 622543181636173826.
+-------------------------------
+日時: 2025-12-04 20:49:35,100
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 472842410783932467
+-------------------------------
+日時: 2025-12-04 20:49:35,155
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1442102402269581325 updated with author 472842410783932467.
+-------------------------------
+日時: 2025-12-04 20:49:35,201
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 711620178022105128
+-------------------------------
+日時: 2025-12-04 20:49:35,243
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1442882702641594561 updated with author 711620178022105128.
+-------------------------------
+日時: 2025-12-04 20:49:35,283
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 903553768593952768
+-------------------------------
+日時: 2025-12-04 20:49:35,342
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1443590290915983360 updated with author 903553768593952768.
+-------------------------------
+日時: 2025-12-04 20:49:35,343
+ファイル名: profile.py
+関数名: profile_all_save
+ログレベル: INFO
+行番号: 59
+メッセージ: [プロフィール保存] チャンネル読み込み開始: 1423778916761473054
+-------------------------------
+日時: 2025-12-04 20:49:35,970
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1057745802702897312
+-------------------------------
+日時: 2025-12-04 20:49:36,020
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426706059761946716 updated with author 1057745802702897312.
+-------------------------------
+日時: 2025-12-04 20:49:36,047
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1281407853940445204
+-------------------------------
+日時: 2025-12-04 20:49:36,098
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426734328502812786 updated with author 1281407853940445204.
+-------------------------------
+日時: 2025-12-04 20:49:36,132
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1035614296262049832
+-------------------------------
+日時: 2025-12-04 20:49:36,167
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426750024066531359 updated with author 1035614296262049832.
+-------------------------------
+日時: 2025-12-04 20:49:36,192
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 628101069485899786
+-------------------------------
+日時: 2025-12-04 20:49:36,243
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426758431787974770 updated with author 628101069485899786.
+-------------------------------
+日時: 2025-12-04 20:49:36,257
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 954553347661242540
+-------------------------------
+日時: 2025-12-04 20:49:36,275
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426761335592452096 updated with author 954553347661242540.
+-------------------------------
+日時: 2025-12-04 20:49:36,300
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 950556286221680640
+-------------------------------
+日時: 2025-12-04 20:49:36,335
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426766010270220419 updated with author 950556286221680640.
+-------------------------------
+日時: 2025-12-04 20:49:36,358
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 582886036049231872
+-------------------------------
+日時: 2025-12-04 20:49:36,404
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426766465268453518 updated with author 582886036049231872.
+-------------------------------
+日時: 2025-12-04 20:49:36,419
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1249999966622060595
+-------------------------------
+日時: 2025-12-04 20:49:36,457
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426775274531459133 updated with author 1249999966622060595.
+-------------------------------
+日時: 2025-12-04 20:49:36,486
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1182974036536459277
+-------------------------------
+日時: 2025-12-04 20:49:36,527
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1426896604513701888 updated with author 1182974036536459277.
+-------------------------------
+日時: 2025-12-04 20:49:36,557
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 421733097063710730
+-------------------------------
+日時: 2025-12-04 20:49:36,595
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1427667166852808896 updated with author 421733097063710730.
+-------------------------------
+日時: 2025-12-04 20:49:36,618
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 448813712426663936
+-------------------------------
+日時: 2025-12-04 20:49:36,663
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1427669148237955192 updated with author 448813712426663936.
+-------------------------------
+日時: 2025-12-04 20:49:36,684
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1328248345466110019
+-------------------------------
+日時: 2025-12-04 20:49:36,716
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1427765467229065371 updated with author 1328248345466110019.
+-------------------------------
+日時: 2025-12-04 20:49:36,731
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 806946292348616764
+-------------------------------
+日時: 2025-12-04 20:49:36,755
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1428210703805976619 updated with author 806946292348616764.
+-------------------------------
+日時: 2025-12-04 20:49:36,773
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 335402228254769154
+-------------------------------
+日時: 2025-12-04 20:49:36,808
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1428771725973258381 updated with author 335402228254769154.
+-------------------------------
+日時: 2025-12-04 20:49:36,835
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 364563286550642688
+-------------------------------
+日時: 2025-12-04 20:49:36,875
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1429481986476740649 updated with author 364563286550642688.
+-------------------------------
+日時: 2025-12-04 20:49:36,892
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 718351468402442311
+-------------------------------
+日時: 2025-12-04 20:49:36,914
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1429493481965097201 updated with author 718351468402442311.
+-------------------------------
+日時: 2025-12-04 20:49:36,930
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1339370576006873150
+-------------------------------
+日時: 2025-12-04 20:49:36,962
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1430777950378135592 updated with author 1339370576006873150.
+-------------------------------
+日時: 2025-12-04 20:49:36,981
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1061066887993237514
+-------------------------------
+日時: 2025-12-04 20:49:37,014
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1430840760726585354 updated with author 1061066887993237514.
+-------------------------------
+日時: 2025-12-04 20:49:37,042
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1125445769411969126
+-------------------------------
+日時: 2025-12-04 20:49:37,086
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1430843767123869769 updated with author 1125445769411969126.
+-------------------------------
+日時: 2025-12-04 20:49:37,117
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1217200552140607640
+-------------------------------
+日時: 2025-12-04 20:49:37,145
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1431195433589411841 updated with author 1217200552140607640.
+-------------------------------
+日時: 2025-12-04 20:49:37,170
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1306627130376847461
+-------------------------------
+日時: 2025-12-04 20:49:37,210
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1431195599016824854 updated with author 1306627130376847461.
+-------------------------------
+日時: 2025-12-04 20:49:37,228
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 485289919078727680
+-------------------------------
+日時: 2025-12-04 20:49:37,250
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1431645567397920940 updated with author 485289919078727680.
+-------------------------------
+日時: 2025-12-04 20:49:37,266
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1309386251018965043
+-------------------------------
+日時: 2025-12-04 20:49:37,310
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1432231374642876567 updated with author 1309386251018965043.
+-------------------------------
+日時: 2025-12-04 20:49:37,326
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 547091189866954773
+-------------------------------
+日時: 2025-12-04 20:49:37,360
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1432242759506460773 updated with author 547091189866954773.
+-------------------------------
+日時: 2025-12-04 20:49:37,385
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1310990291682983978
+-------------------------------
+日時: 2025-12-04 20:49:37,405
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1432346900908085338 updated with author 1310990291682983978.
+-------------------------------
+日時: 2025-12-04 20:49:37,427
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 835243590938525718
+-------------------------------
+日時: 2025-12-04 20:49:37,448
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1433611283130875954 updated with author 835243590938525718.
+-------------------------------
+日時: 2025-12-04 20:49:37,470
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1148489925533126687
+-------------------------------
+日時: 2025-12-04 20:49:37,514
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1434115016638074981 updated with author 1148489925533126687.
+-------------------------------
+日時: 2025-12-04 20:49:37,534
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1162786658660393010
+-------------------------------
+日時: 2025-12-04 20:49:37,579
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1434221071803879527 updated with author 1162786658660393010.
+-------------------------------
+日時: 2025-12-04 20:49:37,595
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1428308916810289153
+-------------------------------
+日時: 2025-12-04 20:49:37,618
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1440654181789864047 updated with author 1428308916810289153.
+-------------------------------
+日時: 2025-12-04 20:49:37,634
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 229900115123372032
+-------------------------------
+日時: 2025-12-04 20:49:37,674
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1441045646462418995 updated with author 229900115123372032.
+-------------------------------
+日時: 2025-12-04 20:49:37,696
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 503799197678567424
+-------------------------------
+日時: 2025-12-04 20:49:37,730
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1441127372316479578 updated with author 503799197678567424.
+-------------------------------
+日時: 2025-12-04 20:49:37,750
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1401068283825754122
+-------------------------------
+日時: 2025-12-04 20:49:37,788
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1441239433180352706 updated with author 1401068283825754122.
+-------------------------------
+日時: 2025-12-04 20:49:37,789
+ファイル名: profile.py
+関数名: profile_all_save
+ログレベル: INFO
+行番号: 85
+メッセージ: [プロフィール保存] 50件処理完了、レートリミット対策で 1.5 秒待機します。
+-------------------------------
+日時: 2025-12-04 20:49:39,306
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 1195379655109255250
+-------------------------------
+日時: 2025-12-04 20:49:39,348
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1441504952555143310 updated with author 1195379655109255250.
+-------------------------------
+日時: 2025-12-04 20:49:39,367
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 789472552383676418
+-------------------------------
+日時: 2025-12-04 20:49:39,395
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1442799106761293865 updated with author 789472552383676418.
+-------------------------------
+日時: 2025-12-04 20:49:39,422
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 80
+メッセージ: [FS_Profile] New profile document created for user: 292655237984944129
+-------------------------------
+日時: 2025-12-04 20:49:39,450
+ファイル名: fs_user_info.py
+関数名: _add_profile_data
+ログレベル: INFO
+行番号: 102
+メッセージ: [FS_Profile] Message doc 1443298818123894916 updated with author 292655237984944129.
+-------------------------------
+日時: 2025-12-04 21:46:36,432
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-04 22:21:32,582
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 00:51:05,359
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 02:11:21,162
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 02:22:12,340
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 02:27:49,067
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 02:32:44,657
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 03:16:26,522
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 04:00:08,027
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 04:42:35,217
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 06:44:11,981
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 07:22:13,359
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 08:27:08,877
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 09:38:46,122
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 11:38:49,111
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 14:08:57,536
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 14:57:08,704
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-05 14:57:08,706
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-05 14:57:08,859
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-05 15:18:25,912
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 161
+メッセージ: [VoicePointCalculator] Processed VC 1446379844823810120: owner=943819696212410388, owner_points=0, users=0
+-------------------------------
+日時: 2025-12-05 15:54:45,384
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-05 15:54:45,385
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-05 15:54:45,529
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-05 15:54:45,846
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 161
+メッセージ: [VoicePointCalculator] Processed VC 1446385741780222012: owner=943819696212410388, owner_points=0, users=0
+-------------------------------
+日時: 2025-12-05 17:51:01,621
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 21:27:24,821
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-05 22:51:11,996
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-06 00:06:33,344
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-06 01:16:57,899
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-06 05:14:40,268
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-06 07:32:13,013
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-06 08:17:17,541
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-06 09:29:16,041
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-06 11:01:37,140
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-06 12:41:14,851
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-06 14:31:01,213
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-06 14:31:01,218
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-06 14:31:01,364
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-06 15:09:28,251
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 161
+メッセージ: [VoicePointCalculator] Processed VC 1446735658541383690: owner=943819696212410388, owner_points=0, users=0
+-------------------------------
+日時: 2025-12-06 15:31:09,274
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-06 17:00:40,328
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-06 20:15:45,179
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session e01176d2a51e48c29cfedbf5c0942666.
+-------------------------------
+日時: 2025-12-06 22:08:27,691
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-06 22:08:27,693
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-06 22:08:28,763
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-06 22:08:30,445
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: cec4a238e8bab5e515b6d44058001c34).
+-------------------------------
+日時: 2025-12-06 22:08:32,627
+ファイル名: client.py
+関数名: on_error
+ログレベル: ERROR
+行番号: 578
+メッセージ: Ignoring exception in on_ready
+-------------------------------
+Traceback (most recent call last):
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\client.py", line 504, in _run_event
+    await coro(*args, **kwargs)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\main.py", line 49, in on_ready
+    await on_ready_view(bot=bot)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\on_event\on_ready\on_ready.py", line 22, in on_ready_view
+    Recruit_Post_View(), Recruit_Check_View(), Recruit_User_View(), Receive_View(), Stand_View(),
+                                               ^^^^^^^^^^^^^^^^^^^
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\services\recruit\views.py", line 1075, in __init__
+    self.add_item(Stand_Button(label="立候補", emoji=CUSTOM.HEART_BOOK, style=discord.ButtonStyle.gray, row=0))
+                                                  ^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CUSTOM' has no attribute 'HEART_BOOK'
+日時: 2025-12-06 22:09:40,904
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-06 22:09:40,905
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-06 22:09:41,815
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-06 22:09:43,611
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: a098a9f6a1ec7aa71da27b679a0681e6).
+-------------------------------
+日時: 2025-12-06 22:09:45,633
+ファイル名: client.py
+関数名: on_error
+ログレベル: ERROR
+行番号: 578
+メッセージ: Ignoring exception in on_ready
+-------------------------------
+Traceback (most recent call last):
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\client.py", line 504, in _run_event
+    await coro(*args, **kwargs)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\main.py", line 49, in on_ready
+    await on_ready_view(bot=bot)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\on_event\on_ready\on_ready.py", line 25, in on_ready_view
+    Blacklist_Manage_View(), Blacklist_Add_View()
+                             ^^^^^^^^^^^^^^^^^^^^
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\services\list_manager\views.py", line 71, in __init__
+    self.add_item(Cancel_Button(label="キャンセル", emoji=DEFAULT.TRASH, style=ButtonStyle.gray, row=0))
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\ui\view.py", line 749, in add_item
+    raise e
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\ui\view.py", line 745, in add_item
+    self.__weights.add_item(item)
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\ui\view.py", line 193, in add_item
+    raise ValueError(f'item would not fit at row {item.row} ({total} > 5 width)')
+ValueError: item would not fit at row 0 (6 > 5 width)
+日時: 2025-12-06 22:10:53,427
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-06 22:10:53,428
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-06 22:10:54,125
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-06 22:10:54,879
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 853f7a0d2924383a1eda0d9100c9bc06).
+-------------------------------
+日時: 2025-12-06 22:10:57,052
+ファイル名: client.py
+関数名: on_error
+ログレベル: ERROR
+行番号: 578
+メッセージ: Ignoring exception in on_ready
+-------------------------------
+Traceback (most recent call last):
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\client.py", line 504, in _run_event
+    await coro(*args, **kwargs)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\main.py", line 49, in on_ready
+    await on_ready_view(bot=bot)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\on_event\on_ready\on_ready.py", line 29, in on_ready_view
+    bot.add_view(view)
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\client.py", line 3148, in add_view
+    raise ValueError('View is not persistent. Items need to have a custom_id set and View must have no timeout')
+ValueError: View is not persistent. Items need to have a custom_id set and View must have no timeout
+日時: 2025-12-06 22:13:32,259
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-06 22:13:32,260
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-06 22:13:32,970
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-06 22:13:33,689
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 2595f16f3c73c9c57889894d68719f17).
+-------------------------------
+日時: 2025-12-06 22:14:41,037
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-06 22:14:41,042
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-06 22:14:41,157
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-06 22:14:41,158
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-06 22:14:41,310
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-06 22:14:41,542
+ファイル名: fs_recruitments.py
+関数名: transaction_operation
+ログレベル: DEBUG
+行番号: 63
+メッセージ: [FS_Number] 取得した通し番号: 1
+-------------------------------
+日時: 2025-12-06 22:15:01,654
+ファイル名: view.py
+関数名: on_error
+ログレベル: ERROR
+行番号: 542
+メッセージ: Ignoring exception in view <Recruit_Filter_Setting_View timeout=None children=1> for item <Filter_Option_Select_Menu placeholder='設定したい項目を選択してください。' min_values=1 max_values=1 disabled=False id=None>
+-------------------------------
+Traceback (most recent call last):
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\ui\view.py", line 555, in _scheduled_task
+    await item.callback(interaction)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\services\recruit\views.py", line 448, in callback
+    await interaction.edit_original_response(view=view)
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\interactions.py", line 569, in edit_original_response
+    data = await adapter.edit_original_interaction_response(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\webhook\async_.py", line 226, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body
+In components.0.components.0.options.3: The specified option value is already used
+日時: 2025-12-06 22:24:45,229
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-06 22:24:45,231
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-06 22:24:45,905
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-06 22:24:46,711
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 3b7f67e58ed6c9bd9f12e1b178c0fc9c).
+-------------------------------
+日時: 2025-12-06 22:25:59,037
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-06 22:25:59,041
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-06 22:25:59,159
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-06 22:25:59,161
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-06 22:25:59,314
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-06 22:26:10,833
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-06 22:26:10,835
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-06 22:26:11,658
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-06 22:26:12,409
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 575a34be6d1b8792868f9eb858af912d).
+-------------------------------
+日時: 2025-12-06 22:26:20,082
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-06 22:26:20,084
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-06 22:26:20,186
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-06 22:26:20,189
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-06 22:26:20,327
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-06 22:26:20,497
+ファイル名: fs_recruitments.py
+関数名: transaction_operation
+ログレベル: DEBUG
+行番号: 63
+メッセージ: [FS_Number] 取得した通し番号: 2
+-------------------------------
+日時: 2025-12-06 22:26:37,330
+ファイル名: views.py
+関数名: callback
+ログレベル: DEBUG
+行番号: 650
+メッセージ: gender_role: <@&1424142770481922148>
+filter_roles: []
+-------------------------------
+日時: 2025-12-06 22:26:37,332
+ファイル名: views.py
+関数名: callback
+ログレベル: DEBUG
+行番号: 658
+メッセージ: allowed_users: {950556286221680640, 495826456996478977, 292655237984944129, 485289919078727680, 582886036049231872, 789472552383676418, 1428308916810289153, 229900115123372032, 335402228254769154, 364563286550642688, 1401068283825754122, 503799197678567424, 1061066887993237514, 1182974036536459277, 421733097063710730, 628101069485899786, 1281407853940445204, 547091189866954773, 835243590938525718, 1217200552140607640, 1148489925533126687, 1057745802702897312, 448813712426663936, 1035614296262049832, 1310990291682983978, 954553347661242540, 1162786658660393010, 1309386251018965043, 1249999966622060595, 806946292348616764, 1339370576006873150, 1328248345466110019, 718351468402442311, 1195379655109255250, 1306627130376847461, 1125445769411969126}
+-------------------------------
+日時: 2025-12-06 22:26:37,365
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 498
+メッセージ: ユーザー 1106998270468829295 のBlackListが存在しません。
+-------------------------------
+日時: 2025-12-06 22:26:37,408
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 619
+メッセージ: ユーザー 1106998270468829295 のBlackList_fromが存在しません。
+-------------------------------
+日時: 2025-12-06 22:26:37,409
+ファイル名: views.py
+関数名: callback
+ログレベル: DEBUG
+行番号: 667
+メッセージ: blacklist: []
+blacklist_from: []
+-------------------------------
+日時: 2025-12-06 22:26:37,409
+ファイル名: views.py
+関数名: callback
+ログレベル: DEBUG
+行番号: 671
+メッセージ: blacklist_ids: set()
+-------------------------------
+日時: 2025-12-06 22:26:37,409
+ファイル名: views.py
+関数名: callback
+ログレベル: DEBUG
+行番号: 673
+メッセージ: blacklist_ids: set()
+-------------------------------
+日時: 2025-12-06 22:26:37,464
+ファイル名: fs_recruitments.py
+関数名: _add_recruit_data
+ログレベル: DEBUG
+行番号: 105
+メッセージ: [FS_Recruitments] 募集データを追加: Owner_ID=1106998270468829295, Message_ID=2
+-------------------------------
+日時: 2025-12-06 22:26:37,839
+ファイル名: views.py
+関数名: notification
+ログレベル: DEBUG
+行番号: 715
+メッセージ: filtered_users: ['950556286221680640', '495826456996478977', '292655237984944129', '485289919078727680', '582886036049231872', '789472552383676418', '1428308916810289153', '229900115123372032', '335402228254769154', '364563286550642688', '1401068283825754122', '503799197678567424', '1061066887993237514', '1182974036536459277', '421733097063710730', '628101069485899786', '1281407853940445204', '547091189866954773', '835243590938525718', '1217200552140607640', '1148489925533126687', '1057745802702897312', '448813712426663936', '1035614296262049832', '1310990291682983978', '954553347661242540', '1162786658660393010', '1309386251018965043', '1249999966622060595', '806946292348616764', '1339370576006873150', '1328248345466110019', '718351468402442311', '1195379655109255250', '1306627130376847461', '1125445769411969126']
+-------------------------------
+日時: 2025-12-06 22:26:37,839
+ファイル名: view.py
+関数名: on_error
+ログレベル: ERROR
+行番号: 542
+メッセージ: Ignoring exception in view <Recruit_Post_View timeout=None children=3> for item <Post_Button style=<ButtonStyle.secondary: 2> url=None disabled=False label='公開' emoji=<PartialEmoji animated=False name='💌' id=None> row=0 sku_id=None id=None>
+-------------------------------
+Traceback (most recent call last):
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\ui\view.py", line 555, in _scheduled_task
+    await item.callback(interaction)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\services\recruit\views.py", line 707, in callback
+    await self.notification(guild=guild, gender_role=gender_role, filtered_users=filtered_users, anonymity=anonymity)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\services\recruit\views.py", line 730, in notification
+    recruit_role_id = MAIN_ROLES.RECRUIT_MN_SIGNED if 0 <= now.hour < 6 else MAIN_ROLES.RECRUIT_SIGNED
+                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'MAIN_ROLES' has no attribute 'RECRUIT_SIGNED'
+日時: 2025-12-06 22:26:56,487
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-06 22:26:56,488
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-06 22:26:57,218
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-06 22:26:58,220
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 6e0a09c5606ea1588c7f7dc9aebf3032).
+-------------------------------
+日時: 2025-12-06 22:27:02,942
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-06 22:27:02,947
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-06 22:27:03,058
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-06 22:27:03,060
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-06 22:27:03,212
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-06 22:27:08,878
+ファイル名: fs_recruitments.py
+関数名: transaction_operation
+ログレベル: DEBUG
+行番号: 63
+メッセージ: [FS_Number] 取得した通し番号: 3
+-------------------------------
+日時: 2025-12-06 22:27:14,400
+ファイル名: views.py
+関数名: callback
+ログレベル: DEBUG
+行番号: 650
+メッセージ: gender_role: <@&1424142770481922148>
+filter_roles: []
+-------------------------------
+日時: 2025-12-06 22:27:14,401
+ファイル名: views.py
+関数名: callback
+ログレベル: DEBUG
+行番号: 658
+メッセージ: allowed_users: {950556286221680640, 495826456996478977, 292655237984944129, 485289919078727680, 582886036049231872, 789472552383676418, 1428308916810289153, 229900115123372032, 335402228254769154, 364563286550642688, 1401068283825754122, 503799197678567424, 1061066887993237514, 1182974036536459277, 421733097063710730, 628101069485899786, 1281407853940445204, 547091189866954773, 835243590938525718, 1217200552140607640, 1148489925533126687, 1057745802702897312, 448813712426663936, 1035614296262049832, 1310990291682983978, 954553347661242540, 1162786658660393010, 1309386251018965043, 1249999966622060595, 806946292348616764, 1339370576006873150, 1328248345466110019, 718351468402442311, 1195379655109255250, 1306627130376847461, 1125445769411969126}
+-------------------------------
+日時: 2025-12-06 22:27:14,439
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 498
+メッセージ: ユーザー 1106998270468829295 のBlackListが存在しません。
+-------------------------------
+日時: 2025-12-06 22:27:14,472
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 619
+メッセージ: ユーザー 1106998270468829295 のBlackList_fromが存在しません。
+-------------------------------
+日時: 2025-12-06 22:27:14,473
+ファイル名: views.py
+関数名: callback
+ログレベル: DEBUG
+行番号: 667
+メッセージ: blacklist: []
+blacklist_from: []
+-------------------------------
+日時: 2025-12-06 22:27:14,473
+ファイル名: views.py
+関数名: callback
+ログレベル: DEBUG
+行番号: 671
+メッセージ: blacklist_ids: set()
+-------------------------------
+日時: 2025-12-06 22:27:14,474
+ファイル名: views.py
+関数名: callback
+ログレベル: DEBUG
+行番号: 673
+メッセージ: blacklist_ids: set()
+-------------------------------
+日時: 2025-12-06 22:27:14,540
+ファイル名: fs_recruitments.py
+関数名: _add_recruit_data
+ログレベル: DEBUG
+行番号: 105
+メッセージ: [FS_Recruitments] 募集データを追加: Owner_ID=1106998270468829295, Message_ID=3
+-------------------------------
+日時: 2025-12-06 22:27:14,892
+ファイル名: views.py
+関数名: notification
+ログレベル: DEBUG
+行番号: 715
+メッセージ: filtered_users: ['950556286221680640', '495826456996478977', '292655237984944129', '485289919078727680', '582886036049231872', '789472552383676418', '1428308916810289153', '229900115123372032', '335402228254769154', '364563286550642688', '1401068283825754122', '503799197678567424', '1061066887993237514', '1182974036536459277', '421733097063710730', '628101069485899786', '1281407853940445204', '547091189866954773', '835243590938525718', '1217200552140607640', '1148489925533126687', '1057745802702897312', '448813712426663936', '1035614296262049832', '1310990291682983978', '954553347661242540', '1162786658660393010', '1309386251018965043', '1249999966622060595', '806946292348616764', '1339370576006873150', '1328248345466110019', '718351468402442311', '1195379655109255250', '1306627130376847461', '1125445769411969126']
+-------------------------------
+日時: 2025-12-06 22:27:14,893
+ファイル名: views.py
+関数名: notification
+ログレベル: DEBUG
+行番号: 743
+メッセージ: target_users: []
+-------------------------------
+日時: 2025-12-06 22:28:36,540
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: ERROR
+行番号: 478
+メッセージ: BlackListまたはBlackList_fromへの追加に失敗しました: sequence item 1: expected str instance, int found
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\firestores\fs_list_manager.py", line 393, in _add_list
+    owner_ref = self.db.collection("Users").document(owner_id)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\cloud\firestore_v1\async_collection.py", line 158, in document
+    return super(AsyncCollectionReference, self).document(document_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\cloud\firestore_v1\base_collection.py", line 151, in document
+    return self._client.document(*child_path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\cloud\firestore_v1\async_client.py", line 220, in document
+    *self._document_path_helper(*document_path), client=self
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\cloud\firestore_v1\base_client.py", line 339, in _document_path_helper
+    joined_path = _helpers.DOCUMENT_PATH_DELIMITER.join(path)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: sequence item 1: expected str instance, int found
+日時: 2025-12-06 22:37:32,932
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-06 22:37:32,933
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-06 22:37:33,597
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-06 22:37:34,511
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 4b14dfb7e445aa3fbdaafbc046bdf6a9).
+-------------------------------
+日時: 2025-12-06 22:38:40,656
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-06 22:38:40,662
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-06 22:38:40,771
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-06 22:38:40,773
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-06 22:38:40,924
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-06 22:38:41,058
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: INFO
+行番号: 410
+メッセージ: BlackListのmeta情報を初期化しました: 1106998270468829295
+-------------------------------
+日時: 2025-12-06 22:38:41,237
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: INFO
+行番号: 421
+メッセージ: BlackList_fromのmeta情報を初期化しました: 598883092198850560
+-------------------------------
+日時: 2025-12-06 22:38:41,616
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: WARNING
+行番号: 474
+メッセージ: 🔧 BlackListの不整合修正: 1106998270468829295 -> 598883092198850560
+-------------------------------
+日時: 2025-12-06 22:38:41,729
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: WARNING
+行番号: 481
+メッセージ: 🔧 BlackList_fromの不整合修正: 598883092198850560 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 22:38:41,730
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: INFO
+行番号: 483
+メッセージ: BlackListとBlackList_fromに対象ユーザーを追加しました: 1106998270468829295 -> 598883092198850560
+-------------------------------
+日時: 2025-12-06 22:38:45,554
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 523
+メッセージ: BlackListを取得しました: 1106998270468829295 -> 1件
+-------------------------------
+日時: 2025-12-06 22:38:49,224
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 523
+メッセージ: BlackListを取得しました: 1106998270468829295 -> 1件
+-------------------------------
+日時: 2025-12-06 22:38:49,226
+ファイル名: view.py
+関数名: on_error
+ログレベル: ERROR
+行番号: 542
+メッセージ: Ignoring exception in view <Blacklist_Manage_View timeout=None children=3> for item <Delete_Button style=<ButtonStyle.secondary: 2> url=None disabled=False label='削除' emoji=<PartialEmoji animated=False name='🗑️' id=None> row=0 sku_id=None id=None>
+-------------------------------
+Traceback (most recent call last):
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\ui\view.py", line 555, in _scheduled_task
+    await item.callback(interaction)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\services\list_manager\views.py", line 213, in callback
+    view = Delete_List_SelectMenu(options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\services\list_manager\views.py", line 233, in __init__
+    self.update_menu()
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\services\list_manager\views.py", line 289, in update_menu
+    SelectAllButton(
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\services\list_manager\views.py", line 437, in __init__
+    self.parent = parent
+    ^^^^^^^^^^^
+AttributeError: property 'parent' of 'SelectAllButton' object has no setter
+日時: 2025-12-06 22:50:20,674
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-06 22:50:20,676
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-06 22:50:21,851
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-06 22:50:22,734
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 9314e2206985618f0672561308284a64).
+-------------------------------
+日時: 2025-12-06 22:50:43,750
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-06 22:50:43,753
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-06 22:50:43,866
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-06 22:50:43,868
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-06 22:50:44,008
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-06 22:50:44,101
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 523
+メッセージ: BlackListを取得しました: 1106998270468829295 -> 1件
+-------------------------------
+日時: 2025-12-06 22:52:19,111
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-06 22:52:19,113
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-06 22:52:19,880
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-06 22:52:20,721
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: bed0f1ba792dc1c8310c585a5f78c98b).
+-------------------------------
+日時: 2025-12-06 22:57:27,137
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-06 22:57:27,140
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-06 22:57:27,263
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-06 22:57:27,266
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-06 22:57:27,439
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-06 22:57:27,528
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 523
+メッセージ: BlackListを取得しました: 1106998270468829295 -> 1件
+-------------------------------
+日時: 2025-12-06 22:57:32,617
+ファイル名: fs_list_manager.py
+関数名: _remove_list
+ログレベル: INFO
+行番号: 573
+メッセージ: BlackListから削除: 1106998270468829295 -> 598883092198850560
+-------------------------------
+日時: 2025-12-06 22:57:32,806
+ファイル名: fs_list_manager.py
+関数名: _remove_list
+ログレベル: INFO
+行番号: 601
+メッセージ: BlackList_fromから削除: 598883092198850560 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:03:35,016
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-06 23:03:35,017
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-06 23:03:35,904
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-06 23:03:36,625
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 55b02777882cd035e13689693afb024b).
+-------------------------------
+日時: 2025-12-06 23:03:56,980
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-06 23:03:56,984
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-06 23:03:57,088
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-06 23:03:57,089
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-06 23:03:57,234
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-06 23:03:57,411
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: INFO
+行番号: 421
+メッセージ: BlackList_fromのmeta情報を初期化しました: 950556286221680640
+-------------------------------
+日時: 2025-12-06 23:03:57,600
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: WARNING
+行番号: 474
+メッセージ: 🔧 BlackListの不整合修正: 1106998270468829295 -> 950556286221680640
+-------------------------------
+日時: 2025-12-06 23:03:57,701
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: WARNING
+行番号: 481
+メッセージ: 🔧 BlackList_fromの不整合修正: 950556286221680640 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:03:57,702
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: INFO
+行番号: 483
+メッセージ: BlackListとBlackList_fromに対象ユーザーを追加しました: 1106998270468829295 -> 950556286221680640
+-------------------------------
+日時: 2025-12-06 23:03:57,810
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: INFO
+行番号: 421
+メッセージ: BlackList_fromのmeta情報を初期化しました: 718351468402442311
+-------------------------------
+日時: 2025-12-06 23:03:58,011
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: WARNING
+行番号: 474
+メッセージ: 🔧 BlackListの不整合修正: 1106998270468829295 -> 718351468402442311
+-------------------------------
+日時: 2025-12-06 23:03:58,415
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: WARNING
+行番号: 481
+メッセージ: 🔧 BlackList_fromの不整合修正: 718351468402442311 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:03:58,416
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: INFO
+行番号: 483
+メッセージ: BlackListとBlackList_fromに対象ユーザーを追加しました: 1106998270468829295 -> 718351468402442311
+-------------------------------
+日時: 2025-12-06 23:03:58,647
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: WARNING
+行番号: 474
+メッセージ: 🔧 BlackListの不整合修正: 1106998270468829295 -> 598883092198850560
+-------------------------------
+日時: 2025-12-06 23:03:58,716
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: WARNING
+行番号: 481
+メッセージ: 🔧 BlackList_fromの不整合修正: 598883092198850560 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:03:58,717
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: INFO
+行番号: 483
+メッセージ: BlackListとBlackList_fromに対象ユーザーを追加しました: 1106998270468829295 -> 598883092198850560
+-------------------------------
+日時: 2025-12-06 23:03:58,862
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: INFO
+行番号: 421
+メッセージ: BlackList_fromのmeta情報を初期化しました: 1125445769411969126
+-------------------------------
+日時: 2025-12-06 23:03:59,013
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: WARNING
+行番号: 474
+メッセージ: 🔧 BlackListの不整合修正: 1106998270468829295 -> 1125445769411969126
+-------------------------------
+日時: 2025-12-06 23:03:59,111
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: WARNING
+行番号: 481
+メッセージ: 🔧 BlackList_fromの不整合修正: 1125445769411969126 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:03:59,112
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: INFO
+行番号: 483
+メッセージ: BlackListとBlackList_fromに対象ユーザーを追加しました: 1106998270468829295 -> 1125445769411969126
+-------------------------------
+日時: 2025-12-06 23:03:59,196
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: INFO
+行番号: 421
+メッセージ: BlackList_fromのmeta情報を初期化しました: 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:03:59,322
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: WARNING
+行番号: 474
+メッセージ: 🔧 BlackListの不整合修正: 1106998270468829295 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:03:59,439
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: WARNING
+行番号: 481
+メッセージ: 🔧 BlackList_fromの不整合修正: 1106998270468829295 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:03:59,440
+ファイル名: fs_list_manager.py
+関数名: _add_list
+ログレベル: INFO
+行番号: 483
+メッセージ: BlackListとBlackList_fromに対象ユーザーを追加しました: 1106998270468829295 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:04:03,996
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 523
+メッセージ: BlackListを取得しました: 1106998270468829295 -> 5件
+-------------------------------
+日時: 2025-12-06 23:04:08,472
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 523
+メッセージ: BlackListを取得しました: 1106998270468829295 -> 5件
+-------------------------------
+日時: 2025-12-06 23:04:20,269
+ファイル名: fs_list_manager.py
+関数名: _remove_list
+ログレベル: INFO
+行番号: 573
+メッセージ: BlackListから削除: 1106998270468829295 -> 598883092198850560
+-------------------------------
+日時: 2025-12-06 23:04:20,382
+ファイル名: fs_list_manager.py
+関数名: _remove_list
+ログレベル: INFO
+行番号: 601
+メッセージ: BlackList_fromから削除: 598883092198850560 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:04:20,494
+ファイル名: fs_list_manager.py
+関数名: _remove_list
+ログレベル: INFO
+行番号: 573
+メッセージ: BlackListから削除: 1106998270468829295 -> 1125445769411969126
+-------------------------------
+日時: 2025-12-06 23:04:20,636
+ファイル名: fs_list_manager.py
+関数名: _remove_list
+ログレベル: INFO
+行番号: 601
+メッセージ: BlackList_fromから削除: 1125445769411969126 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:04:20,794
+ファイル名: fs_list_manager.py
+関数名: _remove_list
+ログレベル: INFO
+行番号: 573
+メッセージ: BlackListから削除: 1106998270468829295 -> 950556286221680640
+-------------------------------
+日時: 2025-12-06 23:04:20,915
+ファイル名: fs_list_manager.py
+関数名: _remove_list
+ログレベル: INFO
+行番号: 601
+メッセージ: BlackList_fromから削除: 950556286221680640 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:04:21,017
+ファイル名: fs_list_manager.py
+関数名: _remove_list
+ログレベル: INFO
+行番号: 573
+メッセージ: BlackListから削除: 1106998270468829295 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:04:21,149
+ファイル名: fs_list_manager.py
+関数名: _remove_list
+ログレベル: INFO
+行番号: 601
+メッセージ: BlackList_fromから削除: 1106998270468829295 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:04:21,234
+ファイル名: fs_list_manager.py
+関数名: _remove_list
+ログレベル: INFO
+行番号: 573
+メッセージ: BlackListから削除: 1106998270468829295 -> 718351468402442311
+-------------------------------
+日時: 2025-12-06 23:04:21,345
+ファイル名: fs_list_manager.py
+関数名: _remove_list
+ログレベル: INFO
+行番号: 601
+メッセージ: BlackList_fromから削除: 718351468402442311 -> 1106998270468829295
+-------------------------------
+日時: 2025-12-06 23:32:55,704
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-07 00:00:18,429
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-07 01:26:07,456
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-07 02:48:44,850
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-07 02:48:44,873
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-07 02:48:45,029
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-07 02:48:45,184
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 523
+メッセージ: BlackListを取得しました: 1106998270468829295 -> 0件
+-------------------------------
+日時: 2025-12-07 03:12:39,535
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-07 04:23:04,028
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-07 07:24:45,085
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-07 10:10:18,161
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-07 12:56:14,004
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-07 15:25:28,181
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-07 15:25:28,187
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-07 15:25:28,351
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-07 16:29:51,650
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-07 16:29:51,652
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-07 16:29:51,815
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-07 16:43:02,613
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-07 16:52:29,045
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 161
+メッセージ: [VoicePointCalculator] Processed VC 1447111749613387919: owner=943819696212410388, owner_points=0, users=0
+-------------------------------
+日時: 2025-12-07 18:31:41,081
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-07 21:52:54,695
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-07 23:45:33,421
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-08 00:02:47,605
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-08 00:22:37,754
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-08 03:41:58,998
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-08 04:27:25,467
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-08 05:51:23,273
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-08 07:16:32,175
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-08 09:36:46,909
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-08 09:36:46,913
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-08 09:36:47,078
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-08 09:38:41,742
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 161
+メッセージ: [VoicePointCalculator] Processed VC 1447386387329319076: owner=582886036049231872, owner_points=0, users=0
+-------------------------------
+日時: 2025-12-08 10:26:55,055
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-08 14:08:12,481
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-08 16:42:50,323
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-08 17:07:29,512
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-08 19:44:31,034
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 55b02777882cd035e13689693afb024b.
+-------------------------------
+日時: 2025-12-17 05:47:13,982
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-17 05:47:13,997
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-17 05:47:14,847
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-17 05:47:21,414
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-17 05:47:21,416
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-17 05:47:22,196
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-17 05:47:22,938
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: b544b420a055972a98715347079166b5).
+-------------------------------
+日時: 2025-12-17 05:48:06,778
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-17 05:48:06,784
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-17 05:48:06,861
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 05:48:06,864
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-17 05:48:07,016
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 05:48:07,222
+ファイル名: fs_vc_tc_sync.py
+関数名: _add_ids
+ログレベル: INFO
+行番号: 72
+メッセージ: [FS_VC_TC_SYNC] Set mapping VC(1450590333325934673) -> TC(1450590334689218611)
+-------------------------------
+日時: 2025-12-17 05:48:07,222
+ファイル名: on_voice_state.py
+関数名: on_voice_state_update
+ログレベル: ERROR
+行番号: 415
+メッセージ: [on_voice_state_main] on_voice_state_update error: VC_Menu_Embed.__init__() missing 1 required positional argument: 'user_id'
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\on_voice_state.py", line 403, in on_voice_state_update
+    handled = await self._handle_knock_flow(member, before, after)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\on_voice_state.py", line 186, in _handle_knock_flow
+    await self._create_knock_room_vc_and_tc(guild, member)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\on_voice_state.py", line 95, in _create_knock_room_vc_and_tc
+    knock_embed = VC_Menu_Embed(vc_type="Knock_Room")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: VC_Menu_Embed.__init__() missing 1 required positional argument: 'user_id'
+日時: 2025-12-17 05:48:57,986
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-17 05:48:57,988
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-17 05:48:58,739
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-17 05:48:59,462
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: fb7647a65211765cf9d3e6433e5b1269).
+-------------------------------
+日時: 2025-12-17 05:49:03,384
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-17 05:49:03,388
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-17 05:49:03,445
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 05:49:03,448
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-17 05:49:03,582
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 05:49:03,719
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: WARNING
+行番号: 90
+メッセージ: [VoicePointCalculator] VC meta not found for vc_id=1450590333325934673.
+-------------------------------
+日時: 2025-12-17 05:49:15,722
+ファイル名: fs_vc_tc_sync.py
+関数名: _add_ids
+ログレベル: INFO
+行番号: 72
+メッセージ: [FS_VC_TC_SYNC] Set mapping VC(1450590620220391444) -> TC(1450590623567581276)
+-------------------------------
+日時: 2025-12-17 05:51:53,960
+ファイル名: fs_user_info.py
+関数名: _get_profile_data
+ログレベル: INFO
+行番号: 138
+メッセージ: [FS_Profile] No profile found for user: 1150829886399852605
+-------------------------------
+日時: 2025-12-17 05:51:53,962
+ファイル名: view.py
+関数名: on_error
+ログレベル: ERROR
+行番号: 542
+メッセージ: Ignoring exception in view <Group_Knock_Menu_View timeout=None children=4> for item <Knock_Button style=<ButtonStyle.success: 3> url=None disabled=False label='ノック' emoji=<PartialEmoji animated=False name='🚪' id=None> row=2 sku_id=None id=None>
+-------------------------------
+Traceback (most recent call last):
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\ui\view.py", line 555, in _scheduled_task
+    await item.callback(interaction)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\services\voice_channel\views.py", line 575, in callback
+    profile_id = profile_data["MESSAGE_ID"]
+                 ~~~~~~~~~~~~^^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+日時: 2025-12-17 05:54:14,803
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-17 05:54:14,804
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-17 05:54:15,609
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-17 05:54:16,354
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: f13d0147ccaa2b11b4ec77a727d1b3e0).
+-------------------------------
+日時: 2025-12-17 05:54:23,295
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-17 05:54:23,298
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-17 05:54:23,363
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 05:54:23,365
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-17 05:54:23,492
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 05:54:23,580
+ファイル名: fs_user_info.py
+関数名: _get_profile_data
+ログレベル: INFO
+行番号: 138
+メッセージ: [FS_Profile] No profile found for user: 1150829886399852605
+-------------------------------
+日時: 2025-12-17 05:54:23,582
+ファイル名: view.py
+関数名: on_error
+ログレベル: ERROR
+行番号: 542
+メッセージ: Ignoring exception in view <Group_Knock_Menu_View timeout=None children=4> for item <Knock_Button style=<ButtonStyle.success: 3> url=None disabled=False label='ノック' emoji=<PartialEmoji animated=False name='🚪' id=None> row=2 sku_id=None id=None>
+-------------------------------
+Traceback (most recent call last):
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\ui\view.py", line 555, in _scheduled_task
+    await item.callback(interaction)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\services\voice_channel\views.py", line 597, in callback
+    tc_id = int(result.get("TC_ID"))
+                ^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'get'
+日時: 2025-12-17 05:55:27,649
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-17 05:55:27,651
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-17 05:55:28,301
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-17 05:55:29,023
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: d7c75fc3bf889381ce21c40fe50fa684).
+-------------------------------
+日時: 2025-12-17 05:55:40,363
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-17 05:55:40,367
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-17 05:55:40,427
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 05:55:40,430
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-17 05:55:40,571
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 05:55:40,658
+ファイル名: fs_user_info.py
+関数名: _get_profile_data
+ログレベル: INFO
+行番号: 138
+メッセージ: [FS_Profile] No profile found for user: 1150829886399852605
+-------------------------------
+日時: 2025-12-17 06:45:12,862
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session d7c75fc3bf889381ce21c40fe50fa684.
+-------------------------------
+日時: 2025-12-17 07:14:15,858
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session d7c75fc3bf889381ce21c40fe50fa684.
+-------------------------------
+日時: 2025-12-17 07:38:30,522
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-17 07:38:30,523
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-17 07:38:31,202
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-17 07:38:31,933
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: eda489233a0f810bc9deac6a41c40e47).
+-------------------------------
+日時: 2025-12-17 08:10:16,967
+ファイル名: on_voice_state.py
+関数名: on_voice_state_update
+ログレベル: ERROR
+行番号: 80
+メッセージ: [on_voice_state_main] on_voice_state_update error: build_context() missing 1 required positional argument: 'now'
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\on_voice_state.py", line 62, in on_voice_state_update
+    ctx = build_context(member, before, after, now)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: build_context() missing 1 required positional argument: 'now'
+日時: 2025-12-17 08:10:36,400
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-17 08:10:36,404
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-17 08:10:36,464
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 08:10:36,466
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-17 08:10:36,601
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 08:10:36,874
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 161
+メッセージ: [VoicePointCalculator] Processed VC 1450590620220391444: owner=None, owner_points=0, users=0
+-------------------------------
+日時: 2025-12-17 08:10:37,365
+ファイル名: on_voice_state.py
+関数名: on_voice_state_update
+ログレベル: ERROR
+行番号: 80
+メッセージ: [on_voice_state_main] on_voice_state_update error: build_context() missing 1 required positional argument: 'now'
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\on_voice_state.py", line 62, in on_voice_state_update
+    ctx = build_context(member, before, after, now)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: build_context() missing 1 required positional argument: 'now'
+日時: 2025-12-17 08:10:47,642
+ファイル名: on_voice_state.py
+関数名: on_voice_state_update
+ログレベル: ERROR
+行番号: 80
+メッセージ: [on_voice_state_main] on_voice_state_update error: build_context() missing 1 required positional argument: 'now'
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\on_voice_state.py", line 62, in on_voice_state_update
+    ctx = build_context(member, before, after, now)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: build_context() missing 1 required positional argument: 'now'
+日時: 2025-12-17 08:11:03,842
+ファイル名: on_voice_state.py
+関数名: on_voice_state_update
+ログレベル: ERROR
+行番号: 80
+メッセージ: [on_voice_state_main] on_voice_state_update error: build_context() missing 1 required positional argument: 'now'
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\on_voice_state.py", line 62, in on_voice_state_update
+    ctx = build_context(member, before, after, now)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: build_context() missing 1 required positional argument: 'now'
+日時: 2025-12-17 08:11:55,952
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-17 08:11:55,953
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-17 08:11:56,635
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-17 08:11:57,405
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: d1ebc89b52623f7422a6eeba2c0a510b).
+-------------------------------
+日時: 2025-12-17 08:11:58,661
+ファイル名: knock.py
+関数名: get_knock_text_channel
+ログレベル: WARNING
+行番号: 40
+メッセージ: [on_voice_state_main] get_ids(1446877956692512941) error: FS_VC_TC_SYNC.get_ids() takes 1 positional argument but 2 were given
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\on_event\on_voice\knock.py", line 38, in get_knock_text_channel
+    result = await self.fs_vc_tc_sync.get_ids(vc_id)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: FS_VC_TC_SYNC.get_ids() takes 1 positional argument but 2 were given
+日時: 2025-12-17 08:11:58,664
+ファイル名: on_voice_state.py
+関数名: on_voice_state_update
+ログレベル: ERROR
+行番号: 80
+メッセージ: [on_voice_state_main] on_voice_state_update error: VoiceLogService.log_channel_changes() missing 3 required positional arguments: 'before', 'after', and 'now'
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\on_voice_state.py", line 74, in on_voice_state_update
+    await self.voice_log_service.log_channel_changes(ctx)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: VoiceLogService.log_channel_changes() missing 3 required positional arguments: 'before', 'after', and 'now'
+日時: 2025-12-17 08:12:10,580
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-17 08:12:10,584
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-17 08:12:10,639
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 08:12:10,641
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-17 08:12:10,769
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 08:12:10,826
+ファイル名: fs_vc_tc_sync.py
+関数名: _add_ids
+ログレベル: INFO
+行番号: 72
+メッセージ: [FS_VC_TC_SYNC] Set mapping VC(1450626586721390663) -> TC(1450626588222951466)
+-------------------------------
+日時: 2025-12-17 08:12:12,257
+ファイル名: knock.py
+関数名: get_knock_text_channel
+ログレベル: WARNING
+行番号: 40
+メッセージ: [on_voice_state_main] get_ids(1446877956692512941) error: FS_VC_TC_SYNC.get_ids() takes 1 positional argument but 2 were given
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\on_event\on_voice\knock.py", line 38, in get_knock_text_channel
+    result = await self.fs_vc_tc_sync.get_ids(vc_id)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: FS_VC_TC_SYNC.get_ids() takes 1 positional argument but 2 were given
+日時: 2025-12-17 08:12:12,259
+ファイル名: knock.py
+関数名: get_knock_text_channel
+ログレベル: WARNING
+行番号: 40
+メッセージ: [on_voice_state_main] get_ids(1450626586721390663) error: FS_VC_TC_SYNC.get_ids() takes 1 positional argument but 2 were given
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\on_event\on_voice\knock.py", line 38, in get_knock_text_channel
+    result = await self.fs_vc_tc_sync.get_ids(vc_id)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: FS_VC_TC_SYNC.get_ids() takes 1 positional argument but 2 were given
+日時: 2025-12-17 08:12:12,259
+ファイル名: on_voice_state.py
+関数名: on_voice_state_update
+ログレベル: ERROR
+行番号: 80
+メッセージ: [on_voice_state_main] on_voice_state_update error: VoiceLogService.log_channel_changes() missing 3 required positional arguments: 'before', 'after', and 'now'
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\on_voice_state.py", line 74, in on_voice_state_update
+    await self.voice_log_service.log_channel_changes(ctx)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: VoiceLogService.log_channel_changes() missing 3 required positional arguments: 'before', 'after', and 'now'
+日時: 2025-12-17 08:12:12,846
+ファイル名: knock.py
+関数名: get_knock_text_channel
+ログレベル: WARNING
+行番号: 40
+メッセージ: [on_voice_state_main] get_ids(1450626586721390663) error: FS_VC_TC_SYNC.get_ids() takes 1 positional argument but 2 were given
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\on_event\on_voice\knock.py", line 38, in get_knock_text_channel
+    result = await self.fs_vc_tc_sync.get_ids(vc_id)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: FS_VC_TC_SYNC.get_ids() takes 1 positional argument but 2 were given
+日時: 2025-12-17 08:12:12,847
+ファイル名: on_voice_state.py
+関数名: on_voice_state_update
+ログレベル: ERROR
+行番号: 80
+メッセージ: [on_voice_state_main] on_voice_state_update error: VoiceLogService.log_channel_changes() missing 3 required positional arguments: 'before', 'after', and 'now'
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\on_voice_state.py", line 74, in on_voice_state_update
+    await self.voice_log_service.log_channel_changes(ctx)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: VoiceLogService.log_channel_changes() missing 3 required positional arguments: 'before', 'after', and 'now'
+日時: 2025-12-17 08:12:31,381
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: WARNING
+行番号: 90
+メッセージ: [VoicePointCalculator] VC meta not found for vc_id=1450626586721390663.
+-------------------------------
+日時: 2025-12-17 08:15:48,314
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-17 08:15:48,315
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-17 08:15:49,147
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-17 08:15:50,453
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 9aee030b68a6f0e94c1e0f5c6cf4faea).
+-------------------------------
+日時: 2025-12-17 08:16:04,671
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-17 08:16:04,674
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-17 08:16:04,734
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 08:16:04,736
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-17 08:16:04,863
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 08:16:04,926
+ファイル名: fs_vc_tc_sync.py
+関数名: _add_ids
+ログレベル: INFO
+行番号: 72
+メッセージ: [FS_VC_TC_SYNC] Set mapping VC(1450627567601188875) -> TC(1450627569883025593)
+-------------------------------
+日時: 2025-12-17 08:16:06,120
+ファイル名: fs_vc_tc_sync.py
+関数名: _get_ids
+ログレベル: INFO
+行番号: 129
+メッセージ: [FS_VC_TC_SYNC] No mapping found for VC_ID=1446877956692512941
+-------------------------------
+日時: 2025-12-17 08:16:06,436
+ファイル名: on_voice_state.py
+関数名: on_voice_state_update
+ログレベル: ERROR
+行番号: 80
+メッセージ: [on_voice_state_main] on_voice_state_update error: 'VoiceStateContext' object has no attribute 'after_state'
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\on_voice_state.py", line 74, in on_voice_state_update
+    await self.voice_log_service.log_channel_changes(ctx)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\on_event\on_voice\logger.py", line 95, in log_channel_changes
+    is_self_mute=ctx.after_state.self_mute,
+                 ^^^^^^^^^^^^^^^
+AttributeError: 'VoiceStateContext' object has no attribute 'after_state'
+日時: 2025-12-17 08:16:06,840
+ファイル名: on_voice_state.py
+関数名: on_voice_state_update
+ログレベル: ERROR
+行番号: 80
+メッセージ: [on_voice_state_main] on_voice_state_update error: 'VoiceStateContext' object has no attribute 'before_state'
+-------------------------------
+Traceback (most recent call last):
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\on_voice_state.py", line 74, in on_voice_state_update
+    await self.voice_log_service.log_channel_changes(ctx)
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\on_event\on_voice\logger.py", line 69, in log_channel_changes
+    is_self_mute=ctx.before_state.self_mute,
+                 ^^^^^^^^^^^^^^^^
+AttributeError: 'VoiceStateContext' object has no attribute 'before_state'
+日時: 2025-12-17 08:22:12,986
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-17 08:22:12,987
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-17 08:22:13,716
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-17 08:22:14,582
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 99cd722b6f814bc9b395becf697af9b7).
+-------------------------------
+日時: 2025-12-17 08:23:20,258
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-17 08:23:20,263
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-17 08:23:20,321
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 08:23:20,324
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-17 08:23:20,457
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 08:23:20,599
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: WARNING
+行番号: 90
+メッセージ: [VoicePointCalculator] VC meta not found for vc_id=1450627567601188875.
+-------------------------------
+日時: 2025-12-17 08:48:28,062
+ファイル名: fs_vc_tc_sync.py
+関数名: _add_ids
+ログレベル: INFO
+行番号: 72
+メッセージ: [FS_VC_TC_SYNC] Set mapping VC(1450635714231402519) -> TC(1450635715850407977)
+-------------------------------
+日時: 2025-12-17 08:48:29,420
+ファイル名: fs_vc_tc_sync.py
+関数名: _get_ids
+ログレベル: INFO
+行番号: 129
+メッセージ: [FS_VC_TC_SYNC] No mapping found for VC_ID=1446877956692512941
+-------------------------------
+日時: 2025-12-17 08:48:29,930
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 110
+メッセージ: [MOVE / JOIN only] minto56_56: 1446877956692512941 → 1450635714231402519
+-------------------------------
+日時: 2025-12-17 08:49:04,852
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] hazakura_03241 ← 1450635714231402519
+-------------------------------
+日時: 2025-12-17 08:49:29,016
+ファイル名: fs_vc_tc_sync.py
+関数名: _add_ids
+ログレベル: INFO
+行番号: 72
+メッセージ: [FS_VC_TC_SYNC] Set mapping VC(1450635976446709771) -> TC(1450635978011181087)
+-------------------------------
+日時: 2025-12-17 08:49:30,070
+ファイル名: fs_vc_tc_sync.py
+関数名: _get_ids
+ログレベル: INFO
+行番号: 129
+メッセージ: [FS_VC_TC_SYNC] No mapping found for VC_ID=1446877956692512941
+-------------------------------
+日時: 2025-12-17 08:49:30,747
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 110
+メッセージ: [MOVE / JOIN only] hazakura_03241: 1446877956692512941 → 1450635976446709771
+-------------------------------
+日時: 2025-12-17 08:49:39,035
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] hazakura_03241 ← 1450635976446709771
+-------------------------------
+日時: 2025-12-17 08:50:02,968
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 161
+メッセージ: [VoicePointCalculator] Processed VC 1450635976446709771: owner=None, owner_points=0, users=0
+-------------------------------
+日時: 2025-12-17 09:38:19,248
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 09:38:19,253
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-17 09:38:19,386
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 09:59:39,389
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] wasabi8823 → 1450635714231402519
+-------------------------------
+日時: 2025-12-17 09:59:43,392
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 199
+メッセージ: [MUTE_ON] wasabi8823 @ 1450635714231402519
+-------------------------------
+日時: 2025-12-17 09:59:43,964
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] wasabi8823 @ 1450635714231402519
+-------------------------------
+日時: 2025-12-17 10:17:02,949
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 127
+メッセージ: [MOVE / LEAVE only] wasabi8823: 1450635714231402519 → 1424278800195260467
+-------------------------------
+日時: 2025-12-17 10:17:13,579
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] wasabi8823 → 1450635714231402519
+-------------------------------
+日時: 2025-12-17 10:17:18,967
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 199
+メッセージ: [MUTE_ON] wasabi8823 @ 1450635714231402519
+-------------------------------
+日時: 2025-12-17 10:17:19,370
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] wasabi8823 @ 1450635714231402519
+-------------------------------
+日時: 2025-12-17 10:18:04,378
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 199
+メッセージ: [MUTE_ON] wasabi8823 @ 1450635714231402519
+-------------------------------
+日時: 2025-12-17 10:18:04,682
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] wasabi8823 @ 1450635714231402519
+-------------------------------
+日時: 2025-12-17 10:20:03,117
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] wasabi8823 ← 1450635714231402519
+-------------------------------
+日時: 2025-12-17 10:41:36,018
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 10:41:36,021
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-17 10:41:36,161
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 10:41:36,648
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] minto56_56 ← 1450635714231402519
+-------------------------------
+日時: 2025-12-17 10:41:48,275
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2025-12-17 10:41:48,277
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2025-12-17 10:41:48,943
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2025-12-17 10:41:50,404
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 4ad7ec49c972733e318ccae7c0595c58).
+-------------------------------
+日時: 2025-12-17 10:41:59,763
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2025-12-17 10:41:59,769
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2025-12-17 10:41:59,838
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 10:41:59,840
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2025-12-17 10:41:59,977
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 10:42:00,667
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] minto56_56 → 1450635714231402519
+-------------------------------
+日時: 2025-12-17 10:42:07,313
+ファイル名: fs_vc_tc_sync.py
+関数名: _delete_ids
+ログレベル: INFO
+行番号: 213
+メッセージ: [FS_VC_TC_SYNC] Deleted mapping for VC_ID=1450635714231402519
+-------------------------------
+日時: 2025-12-17 10:42:07,970
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] minto56_56 ← 1450635714231402519
+-------------------------------
+日時: 2025-12-17 10:42:08,049
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 161
+メッセージ: [VoicePointCalculator] Processed VC 1450635714231402519: owner=None, owner_points=0, users=0
+-------------------------------
+日時: 2025-12-17 12:12:18,769
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 12:12:18,772
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-17 12:12:18,905
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 13:42:55,041
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 13:42:55,043
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-17 13:42:55,182
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 14:30:12,675
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 4ad7ec49c972733e318ccae7c0595c58.
+-------------------------------
+日時: 2025-12-17 15:01:04,776
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 4ad7ec49c972733e318ccae7c0595c58.
+-------------------------------
+日時: 2025-12-17 17:06:21,604
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 17:06:21,608
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-17 17:06:21,757
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 18:29:20,683
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 4ad7ec49c972733e318ccae7c0595c58.
+-------------------------------
+日時: 2025-12-17 19:39:59,979
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 4ad7ec49c972733e318ccae7c0595c58.
+-------------------------------
+日時: 2025-12-17 20:32:37,009
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 20:32:37,012
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-17 20:32:37,139
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 22:47:34,506
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 4ad7ec49c972733e318ccae7c0595c58.
+-------------------------------
+日時: 2025-12-17 23:06:46,210
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-17 23:06:46,212
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-17 23:06:46,351
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-17 23:06:46,644
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 110
+メッセージ: [MOVE / JOIN only] kakun0022: 1423777839294976142 → 1450851719432110211
+-------------------------------
+日時: 2025-12-17 23:06:48,808
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 199
+メッセージ: [MUTE_ON] kakun0022 @ 1450851719432110211
+-------------------------------
+日時: 2025-12-17 23:06:48,987
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] kakun0022 @ 1450851719432110211
+-------------------------------
+日時: 2025-12-17 23:06:49,235
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 199
+メッセージ: [MUTE_ON] kakun0022 @ 1450851719432110211
+-------------------------------
+日時: 2025-12-17 23:06:49,327
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] kakun0022 @ 1450851719432110211
+-------------------------------
+日時: 2025-12-17 23:07:32,628
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] ponta_0001 → 1450851719432110211
+-------------------------------
+日時: 2025-12-17 23:10:13,783
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] gakkun5176 → 1450851719432110211
+-------------------------------
+日時: 2025-12-17 23:20:51,685
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] kakun0022 ← 1450851719432110211
+-------------------------------
+日時: 2025-12-17 23:22:18,067
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] inali_910 → 1450851719432110211
+-------------------------------
+日時: 2025-12-17 23:22:20,327
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] inali_910 @ 1450851719432110211
+-------------------------------
+日時: 2025-12-17 23:22:20,996
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 199
+メッセージ: [MUTE_ON] inali_910 @ 1450851719432110211
+-------------------------------
+日時: 2025-12-17 23:22:21,193
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] inali_910 @ 1450851719432110211
+-------------------------------
+日時: 2025-12-18 00:00:20,617
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 199
+メッセージ: [MUTE_ON] inali_910 @ 1450851719432110211
+-------------------------------
+日時: 2025-12-18 00:00:23,034
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] inali_910 ← 1450851719432110211
+-------------------------------
+日時: 2025-12-18 00:00:28,815
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] gakkun5176 ← 1450851719432110211
+-------------------------------
+日時: 2025-12-18 00:00:33,335
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] ponta_0001 ← 1450851719432110211
+-------------------------------
+日時: 2025-12-18 00:00:34,004
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 161
+メッセージ: [VoicePointCalculator] Processed VC 1450851719432110211: owner=None, owner_points=0, users=0
+-------------------------------
+日時: 2025-12-18 00:14:45,412
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-18 00:14:45,414
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-18 00:14:45,555
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-18 01:36:50,229
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 4ad7ec49c972733e318ccae7c0595c58.
+-------------------------------
+日時: 2025-12-18 04:32:52,387
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 4ad7ec49c972733e318ccae7c0595c58.
+-------------------------------
+日時: 2025-12-18 04:51:40,188
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 4ad7ec49c972733e318ccae7c0595c58.
+-------------------------------
+日時: 2025-12-18 05:45:30,461
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 4ad7ec49c972733e318ccae7c0595c58.
+-------------------------------
+日時: 2025-12-18 07:02:43,339
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 4ad7ec49c972733e318ccae7c0595c58.
+-------------------------------
+日時: 2025-12-18 07:27:27,344
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-18 07:27:27,346
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-18 07:27:27,484
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-18 08:26:30,742
+ファイル名: requests.py
+関数名: __call__
+ログレベル: DEBUG
+行番号: 185
+メッセージ: Making request: POST https://oauth2.googleapis.com/token
+-------------------------------
+日時: 2025-12-18 08:26:30,745
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2025-12-18 08:26:30,901
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2025-12-18 08:26:31,212
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 110
+メッセージ: [MOVE / JOIN only] kakun0022: 1423777839294976142 → 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:26:35,424
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 199
+メッセージ: [MUTE_ON] kakun0022 @ 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:26:35,613
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] kakun0022 @ 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:26:35,782
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 199
+メッセージ: [MUTE_ON] kakun0022 @ 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:26:35,937
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] kakun0022 @ 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:27:10,155
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] wasabi8823 → 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:27:14,188
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 199
+メッセージ: [MUTE_ON] wasabi8823 @ 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:27:14,568
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] wasabi8823 @ 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:27:30,273
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] minto56_56 → 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:41:07,338
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] 7no8777se → 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:41:08,871
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 199
+メッセージ: [MUTE_ON] 7no8777se @ 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:41:10,343
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] 7no8777se @ 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:42:43,650
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] white_heart_01 → 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:42:53,434
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] white_heart_01 ← 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:43:15,823
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] white_heart_01 → 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:43:21,013
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] white_heart_01 @ 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:47:16,863
+ファイル名: views.py
+関数名: callback
+ログレベル: ERROR
+行番号: 70
+メッセージ: Error while fetching member: 404 Not Found (error code: 10007): Unknown Member
+-------------------------------
+日時: 2025-12-18 08:47:26,748
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session 4ad7ec49c972733e318ccae7c0595c58.
+-------------------------------
+日時: 2025-12-18 08:47:31,757
+ファイル名: views.py
+関数名: callback
+ログレベル: ERROR
+行番号: 70
+メッセージ: Error while fetching member: 404 Not Found (error code: 10007): Unknown Member
+-------------------------------
+日時: 2025-12-18 08:53:01,525
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] _nonp → 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:56:12,916
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] _nonp ← 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:56:19,879
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] 7no8777se ← 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:56:20,427
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 81
+メッセージ: [LEAVE] white_heart_01 ← 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:58:44,118
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] nao_babu → 1450992583617806366
+-------------------------------
+日時: 2025-12-18 08:58:49,287
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] nao_babu @ 1450992583617806366
+-------------------------------
+日時: 2025-12-18 09:07:08,419
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] sora6198 → 1450992583617806366
+-------------------------------
+日時: 2025-12-18 09:07:11,140
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 199
+メッセージ: [MUTE_ON] sora6198 @ 1450992583617806366
+-------------------------------
+日時: 2025-12-18 09:07:12,305
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 211
+メッセージ: [MUTE_OFF] sora6198 @ 1450992583617806366
+-------------------------------
+日時: 2025-12-18 09:07:24,538
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 61
+メッセージ: [JOIN] shun072111 → 1450992583617806366
+-------------------------------
