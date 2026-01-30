@@ -15,9 +15,12 @@ extensions = (
     'on_reaction',
     'on_voice_state',
 
+    'judging',
     'list_manager',
     'profile',
     'secret_recruit',
+
+    'points',
 )
 
 class MyBot(commands.Bot):
@@ -47,6 +50,11 @@ class MyBot(commands.Bot):
 
         from on_event.on_ready.on_ready import on_ready_view
         await on_ready_view(bot=bot)
+
+        from helpers.http import HTTPClient
+
+        HTTPClient.set_bot_token(token=BOT_TOKEN)
+        await HTTPClient.start()
 
         retries = 3
         delay = 5  # 5秒間の遅延

@@ -13,6 +13,7 @@ from on_event.on_voice.configs import TIMEZONE
 from on_event.on_voice.context import build_context
 from on_event.on_voice.knock import KnockService
 from on_event.on_voice.logger import VoiceLogService
+from on_event.on_voice.user_limit import UserLimitService
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,7 @@ class On_Voice_State_Main_Cog(commands.Cog):
         self.knock_service = KnockService(fs_vc_tc_sync=self.fs_vc_tc_sync)
         # VC_LOG への書き込みサービス
         self.voice_log_service = VoiceLogService(fs_voice_log=self.fs_voice_log)
+        self.user_limit_service = UserLimitService()
 
     # -------------------------
     # イベント本体
@@ -52,16 +54,17 @@ class On_Voice_State_Main_Cog(commands.Cog):
         ただし NOT_CONNECT_VC_IDS に含まれるVCはログ対象から除外する。
         """
         try:
-            # Botは対象外
-            if member.bot:
-                return
-
             now = datetime.now(TIMEZONE)
 
             # VoiceStateContext を構築（接続状態・カテゴリ・ノックVCなどの判定をここで完了させる）
             ctx = build_context(member, before, after, now)
             if ctx is None:
                 # ログ対象外（両方 None など）の場合
+                return
+
+            await self.user_limit_service.handle_user_limit(ctx)
+
+            if member.bot:
                 return
 
             # 1) ノック関連の特殊処理（VC/TC権限など）

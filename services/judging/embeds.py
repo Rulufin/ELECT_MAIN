@@ -98,14 +98,41 @@ class Judging_Profile_Embed(Embed):
         self.set_footer(text=f"{formatted_date}")
         self.set_thumbnail(url=author.display_avatar.url)
 
-class Judging_Pass_Embed(Embed):
+class Judging_Prof_Pass_Embed(Embed):
     def __init__(self):
         super().__init__(
-            title="ELECT入場審査 - 合格",
+            title="ELECTプロフ審査 - 合格",
             description=textwrap.dedent(
                 '''
-                ELECTの入場審査に合格しました。
+                ELECTのプロフ審査に合格しました。
                 おめでとうございます。
+
+                [こちら](https://discord.com/channels/1421436016442740749/1424994909370323056)で面接日程の調整をお願いします。
+                '''
+            )
+        )
+
+class Judging_Interview_Pass_Embed(Embed):
+    def __init__(self):
+        super().__init__(
+            title="ELECT面接 - 合格",
+            description=textwrap.dedent(
+                '''
+                ELECTの面接に合格しました。
+                おめでとうございます。
+
+                [こちら](https://ptb.discord.com/channels/1421436016442740749/1451824654560923748)でサーバー案内日程の調整をお願いします。
+                '''
+            )
+        )
+
+class Judging_Guide_Panel_Embed(Embed):
+    def __init__(self):
+        super().__init__(
+            title="__案内人用パネル__",
+            description=textwrap.dedent(
+                '''
+                VC接続者に仮メンバーロールを付与できます。
                 '''
             )
         )

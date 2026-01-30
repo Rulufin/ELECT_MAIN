@@ -1,7 +1,11 @@
 import discord
 from discord.ext import commands
 
-from services.judging.views import Judging_Panel_View, Judging_Result_View
+from services.judging.views import (
+    Judging_Panel_View, Judging_Result_View,
+    Interview_Panel_View, Server_Guidance_View,
+    Guide_Panel_View,
+)
 from services.recruit.views import (
     Recruit_Panel_View, Recruit_Main_Setting_View, 
     Recruit_Filter_Panel_View, Recruit_Filter_Setting_View,
@@ -18,6 +22,8 @@ async def on_ready_view(bot: commands.Bot):
     views = [
         # 審査
         Judging_Panel_View(), Judging_Result_View(),
+        Interview_Panel_View(), Server_Guidance_View(),
+        Guide_Panel_View(),
 
         # 裏募集
         Recruit_Panel_View(), Recruit_Main_Setting_View(),

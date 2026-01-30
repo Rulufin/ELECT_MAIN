@@ -17,7 +17,8 @@ logger = logging.getLogger(__name__)
 FILENAME = "on_message_main"
 
 PROFILE_CHANNELS = [
-    
+    MAIN_CHANNELS.PROFILE_MALE,
+    MAIN_CHANNELS.PROFILE_FEMALE
 ]
 
 class On_Message_Main_Cog(commands.Cog):
@@ -62,18 +63,22 @@ class On_Message_Main_Cog(commands.Cog):
             mentioned_members = message.mentions
 
             if not mentioned_members:
-                await message.add_reaction("❌")
                 return
 
             moved = False
 
+            author_vc = author.voice.channel
+
             for member in mentioned_members:
                 if not member.voice:
-                    # VCにいないので移動できない
                     continue
 
+                if member.voice.channel.id != author_vc.id:
+                    await message.add_reaction("❌")
+                    continue  # 同じVCじゃないので対象外
+
                 try:
-                    await member.move_to(sleep_vc, reason="寝落ちVC召喚")
+                    await member.move_to(sleep_vc, reason="寝落ちVCへ移動")
                     moved = True
                 except Exception:
                     pass

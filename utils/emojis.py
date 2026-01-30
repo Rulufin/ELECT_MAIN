@@ -32,6 +32,7 @@ class DEFAULT:
     NEXT = "▶️"
     PREV = "◀️"
     RESET = "🔄"
+    STOP = "⏹️"
 
     # 顔
     EYES = "👀"

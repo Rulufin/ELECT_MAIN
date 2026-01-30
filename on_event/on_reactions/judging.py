@@ -74,16 +74,36 @@ class OnReactionJudging:
         # スレッド名: "ユーザーID-YYYYMMDD"
         thread_name = f"{author.id}-{formatted_date}"
 
-        tag_obj = judge_forum.get_tag(JUDGE_TAGS.NOW)
+        role_ids_now = {r.id for r in author.roles}
 
-        applied_tags = []
-        if tag_obj is not None:
-            applied_tags.append(tag_obj)
+        has_g_male = MAIN_ROLES.G_MALE in role_ids_now
+        has_g_female = MAIN_ROLES.G_FEMALE in role_ids_now  # ← 必要
+
+        # 付けたいタグID（例：NOW + 性別）
+        tag_ids: list[int] = [JUDGE_TAGS.NOW]
+
+        if has_g_male and not has_g_female:
+            tag_ids.append(JUDGE_TAGS.MALE)
+        elif has_g_female and not has_g_male:
+            tag_ids.append(JUDGE_TAGS.FEMALE)
         else:
-            # タグが見つからなかったときのログだけ出す
+            # どっちでもない/両方のときはログだけ or どちらも付けない、など運用で決める
             logger.warning(
-                f"[{FILENAME}] ForumTag NOW (id={JUDGE_TAGS.NOW}) not found on forum {judge_forum.id}"
+                f"[{FILENAME}] gender role ambiguous: male={has_g_male} female={has_g_female} user={author.id}"
             )
+
+        # -------------------------
+        # ForumTagオブジェクトに変換
+        # -------------------------
+        applied_tags = []
+        for tid in dict.fromkeys(tag_ids):  # 重複排除（順序維持）
+            tag_obj = judge_forum.get_tag(tid)  # ForumTag を返す想定
+            if tag_obj is not None:
+                applied_tags.append(tag_obj)
+            else:
+                logger.warning(
+                    f"[{FILENAME}] ForumTag (id={tid}) not found on forum {judge_forum.id}"
+                )
 
         created = await judge_forum.create_thread(
             name=thread_name,

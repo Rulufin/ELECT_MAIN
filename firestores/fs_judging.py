@@ -18,7 +18,7 @@ DateLike = Union[str, datetime]
 
 class FS_Judging:
     ROOT_COLLECTION = "Judging"
-    CATEGORY_KEYS = ("circle", "triangle", "cross", "caution")
+    CATEGORY_KEYS = ("favorite", "circle", "cross", "caution")
 
     def __init__(
         self,
@@ -97,8 +97,8 @@ class FS_Judging:
             return {}, {}, {}, {}, False
         data = snap.to_dict() or {}
         return (
+            dict(data.get("favorite", {}) or {}),
             dict(data.get("circle", {}) or {}),
-            dict(data.get("triangle", {}) or {}),
             dict(data.get("cross", {}) or {}),
             dict(data.get("caution", {}) or {}),
             True,
@@ -125,10 +125,10 @@ class FS_Judging:
             m_id = str(message_id)
             d_ymd = str(date_ymd)
 
-            circle, triangle, cross, caution, _ = await self._load_maps(t_id, m_id, d_ymd)
+            favorite, circle, cross, caution, _ = await self._load_maps(t_id, m_id, d_ymd)
             return {
+                "favorite": favorite,
                 "circle": circle,
-                "triangle": triangle,
                 "cross": cross,
                 "caution": caution,
             }
@@ -146,17 +146,17 @@ class FS_Judging:
         try:
             category = category.lower()
             if category not in self.CATEGORY_KEYS:
-                raise ValueError("category must be one of circle, triangle, cross, caution")
+                raise ValueError("category must be one of favorite, circle, cross, caution")
 
             t_id = str(target_id)
             m_id = str(message_id)
             d_ymd = str(date_ymd)
 
-            circle, triangle, cross, caution, _ = await self._load_maps(t_id, m_id, d_ymd)
+            favorite, circle, cross, caution, _ = await self._load_maps(t_id, m_id, d_ymd)
+            if category == "favorite":
+                return favorite
             if category == "circle":
                 return circle
-            if category == "triangle":
-                return triangle
             if category == "cross":
                 return cross
             return caution  # caution
@@ -164,7 +164,7 @@ class FS_Judging:
             logger.error(f"Error in get_category: {e}")
             return {}
 
-    # ------------- Write (circle/triangle/cross toggle + move exclusivity) -------------
+    # ------------- Write (favorite/circle/cross toggle + move exclusivity) -------------
     
     async def set_vote(
         self,
@@ -188,7 +188,7 @@ class FS_Judging:
             user_name = getattr(user, "display_name", None) or getattr(user, "name", str(user.id))
             user_id = str(user.id)
 
-            if category in ("circle", "triangle", "cross"):
+            if category in ("favorite", "circle", "cross"):
                 return await self._set_simple_category(
                     target_id=t_id,
                     message_id=m_id,
@@ -208,7 +208,7 @@ class FS_Judging:
                     comment=comment,
                 )
 
-            raise ValueError("category must be one of circle, triangle, cross, caution")
+            raise ValueError("category must be one of favorite, circle, cross, caution")
         
         except Exception as e:
             logger.error(f"Error in set_vote: {e}")
@@ -227,21 +227,21 @@ class FS_Judging:
             category = category.lower()
             doc_ref = self._day_doc(target_id, message_id, date_ymd)
 
-            circle, triangle, cross, caution, _ = await self._load_maps(target_id, message_id, date_ymd)
+            favorite, circle, cross, caution, _ = await self._load_maps(target_id, message_id, date_ymd)
 
             # 現在どのカテゴリにいるか
+            favorite_idx = self._find_user_index(favorite, user_id)
             circle_idx = self._find_user_index(circle, user_id)
-            triangle_idx = self._find_user_index(triangle, user_id)
             cross_idx = self._find_user_index(cross, user_id)
             caution_idx = self._find_user_index(caution, user_id)
 
             # 同じカテゴリを押した → 取り消し
-            if category == "circle":
+            if category == "favorite":
+                current_idx = favorite_idx
+                current_map = favorite
+            elif category == "circle":
                 current_idx = circle_idx
                 current_map = circle
-            elif category == "triangle":
-                current_idx = triangle_idx
-                current_map = triangle
             else:  # "cross"
                 current_idx = cross_idx
                 current_map = cross
@@ -251,8 +251,8 @@ class FS_Judging:
                 await self._q_set(
                     doc_ref,
                     {
+                        "favorite": favorite,
                         "circle": circle,
-                        "triangle": triangle,
                         "cross": cross,
                         "caution": caution,
                     },
@@ -263,13 +263,13 @@ class FS_Judging:
             # それ以外 → 排他（他カテゴリから削除）
             removed_from_other = any(
                 idx is not None
-                for idx in [circle_idx, triangle_idx, cross_idx, caution_idx]
+                for idx in [favorite_idx, circle_idx, cross_idx, caution_idx]
             )
 
+            if favorite_idx is not None:
+                favorite.pop(favorite_idx)
             if circle_idx is not None:
                 circle.pop(circle_idx)
-            if triangle_idx is not None:
-                triangle.pop(triangle_idx)
             if cross_idx is not None:
                 cross.pop(cross_idx)
             if caution_idx is not None:
@@ -277,12 +277,12 @@ class FS_Judging:
 
             # 新規追加
             payload = {"user_id": user_id, "user_name": user_name}
-            if category == "circle":
+            if category == "favorite":
+                new_idx = self._next_index(favorite)
+                favorite[new_idx] = payload
+            elif category == "circle":
                 new_idx = self._next_index(circle)
                 circle[new_idx] = payload
-            elif category == "triangle":
-                new_idx = self._next_index(triangle)
-                triangle[new_idx] = payload
             else:
                 new_idx = self._next_index(cross)
                 cross[new_idx] = payload
@@ -290,8 +290,8 @@ class FS_Judging:
             await self._q_set(
                 doc_ref,
                 {
+                    "favorite": favorite,
                     "circle": circle,
-                    "triangle": triangle,
                     "cross": cross,
                     "caution": caution,
                 },
@@ -316,13 +316,13 @@ class FS_Judging:
     ) -> str:
         try:
             doc_ref = self._day_doc(target_id, message_id, date_ymd)
-            circle, triangle, cross, caution, _ = await self._load_maps(target_id, message_id, date_ymd)
+            favorite, circle, cross, caution, _ = await self._load_maps(target_id, message_id, date_ymd)
 
             norm = (comment or "").strip()
 
             # 各カテゴリでの index
+            favorite_idx = self._find_user_index(favorite, user_id)
             circle_idx = self._find_user_index(circle, user_id)
-            triangle_idx = self._find_user_index(triangle, user_id)
             cross_idx = self._find_user_index(cross, user_id)
             caution_idx = self._find_user_index(caution, user_id)
 
@@ -351,13 +351,13 @@ class FS_Judging:
 
             # 他カテゴリ → CAUTIONに移動（排他）
             removed_from_other = any(
-                idx is not None for idx in [circle_idx, triangle_idx, cross_idx]
+                idx is not None for idx in [circle_idx, favorite_idx, cross_idx]
             )
 
+            if favorite_idx is not None:
+                favorite.pop(favorite_idx)
             if circle_idx is not None:
                 circle.pop(circle_idx)
-            if triangle_idx is not None:
-                triangle.pop(triangle_idx)
             if cross_idx is not None:
                 cross.pop(cross_idx)
 
@@ -371,8 +371,8 @@ class FS_Judging:
             await self._q_set(
                 doc_ref,
                 {
+                    "favorite": favorite,
                     "circle": circle,
-                    "triangle": triangle,
                     "cross": cross,
                     "caution": caution,
                 },
@@ -397,7 +397,7 @@ class FS_Judging:
         try:
             category = category.lower()
             if category not in self.CATEGORY_KEYS:
-                raise ValueError("category must be one of circle, triangle, cross, caution")
+                raise ValueError("category must be one of favorite, circle, cross, caution")
 
             t_id = str(target_id)
             m_id = str(message_id)
@@ -405,20 +405,20 @@ class FS_Judging:
             u_id = str(user_id)
 
             doc_ref = self._day_doc(t_id, m_id, d_ymd)
-            circle, triangle, cross, caution, _ = await self._load_maps(t_id, m_id, d_ymd)
+            favorite, circle, cross, caution, _ = await self._load_maps(t_id, m_id, d_ymd)
+
+            if category == "favorite":
+                idx = self._find_user_index(favorite, u_id)
+                if idx is not None:
+                    favorite.pop(idx, None)
+                    await self._q_set(doc_ref, {"favorite": favorite}, merge=True)
+                return
 
             if category == "circle":
                 idx = self._find_user_index(circle, u_id)
                 if idx is not None:
                     circle.pop(idx, None)
                     await self._q_set(doc_ref, {"circle": circle}, merge=True)
-                return
-
-            if category == "triangle":
-                idx = self._find_user_index(triangle, u_id)
-                if idx is not None:
-                    triangle.pop(idx, None)
-                    await self._q_set(doc_ref, {"triangle": triangle}, merge=True)
                 return
 
             if category == "cross":
@@ -447,8 +447,8 @@ class FS_Judging:
             await self._q_set(
                 doc_ref,
                 {
+                    "favorite": {},
                     "circle": {},
-                    "triangle": {},
                     "cross": {},
                     "caution": {},
                 },
@@ -485,7 +485,7 @@ class FS_Judging:
 
         保存される内容：
             - thread_id (必須)
-            - circle / triangle / cross / caution は空の map
+            - favorite / circle / cross / caution は空の map
           
         overwrite=True の場合、既存ドキュメントを完全上書きする。
         overwrite=False の場合、既に存在していたら何もせず "exists" を返す。
@@ -504,8 +504,8 @@ class FS_Judging:
 
             data = {
                 "thread_id": th_id,
+                "favorite": {},
                 "circle": {},
-                "triangle": {},
                 "cross": {},
                 "caution": {},
             }
@@ -533,8 +533,8 @@ class FS_Judging:
         {
             "message_id1": {
                 "thread_id": "...",
+                "favorite": {...},
                 "circle": {...},
-                "triangle": {...},
                 "cross": {...},
                 "caution": {...},
             },
@@ -565,8 +565,8 @@ class FS_Judging:
 
                 result[message_id] = {
                     "thread_id": data.get("thread_id"),
+                    "favorite": dict(data.get("favorite", {}) or {}),
                     "circle": dict(data.get("circle", {}) or {}),
-                    "triangle": dict(data.get("triangle", {}) or {}),
                     "cross": dict(data.get("cross", {}) or {}),
                     "caution": dict(data.get("caution", {}) or {}),
                 }

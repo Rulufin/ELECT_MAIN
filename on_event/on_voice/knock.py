@@ -194,8 +194,8 @@ class KnockService:
             or await guild.fetch_role(MAIN_ROLES.MEMBER)
         )
         p_member_role = (
-            guild.get_role(MAIN_ROLES.MEMBER_P)
-            or await guild.fetch_role(MAIN_ROLES.MEMBER_P)
+            guild.get_role(MAIN_ROLES.P_MEMBER)
+            or await guild.fetch_role(MAIN_ROLES.P_MEMBER)
         )
 
         # 専用VC作成

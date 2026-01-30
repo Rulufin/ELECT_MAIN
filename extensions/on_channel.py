@@ -36,10 +36,10 @@ class on_guild_channel_main_cog(commands.Cog):
             guild_id = channel.guild.id
 
             # 例：VCログの deleted_at を記録
-            await self.fs_voice_log.set_vc_deleted(vc_id, datetime.now(TIMEZONE))
+            await self.fs_voice_log.set_vc_deleted(vc_id=vc_id, deleted_at=datetime.now(TIMEZONE))
 
             # 集計ロジック呼ぶ（後で作る）
-            await self.voice_point_calculator.process_vc_closed(vc_id)
+            await self.voice_point_calculator.process_vc_closed(vc_id=vc_id)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(on_guild_channel_main_cog(bot))
