@@ -14,6 +14,8 @@ from on_event.on_voice.context import build_context
 from on_event.on_voice.knock import KnockService
 from on_event.on_voice.logger import VoiceLogService
 from on_event.on_voice.user_limit import UserLimitService
+from on_event.on_voice.quick_match import QM_Service
+from on_event.on_voice.delete import Delete_Service
 
 logger = logging.getLogger(__name__)
 
@@ -27,9 +29,14 @@ class On_Voice_State_Main_Cog(commands.Cog):
 
         # ノック関連のサービス
         self.knock_service = KnockService(fs_vc_tc_sync=self.fs_vc_tc_sync)
+        # QM関連のサービス
+        self.qm_service = QM_Service()
+
         # VC_LOG への書き込みサービス
         self.voice_log_service = VoiceLogService(fs_voice_log=self.fs_voice_log)
         self.user_limit_service = UserLimitService()
+
+        self.delete_service = Delete_Service()
 
     # -------------------------
     # イベント本体
@@ -56,10 +63,8 @@ class On_Voice_State_Main_Cog(commands.Cog):
         try:
             now = datetime.now(TIMEZONE)
 
-            # VoiceStateContext を構築（接続状態・カテゴリ・ノックVCなどの判定をここで完了させる）
             ctx = build_context(member, before, after, now)
             if ctx is None:
-                # ログ対象外（両方 None など）の場合
                 return
 
             await self.user_limit_service.handle_user_limit(ctx)
@@ -67,16 +72,16 @@ class On_Voice_State_Main_Cog(commands.Cog):
             if member.bot:
                 return
 
-            # 1) ノック関連の特殊処理（VC/TC権限など）
             handled = await self.knock_service.handle_knock_flow(ctx)
             if handled:
-                # 不正入室などでここで完結させたい場合はログ処理をスキップ
                 return
 
-            # 2) 通常ログ（接続 / 切断 / 移動）
-            await self.voice_log_service.log_channel_changes(ctx)
+            await self.qm_service.handle_qm_flow(ctx)
 
-            # 3) ミュートログ
+            # ★追加：削除（ログより前/後どっちでもいいが、後だと消えた後参照に注意）
+            await self.delete_service.handle_delete_flow(ctx)
+
+            await self.voice_log_service.log_channel_changes(ctx)
             await self.voice_log_service.log_mute_changes(ctx)
 
         except Exception as e:

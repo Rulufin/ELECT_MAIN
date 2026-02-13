@@ -17,6 +17,23 @@ class VC_Create_Response_Embed(Embed):
             color=SERVER_COLORS.MAIN
         )
 
+class QM_Create_Panel(Embed):
+    def __init__(self):
+        super().__init__(
+            title="__2shot作成__",
+            description=textwrap.dedent(
+                '''
+                誰かが入ってくるのを待機するお部屋を作成します。
+                -# ――――――――――――――――――――
+                2shot: メンバーから見える部屋です。
+                裏2shot: 2人揃うとメンバーから見えなくなる部屋です。
+                -# ――――――――――――――――――――
+                同性⭕️: 同性でも見えるお部屋です。
+                同性❌️: 異性にしか見えないお部屋です。
+                '''
+            )
+        )
+
 class VC_Menu_Embed(Embed):
     def __init__(self, vc_type, user_id):
         super().__init__(title="__VCメニュー__", color=SERVER_COLORS.MAIN)
@@ -38,6 +55,11 @@ class VC_Menu_Embed(Embed):
             self.add_field(name=f"{DEFAULT.SLEEP}__寝落ち切断__", value="寝落ちた人を切断できます。", inline=False)
             self.add_field(name=f"{DEFAULT.MALE_HEART}__ユーザー招待__", value="この個室にユーザーを招待します。", inline=False)
             self.set_footer(text=f"{user_id}")
+        elif vc_type == "QM":
+            self.add_field(name=f"{DEFAULT.MEMO}__名前/ステータス変更__", value="部屋名とチャンネルステータスを変更できます。", inline=False)
+            self.add_field(name=f"{DEFAULT.HEADPHONE}__ビットレート変更__", value="ビットレートを変更できます。", inline=False)
+            self.add_field(name=f"{DEFAULT.SLEEP}__寝落ち切断__", value="寝落ちた人を切断できます。", inline=False)
+
 
 class VC_Status_Change_Embed(Embed):
     def __init__(self, change_type, name: str = "", status: str = None, user_limit: int = None, bitrate: int = None):

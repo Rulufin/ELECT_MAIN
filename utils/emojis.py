@@ -52,6 +52,9 @@ class DEFAULT:
 
     SLEEP = "💤"
 
+    SUN = "☀️"
+    MOON = "🌙"
+
     # 物
     HEADPHONE = "🎧"
     DOOR = "🚪"

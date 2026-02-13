@@ -62952,3 +62952,751 @@ aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host gateway-u
 行番号: 333
 メッセージ: [MUTE_OFF] sara.oni @ 1466732391534952553 (category_id=1423777741697974292)
 -------------------------------
+日時: 2026-01-30 19:48:15,473
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 324
+メッセージ: [MUTE_ON] puniodesuyo @ 1466732391534952553 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-01-30 19:48:25,961
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] puniodesuyo ← 1466732391534952553 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-01-30 19:51:47,867
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 96
+メッセージ: [JOIN] natsu72. → 1466732391534952553 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 22:38:20,855
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2026-02-13 22:38:20,875
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2026-02-13 22:38:21,735
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2026-02-13 22:41:58,978
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2026-02-13 22:41:58,981
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2026-02-13 22:41:59,627
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2026-02-13 22:42:01,030
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 322f1d6fba374e7f1e045ee95cd7877a).
+-------------------------------
+日時: 2026-02-13 22:43:58,700
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2026-02-13 22:43:58,703
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2026-02-13 22:43:58,747
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2026-02-13 22:43:58,830
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2026-02-13 22:43:59,042
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 324
+メッセージ: [MUTE_ON] nekko_kaaii @ 1471844063773720608 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 22:43:59,680
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] nekko_kaaii ← 1471844063773720608 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 22:46:31,142
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2026-02-13 22:46:31,144
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2026-02-13 22:46:31,805
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2026-02-13 22:47:41,020
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2026-02-13 22:47:41,021
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2026-02-13 22:47:41,672
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2026-02-13 22:47:42,424
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 724f591c46eed657d2308a81035d8963).
+-------------------------------
+日時: 2026-02-13 22:48:22,975
+ファイル名: tree.py
+関数名: on_error
+ログレベル: ERROR
+行番号: 819
+メッセージ: Ignoring exception in command 'vc作成パネル'
+-------------------------------
+Traceback (most recent call last):
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DiscordBots\ELECT\ELECT_MAIN\extensions\vc_create.py", line 36, in vc_create_panel
+    embed, view = type_map.get(vc_type)
+    ^^^^^^^^^^^
+TypeError: cannot unpack non-iterable NoneType object
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\app_commands\tree.py", line 1297, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\app_commands\commands.py", line 884, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\houra.G-K\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\app_commands\commands.py", line 873, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'vc作成パネル' raised an exception: TypeError: cannot unpack non-iterable NoneType object
+日時: 2026-02-13 22:49:04,634
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2026-02-13 22:49:04,638
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2026-02-13 22:49:04,684
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2026-02-13 22:49:04,750
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2026-02-13 22:49:05,025
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] nao_babu ← 1471855362507542630 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 22:50:27,873
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2026-02-13 22:50:27,874
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2026-02-13 22:50:28,507
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2026-02-13 22:50:29,265
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: a32df9b503413cb52d457ff2e24cf66c).
+-------------------------------
+日時: 2026-02-13 22:50:36,577
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2026-02-13 22:50:36,580
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2026-02-13 22:50:36,622
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2026-02-13 22:50:36,692
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2026-02-13 22:50:36,926
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 96
+メッセージ: [JOIN] nao_babu → 1471855362507542630 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 22:50:40,288
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 333
+メッセージ: [MUTE_OFF] nao_babu @ 1471855362507542630 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 22:50:48,721
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 523
+メッセージ: BlackListを取得しました: 1106998270468829295 -> 0件
+-------------------------------
+日時: 2026-02-13 22:55:38,508
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] sora6198 ← 1471844063773720608 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 22:59:32,114
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 96
+メッセージ: [JOIN] ____rr. → 1471844063773720608 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 22:59:55,689
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] f0781_59696 ← 1471855362507542630 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 23:01:15,486
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] ____rr. ← 1471844063773720608 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 23:01:17,626
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 96
+メッセージ: [JOIN] ____rr. → 1471844063773720608 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 23:01:56,658
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] ____rr. ← 1471844063773720608 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 23:06:18,596
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] aru6z ← 1471844063773720608 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 23:06:19,440
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] tanukinaritai ← 1471844063773720608 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 23:06:20,943
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 306
+メッセージ: [VoicePointCalculator] Processed VC 1471844063773720608: type=normal category_id=1423777741697974292 owner=1306627130376847461 owner_points=30 connect_saved=5
+-------------------------------
+日時: 2026-02-13 23:06:44,858
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2026-02-13 23:06:44,860
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2026-02-13 23:06:45,440
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2026-02-13 23:06:46,975
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: 9f7c9d79a95fd39887f79fe7d434d62d).
+-------------------------------
+日時: 2026-02-13 23:07:00,373
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2026-02-13 23:07:00,376
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2026-02-13 23:07:00,433
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2026-02-13 23:07:00,504
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2026-02-13 23:07:00,899
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: WARNING
+行番号: 154
+メッセージ: [VoicePointCalculator] vc=1465562486005694485 category_id=1465561891375026216 => vc_type unresolved. skip.
+-------------------------------
+日時: 2026-02-13 23:07:03,434
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: WARNING
+行番号: 154
+メッセージ: [VoicePointCalculator] vc=1465562116760273086 category_id=1465561891375026216 => vc_type unresolved. skip.
+-------------------------------
+日時: 2026-02-13 23:07:07,083
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 96
+メッセージ: [JOIN] minto56_56 → 1471866210814660823 (category_id=1423780957722513518)
+-------------------------------
+日時: 2026-02-13 23:07:10,630
+ファイル名: delete.py
+関数名: _delete_if_empty_with_retry
+ログレベル: INFO
+行番号: 93
+メッセージ: [delete] deleted VC channel=1471866210814660823
+-------------------------------
+日時: 2026-02-13 23:07:10,725
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] minto56_56 ← 1471866210814660823 (category_id=1423780957722513518)
+-------------------------------
+日時: 2026-02-13 23:07:10,733
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 282
+メッセージ: [VoicePointCalculator] VC 1471866210814660823 connect: no eligible members (block unmet). skip all connect awards.
+-------------------------------
+日時: 2026-02-13 23:07:10,772
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 306
+メッセージ: [VoicePointCalculator] Processed VC 1471866210814660823: type=public_room category_id=1423780957722513518 owner=1106998270468829295 owner_points=0 connect_saved=0
+-------------------------------
+日時: 2026-02-13 23:07:23,705
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 523
+メッセージ: BlackListを取得しました: 1106998270468829295 -> 0件
+-------------------------------
+日時: 2026-02-13 23:09:23,071
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 96
+メッセージ: [JOIN] minto56_56 → 1471870384033894514 (category_id=1423781854867361832)
+-------------------------------
+日時: 2026-02-13 23:09:53,841
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 96
+メッセージ: [JOIN] hazakura_03241 → 1471870384033894514 (category_id=1423781854867361832)
+-------------------------------
+日時: 2026-02-13 23:10:19,351
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] minto56_56 ← 1471870384033894514 (category_id=1423781854867361832)
+-------------------------------
+日時: 2026-02-13 23:10:21,868
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 282
+メッセージ: [VoicePointCalculator] VC 1471870384033894514 connect: no eligible members (block unmet). skip all connect awards.
+-------------------------------
+日時: 2026-02-13 23:10:21,883
+ファイル名: delete.py
+関数名: _delete_if_empty_with_retry
+ログレベル: INFO
+行番号: 93
+メッセージ: [delete] deleted VC channel=1471870384033894514
+-------------------------------
+日時: 2026-02-13 23:10:21,900
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 306
+メッセージ: [VoicePointCalculator] Processed VC 1471870384033894514: type=secret_room category_id=1423781854867361832 owner=1106998270468829295 owner_points=0 connect_saved=0
+-------------------------------
+日時: 2026-02-13 23:10:21,966
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] hazakura_03241 ← 1471870384033894514 (category_id=1423781854867361832)
+-------------------------------
+日時: 2026-02-13 23:12:33,527
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 324
+メッセージ: [MUTE_ON] enserio_mazide @ 1471854324698321030 (category_id=1423779258794508420)
+-------------------------------
+日時: 2026-02-13 23:13:03,970
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 324
+メッセージ: [MUTE_ON] lv__u @ 1471854324698321030 (category_id=1423779258794508420)
+-------------------------------
+日時: 2026-02-13 23:13:03,984
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 333
+メッセージ: [MUTE_OFF] lv__u @ 1471854324698321030 (category_id=1423779258794508420)
+-------------------------------
+日時: 2026-02-13 23:13:04,811
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] lv__u ← 1471854324698321030 (category_id=1423779258794508420)
+-------------------------------
+日時: 2026-02-13 23:13:11,802
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 96
+メッセージ: [JOIN] lv__u → 1471854324698321030 (category_id=1423779258794508420)
+-------------------------------
+日時: 2026-02-13 23:13:24,286
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 333
+メッセージ: [MUTE_OFF] enserio_mazide @ 1471854324698321030 (category_id=1423779258794508420)
+-------------------------------
+日時: 2026-02-13 23:13:31,407
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 324
+メッセージ: [MUTE_ON] enserio_mazide @ 1471854324698321030 (category_id=1423779258794508420)
+-------------------------------
+日時: 2026-02-13 23:13:34,337
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 333
+メッセージ: [MUTE_OFF] enserio_mazide @ 1471854324698321030 (category_id=1423779258794508420)
+-------------------------------
+日時: 2026-02-13 23:14:54,639
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 96
+メッセージ: [JOIN] mugenn1172 → 1471855362507542630 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 23:14:57,059
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 333
+メッセージ: [MUTE_OFF] mugenn1172 @ 1471855362507542630 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 23:16:48,327
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 324
+メッセージ: [MUTE_ON] enununucha @ 1471855362507542630 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 23:17:47,615
+ファイル名: logger.py
+関数名: log_mute_changes
+ログレベル: INFO
+行番号: 333
+メッセージ: [MUTE_OFF] enununucha @ 1471855362507542630 (category_id=1423777741697974292)
+-------------------------------
+日時: 2026-02-13 23:19:27,123
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2026-02-13 23:19:27,124
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2026-02-13 23:19:27,944
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2026-02-13 23:19:28,617
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: f1db5fba820d309dc7e5d09516017351).
+-------------------------------
+日時: 2026-02-13 23:19:33,194
+ファイル名: user_limit.py
+関数名: _apply_delta
+ログレベル: DEBUG
+行番号: 67
+メッセージ: [UserLimit] ch=1471854324698321030 user_limit 3 -> 3 (delta=1)
+-------------------------------
+日時: 2026-02-13 23:23:43,601
+ファイル名: fs_queuemanager.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2026-02-13 23:23:43,606
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2026-02-13 23:23:43,655
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2026-02-13 23:23:43,730
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2026-02-13 23:23:43,814
+ファイル名: fs_list_manager.py
+関数名: _get_list
+ログレベル: INFO
+行番号: 523
+メッセージ: BlackListを取得しました: 1106998270468829295 -> 0件
+-------------------------------
+日時: 2026-02-13 23:23:52,643
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 96
+メッセージ: [JOIN] minto56_56 → 1471874494804135966 (category_id=1423781854867361832)
+-------------------------------
+日時: 2026-02-13 23:24:52,770
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 96
+メッセージ: [JOIN] hazakura_03241 → 1471874494804135966 (category_id=1423781854867361832)
+-------------------------------
+日時: 2026-02-13 23:25:15,349
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] hazakura_03241 ← 1471874494804135966 (category_id=1423781854867361832)
+-------------------------------
+日時: 2026-02-13 23:25:15,912
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 96
+メッセージ: [JOIN] hazakura_03241 → 1471874494804135966 (category_id=1423781854867361832)
+-------------------------------
+日時: 2026-02-13 23:25:27,045
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] hazakura_03241 ← 1471874494804135966 (category_id=1423781854867361832)
+-------------------------------
+日時: 2026-02-13 23:25:34,973
+ファイル名: delete.py
+関数名: _delete_if_empty_with_retry
+ログレベル: INFO
+行番号: 93
+メッセージ: [delete] deleted VC channel=1471874494804135966
+-------------------------------
+日時: 2026-02-13 23:25:35,064
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 282
+メッセージ: [VoicePointCalculator] VC 1471874494804135966 connect: no eligible members (block unmet). skip all connect awards.
+-------------------------------
+日時: 2026-02-13 23:25:35,070
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] minto56_56 ← 1471874494804135966 (category_id=1423781854867361832)
+-------------------------------
+日時: 2026-02-13 23:25:35,095
+ファイル名: voice_point_calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 306
+メッセージ: [VoicePointCalculator] Processed VC 1471874494804135966: type=secret_room category_id=1423781854867361832 owner=1106998270468829295 owner_points=0 connect_saved=0
+-------------------------------
+日時: 2026-02-13 23:34:31,441
+ファイル名: logger.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 132
+メッセージ: [LEAVE] enununucha ← 1471855362507542630 (category_id=1423777741697974292)
+-------------------------------

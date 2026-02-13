@@ -86,8 +86,7 @@ VC_POINT_RULES: Mapping[VCType, VC_Point_Rule] = {
         include_speaker_mute=False,
 
         category_ids=(
-            MAIN_CATEGORIES.SECRET_QM_MALE,
-            MAIN_CATEGORIES.SECRET_QM_FEMALE,
+            MAIN_CATEGORIES.SECRET_QM,
             MAIN_CATEGORIES.SECRET_ROOM,
         ),
     ),

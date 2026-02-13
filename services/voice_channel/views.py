@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands, tasks
 from discord import (
-    app_commands, Interaction, PermissionOverwrite,
+    app_commands, Interaction, PermissionOverwrite, Permissions,
     SelectOption, TextStyle, ChannelType, ButtonStyle,
     Member, User, Thread, TextChannel, VoiceChannel, ForumChannel, Guild,
     Emoji, PartialEmoji,
@@ -32,6 +32,7 @@ from services.system.embeds import *
 
 from firestores.fs_vc_tc_sync import FS_VC_TC_SYNC
 from firestores.fs_user_info import FS_Profile
+from firestores.fs_list_manager import FS_BlackList
 
 from utils.ids import *
 from utils.emojis import *
@@ -43,6 +44,128 @@ FILENAME = "voice_channel_views"
 
 logger = logging.getLogger(__name__)
 
+# ─────────────────────────
+# 作成
+# ─────────────────────────
+class VC_Create_QM_Panel_View(View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(Create_Two_Button(label="2shot", emoji=DEFAULT.SUN, style=ButtonStyle.gray, row=0, vc_type="QM", per_type="public"))
+        self.add_item(Create_Two_Button(label="同性⭕️裏2shot", emoji=DEFAULT.MOON, style=ButtonStyle.gray, row=1, vc_type="S_QM", per_type="public"))
+        self.add_item(Create_Two_Button(label="同性❌️裏2shot", emoji=DEFAULT.MOON, style=ButtonStyle.gray, row=1, vc_type="S_QM", per_type="secret"))
+
+class Create_Two_Button(Button):
+    def __init__(self, label, emoji, style, row, vc_type, per_type):
+        super().__init__(
+            label=label,
+            emoji=emoji,
+            style=style,
+            row=row,
+            custom_id=f"{FILENAME}_{label}_{vc_type}_{self.__class__.__name__}",
+        )
+        self.vc_type = vc_type
+        self.per_type = per_type
+        self.emoji = emoji
+        self.bl_list = FS_BlackList()
+
+    async def callback(self, interaction: Interaction):
+        await interaction.response.defer(ephemeral=True)
+
+        type_map = {
+            "QM":   (MAIN_CATEGORIES.PUBLIC_QM, 2, QM_Menu_View()),
+            "S_QM": (MAIN_CATEGORIES.SECRET_QM, 2, QM_Menu_View()),
+        }
+
+        picked = type_map.get(self.vc_type)
+        if not picked:
+            await interaction.followup.send("不明なVCタイプです。", ephemeral=True)
+            return
+
+        category_id, user_limit, view = picked
+
+        guild = interaction.guild
+        if guild is None:
+            await interaction.followup.send("ギルド外では使えません。", ephemeral=True)
+            return
+
+        # Member保証（guild内なら基本 Member）
+        user = interaction.user
+        if not isinstance(user, Member):
+            user = guild.get_member(interaction.user.id) or await guild.fetch_member(interaction.user.id)
+
+        # category / roles
+        category = guild.get_channel(category_id) or await guild.fetch_channel(category_id)
+
+        member_role   = guild.get_role(MAIN_ROLES.MEMBER)   or await guild.fetch_role(MAIN_ROLES.MEMBER)
+        p_member_role = guild.get_role(MAIN_ROLES.P_MEMBER) or await guild.fetch_role(MAIN_ROLES.P_MEMBER)
+        male_role     = guild.get_role(MAIN_ROLES.MALE)     or await guild.fetch_role(MAIN_ROLES.MALE)
+        p_male_role   = guild.get_role(MAIN_ROLES.P_MALE)   or await guild.fetch_role(MAIN_ROLES.P_MALE)
+        female_role   = guild.get_role(MAIN_ROLES.FEMALE)   or await guild.fetch_role(MAIN_ROLES.FEMALE)
+        p_female_role = guild.get_role(MAIN_ROLES.P_FEMALE) or await guild.fetch_role(MAIN_ROLES.P_FEMALE)
+
+        # =========
+        # overwrites は dict[Snowflake, PermissionOverwrite]
+        # =========
+        overwrites: dict[discord.abc.Snowflake, PermissionOverwrite] = {}
+
+        # ---- public / secret
+        if self.per_type == "public":
+            overwrites[guild.default_role] = PermissionOverwrite(view_channel=False, connect=False)
+            overwrites[member_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
+            overwrites[p_member_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
+
+        elif self.per_type == "secret":
+            overwrites[guild.default_role] = PermissionOverwrite(view_channel=False, connect=False)
+
+            user_role_ids = {r.id for r in user.roles}
+            if MAIN_ROLES.MALE in user_role_ids:
+                overwrites[female_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
+                overwrites[p_female_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
+            else:
+                overwrites[male_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
+                overwrites[p_male_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
+
+            # 作成者本人が入れない事故防止（ロール設計で必ず入れるなら削ってOK）
+            overwrites[user] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
+
+        else:
+            await interaction.followup.send("不明なper_typeです。", ephemeral=True)
+            return
+
+        # ---- blacklist：Memberへdeny overwriteを付与
+        result = await self.bl_list.get_list(str(user.id))
+        if result and result != "NOT_FOUND":
+            ids = [int(entry["id"]) for entry in result if isinstance(entry, dict) and "id" in entry]
+            for target_id in ids:
+                target = guild.get_member(target_id)
+                if target is None:
+                    # 多いと重いので、必要な時だけ fetch
+                    try:
+                        target = await guild.fetch_member(target_id)
+                    except discord.NotFound:
+                        continue
+
+                overwrites[target] = PermissionOverwrite(view_channel=False, connect=False)
+
+        # =========
+        # VC 作成
+        # =========
+        new_vc = await guild.create_voice_channel(
+            name=f"{self.emoji}{user.display_name}'s Room",
+            category=category,
+            user_limit=user_limit,
+            overwrites=overwrites,
+        )
+
+        # =========
+        # VCにメニュー送信（voice-in-textchannelが有効なら通る）
+        # =========
+        menu_embed = VC_Menu_Embed(vc_type="QM", user_id=user.id)
+        await new_vc.send(content=f"{user.mention}", embed=menu_embed, view=view)
+
+        response_embed = VC_Create_Response_Embed(channel_id=new_vc.id)
+        await interaction.followup.send(embed=response_embed, ephemeral=True)
+
 # 会議
 class Group_Knock_Menu_View(View):
     def __init__(self):
@@ -51,6 +174,13 @@ class Group_Knock_Menu_View(View):
         self.add_item(UserLimit_Change_Button(label="人数変更", emoji=DEFAULT.PEOPLE_TWO, style=ButtonStyle.gray, row=0))
         self.add_item(Bitrate_Change_Button(label="ビットレート変更", emoji=DEFAULT.HEADPHONE, style=ButtonStyle.gray, row=1))
         self.add_item(Knock_Button(label="ノック", emoji=DEFAULT.DOOR, style=ButtonStyle.green, row=2))
+
+# QM
+class QM_Menu_View(View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(Name_Change_Button(label="部屋名変更", emoji=DEFAULT.MEMO, style=ButtonStyle.gray, row=0))
+        self.add_item(Bitrate_Change_Button(label="ビットレート変更", emoji=DEFAULT.HEADPHONE, style=ButtonStyle.gray, row=1))
 
 class Name_Change_Button(Button):
     def __init__(self, label, emoji, style, row):
@@ -284,7 +414,6 @@ class Bitrate_Change_Modal(Modal):
             error_embed = VC_Internal_Error_Embed()
             await interaction.followup.send(embed=error_embed, ephemeral=True)
 
-
 class Sleep_Button(Button):
     def __init__(self, label: str, emoji: Optional[Emoji | PartialEmoji | str], style: ButtonStyle, row: int):
         super().__init__(
@@ -337,7 +466,6 @@ class Sleep_Button(Button):
         ).set_footer(text=f"ページ: 1/{view.total_pages}")
 
         await interaction.followup.send(embed=embed, view=view, ephemeral=True)
-
 
 class Sleep_Select_Menu(View):
     def __init__(self, options: List[SelectOption], max_items_per_page: int = 25):
@@ -428,7 +556,6 @@ class Sleep_Select_Menu(View):
         self.update_menu()
         await interaction.response.edit_message(embed=self.embed, view=self)
 
-
 # ─────────────────────────
 # ページ切り替えボタン
 # ─────────────────────────
@@ -443,7 +570,6 @@ class PrevPageButton(Button):
         view.embed.set_footer(text=f"ページ: {view.current_page + 1}/{view.total_pages}")
         await interaction.response.edit_message(embed=view.embed, view=view)
 
-
 class NextPageButton(Button):
     def __init__(self):
         super().__init__(label="次のページ", style=ButtonStyle.gray)
@@ -454,7 +580,6 @@ class NextPageButton(Button):
         view.update_menu()
         view.embed.set_footer(text=f"ページ: {view.current_page + 1}/{view.total_pages}")
         await interaction.response.edit_message(embed=view.embed, view=view)
-
 
 # ─────────────────────────
 # 選択操作系ボタン
@@ -481,7 +606,6 @@ class SelectAllButton(Button):
         view.update_menu()
         await interaction.response.edit_message(embed=view.embed, view=view)
 
-
 class ResetSelectionButton(Button):
     def __init__(self):
         super().__init__(label="選択をリセット", style=ButtonStyle.gray)
@@ -504,7 +628,6 @@ class ResetSelectionButton(Button):
         view.update_menu()
         await interaction.response.edit_message(embed=view.embed, view=view)
 
-
 class ConfirmButton(Button):
     def __init__(self):
         super().__init__(label="確定", style=discord.ButtonStyle.green)
@@ -513,7 +636,6 @@ class ConfirmButton(Button):
         view = cast(Sleep_Select_Menu, self.view)
         modal = DisconnectUsersModal(view.selected_items)
         await interaction.response.send_modal(modal)
-
 
 class DisconnectUsersModal(Modal):
     def __init__(self, selected_users):

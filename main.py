@@ -21,6 +21,7 @@ extensions = (
     'secret_recruit',
 
     'points',
+    'vc_create',
 )
 
 class MyBot(commands.Bot):

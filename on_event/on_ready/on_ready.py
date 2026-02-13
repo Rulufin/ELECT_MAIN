@@ -15,7 +15,8 @@ from services.list_manager.views import (
     Blacklist_Manage_View, Blacklist_Add_View, 
 )
 from services.voice_channel.views import (
-    Group_Knock_Menu_View, VC_Knock_Receive_View
+    Group_Knock_Menu_View, VC_Knock_Receive_View,
+    VC_Create_QM_Panel_View, QM_Menu_View
 )
 
 async def on_ready_view(bot: commands.Bot):
@@ -35,6 +36,7 @@ async def on_ready_view(bot: commands.Bot):
 
         # VC系
         Group_Knock_Menu_View(), VC_Knock_Receive_View(),
+        VC_Create_QM_Panel_View(), QM_Menu_View()
     ]
 
     for view in views:
