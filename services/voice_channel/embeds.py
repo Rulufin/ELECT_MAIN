@@ -33,6 +33,7 @@ class QM_Create_Panel(Embed):
                 '''
             )
         )
+        self.set_footer(text="作成者のブラックリストが反映されます。")
 
 class VC_Menu_Embed(Embed):
     def __init__(self, vc_type, user_id):
