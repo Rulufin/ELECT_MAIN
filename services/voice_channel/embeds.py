@@ -30,10 +30,11 @@ class QM_Create_Panel(Embed):
                 -# ――――――――――――――――――――
                 同性⭕️: 同性でも見えるお部屋です。
                 同性❌️: 異性にしか見えないお部屋です。
+
+                -# ※作成者の[ブラックリスト](https://discord.com/channels/1421436016442740749/1471878931518066893/1471878983661522974)が反映されます。
                 '''
             )
         )
-        self.set_footer(text="作成者のブラックリストが反映されます。")
 
 class VC_Menu_Embed(Embed):
     def __init__(self, vc_type, user_id):
