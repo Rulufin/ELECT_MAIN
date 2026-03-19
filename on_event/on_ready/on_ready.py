@@ -14,9 +14,14 @@ from services.recruit.views import (
 from services.list_manager.views import (
     Blacklist_Manage_View, Blacklist_Add_View, 
 )
-from services.voice_channel.views import (
+from services.voice.ui.views import (
     Group_Knock_Menu_View, VC_Knock_Receive_View,
     VC_Create_QM_Panel_View, QM_Menu_View
+)
+
+from services.points.ui.views import (
+    Point_Panel_View, Points_Thread_View,
+    Point_Check_View, Point_Use_View, Points_Close_View
 )
 
 async def on_ready_view(bot: commands.Bot):
@@ -36,7 +41,11 @@ async def on_ready_view(bot: commands.Bot):
 
         # VC系
         Group_Knock_Menu_View(), VC_Knock_Receive_View(),
-        VC_Create_QM_Panel_View(), QM_Menu_View()
+        VC_Create_QM_Panel_View(), QM_Menu_View(),
+
+        # ポイント系
+        Point_Panel_View(), Points_Thread_View(),
+        Point_Check_View(), Point_Use_View(), Points_Close_View()
     ]
 
     for view in views:

@@ -27,7 +27,7 @@ from typing import Optional, Set, cast
 
 from helpers.http import *
 
-from services.voice_channel.embeds import *
+from services.voice.ui.embeds import *
 from services.system.embeds import *
 
 from firestores.fs_vc_tc_sync import FS_VC_TC_SYNC
@@ -112,7 +112,7 @@ class Create_Two_Button(Button):
         if self.per_type == "public":
             overwrites[guild.default_role] = PermissionOverwrite(view_channel=False, connect=False)
             overwrites[member_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
-            overwrites[p_member_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
+            # overwrites[p_member_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
 
         elif self.per_type == "secret":
             overwrites[guild.default_role] = PermissionOverwrite(view_channel=False, connect=False)
@@ -120,10 +120,10 @@ class Create_Two_Button(Button):
             user_role_ids = {r.id for r in user.roles}
             if MAIN_ROLES.MALE in user_role_ids:
                 overwrites[female_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
-                overwrites[p_female_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
+                # overwrites[p_female_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
             else:
                 overwrites[male_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
-                overwrites[p_male_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
+                # overwrites[p_male_role] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
 
             # 作成者本人が入れない事故防止（ロール設計で必ず入れるなら削ってOK）
             overwrites[user] = PermissionOverwrite(view_channel=True, connect=True, speak=True)
@@ -228,7 +228,12 @@ class Name_Change_Modal(Modal):
         
         new_name_text = self.name_input.value
 
-        new_name = f"{DEFAULT.DOOR}{new_name_text}"
+        category = interaction.channel.category
+
+        if category.id == MAIN_CATEGORIES.KNOCK_CATEGORY:
+            new_name = f"{DEFAULT.DOOR}{new_name_text}"
+        else:
+            new_name = f"{new_name_text}"
 
         new_status = self.status_input.value
 

@@ -21,9 +21,16 @@ class Points_Type(StrEnum):
     PENALTY = "Penalty"
     ADJUST = "Adjust"
 
+    # ───── 使用 ─────
+    USE_ICON_EMOJI = "Use_Icon_Emoji"
+    USE_PRIVATE = "Use_Private"
+    USE_ROLE = "Use_Role"
+    USE_OTHER = "Use_Other"
+
 class Genre_Type(StrEnum):
     VC = "VC"
     PLAY = "PLAY"
     USER = "USER"
     PHOTO = "PHOTO"
     ADMIN = "ADMIN"
+    USE = "USE"

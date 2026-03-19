@@ -5,8 +5,8 @@ from discord import (
     app_commands, Interaction, TextChannel
 )
 
-from services.voice_channel.embeds import QM_Create_Panel
-from services.voice_channel.views import VC_Create_QM_Panel_View
+from services.voice.ui.embeds import QM_Create_Panel
+from services.voice.ui.views import VC_Create_QM_Panel_View
 
 from utils.ids import MAIN_CHANNELS
 

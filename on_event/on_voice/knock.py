@@ -9,8 +9,8 @@ import logging
 from typing import Optional
 
 from firestores.fs_vc_tc_sync import FS_VC_TC_SYNC
-from services.voice_channel.embeds import VC_Menu_Embed, VC_Knock_Disconnect_Embed
-from services.voice_channel.views import Group_Knock_Menu_View
+from services.voice.ui.embeds import VC_Menu_Embed, VC_Knock_Disconnect_Embed
+from services.voice.ui.views import Group_Knock_Menu_View
 
 from .configs import MAIN_CATEGORIES, MAIN_CHANNELS, FILENAME
 from .context import VoiceStateContext

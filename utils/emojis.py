@@ -55,6 +55,8 @@ class DEFAULT:
     SUN = "☀️"
     MOON = "🌙"
 
+    TWINKLE = "✨"
+
     # 物
     HEADPHONE = "🎧"
     DOOR = "🚪"

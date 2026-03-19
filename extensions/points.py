@@ -7,6 +7,10 @@ from discord import (
 
 from firestores.fs_voice_log import FS_Voice_Log
 
+from services.points.ui.embeds import Point_Panel_Embed
+from services.points.ui.views import Point_Panel_View
+
+
 FILENAME = "points_main_cog"
 
 class Points_Main_Cog(commands.Cog):
@@ -29,6 +33,17 @@ class Points_Main_Cog(commands.Cog):
         )
 
         await interaction.followup.send(embed=embed)
+
+    @app_commands.command(name="ポイントパネル", description="ポイント用のパネルを出力します。")
+    @app_commands.guild_only()
+    @app_commands.default_permissions(administrator=True)
+    async def point_panel_command(self, interaction: Interaction):
+        await interaction.response.send_message(content="パネルを出力します。", ephemeral=True)
+
+        embed = Point_Panel_Embed()
+        view = Point_Panel_View()
+
+        await interaction.channel.send(embed=embed, view=view)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Points_Main_Cog(bot))
