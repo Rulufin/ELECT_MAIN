@@ -704,3 +704,86 @@ class FS_Points:
             "totals_by_genre": by_genre,
             "flat_totals": by_flat if also_rebuild_flat_fields else None,
         }
+
+    # ─────────────────────────
+    # all users totals
+    # ─────────────────────────
+
+    async def list_all_user_totals(
+        self,
+        *,
+        limit: int = 5000,
+        order_desc: bool = True,
+        include_zero: bool = True,
+    ) -> List[Dict[str, Any]]:
+        """
+        全ユーザーの total_points を一覧で返す。
+
+        returns:
+            [
+                {
+                    "user_id": "1234567890",
+                    "total_points": 150,
+                    "last_updated_at": ...,
+                    "last_recalc_at": ...,
+                },
+                ...
+            ]
+        """
+        out: List[Dict[str, Any]] = []
+
+        try:
+            q = self.db.collection(self.root)
+
+            # total_points 順で見たいケースが多いので並び替え対応
+            direction = (
+                firestore.Query.DESCENDING
+                if order_desc
+                else firestore.Query.ASCENDING
+            )
+            q = q.order_by("total_points", direction=direction)
+
+            i = 0
+            async for snap in q.stream():
+                i += 1
+                if i > int(limit):
+                    break
+
+                data = snap.to_dict() or {}
+                total_points = int(data.get("total_points", 0) or 0)
+
+                if not include_zero and total_points == 0:
+                    continue
+
+                out.append(
+                    {
+                        "user_id": str(snap.id),
+                        "total_points": total_points,
+                        "last_updated_at": data.get("last_updated_at"),
+                        "last_recalc_at": data.get("last_recalc_at"),
+                    }
+                )
+
+        except Exception as e:
+            logger.error(f"[FS_Points] list_all_user_totals error: {e}", exc_info=True)
+
+        return out
+
+    async def list_all_user_totals_map(
+        self,
+        *,
+        limit: int = 5000,
+        include_zero: bool = True,
+    ) -> Dict[str, int]:
+        """
+        全ユーザーの total_points を {user_id: total_points} で返す。
+        """
+        rows = await self.list_all_user_totals(
+            limit=limit,
+            order_desc=True,
+            include_zero=include_zero,
+        )
+        return {
+            str(row["user_id"]): int(row.get("total_points", 0) or 0)
+            for row in rows
+        }

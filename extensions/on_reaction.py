@@ -1,14 +1,21 @@
-import discord
-from discord.ext import commands
-from discord import (
-    Interaction,
-    User, Member, Message, Role, Guild
-)
-
-from utils.ids import *
-
-from typing import Optional
 import logging
+
+import discord
+from discord import Guild, Member, Message, TextChannel
+from discord.ext import commands
+
+from services.judging.profile.service import ProfileJudgingService
+
+from utils.discord_helpers.resolve import (
+    resolve_guild,
+    resolve_member,
+    resolve_message,
+    resolve_text_channel,
+)
+from utils.discord_helpers.check import (
+    has_any_role
+)
+from utils.ids import *
 
 logger = logging.getLogger(__name__)
 
@@ -16,51 +23,55 @@ FILENAME = "on_reaction_main"
 
 ADMINISTRATOR_IDS = [
     MAIN_ROLES.ADMINISTRATOR_ONE,
-    MAIN_ROLES.ADMINISTRATOR_TWO
+    MAIN_ROLES.ADMINISTRATOR_TWO,
 ]
+
 
 class On_Reaction_Main_Cog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+        self.profile_judge_service = ProfileJudgingService()
 
     @commands.Cog.listener()
-    async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
+    async def on_raw_reaction_add(
+        self,
+        payload: discord.RawReactionActionEvent,
+    ) -> None:
 
-        guild_id: Optional[int] = payload.guild_id
-        if guild_id is None:
+        guild: Guild | None = await resolve_guild(self.bot, payload.guild_id)
+        if guild is None:
             # DM などギルド外はスキップ
             return
 
-        guild = self.bot.get_guild(guild_id) or await self.bot.fetch_guild(guild_id)
-        if guild is None:
-            return
-
-        user_id = payload.user_id
-        member = guild.get_member(user_id) or await guild.fetch_member(user_id)
-        if member is None or member.bot:
+        member: Member | None = await resolve_member(
+            guild,
+            payload.user_id,
+            allow_bot=False,
+        )
+        if member is None:
             return
 
         # ADMINISTRATOR_IDS のロールを持っているか
-        if not any(role.id in ADMINISTRATOR_IDS for role in member.roles):
+        if not has_any_role(member, ADMINISTRATOR_IDS):
             return
 
         channel_id = payload.channel_id
         if channel_id != MAIN_CHANNELS.PROFILE_PROVISIONAL:
             return
 
-        # チャンネル取得
-        channel = guild.get_channel(channel_id) or await guild.fetch_channel(channel_id)
+        channel: TextChannel | None = await resolve_text_channel(guild, channel_id)
         if channel is None:
             return
 
-        # メッセージ取得（★awaitが必要）
-        message_id = payload.message_id
-        message = await channel.fetch_message(message_id)
+        message: Message | None = await resolve_message(channel, payload.message_id)
+        if message is None:
+            return
 
-        # 実処理へ
-        from on_event.on_reactions.judging import on_reaction_judging
-        await on_reaction_judging(guild=guild, message=message)
+        await self.profile_judge_service.start_from_reaction(
+            guild=guild,
+            message=message,
+        )
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(On_Reaction_Main_Cog(bot))

@@ -1,5 +1,7 @@
 import re
-from typing import Iterable, Any
+from typing import Iterable, Any, Optional
+
+from discord import Embed
 
 MENTION_ID_RE = re.compile(r"<@!?(?P<id>\d+)>")
 
@@ -39,3 +41,15 @@ def coerce_user_ids(obj: Any) -> set[int]:
         return ids
 
     return ids
+
+def coerce_user_ids_or_raw_id(obj: Any) -> set[int]:
+    ids = coerce_user_ids(obj)
+    if ids:
+        return ids
+
+    if isinstance(obj, str):
+        s = obj.strip()
+        if s.isdigit() and 15 <= len(s) <= 25:
+            return {int(s)}
+
+    return set()

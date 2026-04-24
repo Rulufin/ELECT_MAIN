@@ -34,7 +34,7 @@ class Point_Request_Public_UserSelect_Embed(Embed):
             title="__公開ポイント - ユーザー選択__",
             description=textwrap.dedent(
                 '''
-                一緒に公開したユーザーを自分含めて選択してください。
+                一緒に公開したユーザーを自分含めて選択し、【おっけー】を押してください。
                 '''
             )
         )
@@ -49,6 +49,22 @@ class Point_Request_Public_Embed(Embed):
 
                 公開ログのリンクを教えて下さい。
                 -# ※間違えて申請した場合は『閉じる』を押してください。
+                '''
+            )
+        )
+
+class Point_Request_Confirm_Check_Embed(Embed):
+    def __init__(self, mention_list):
+        super().__init__(
+            title="__公開ポイント - 申請確認__",
+            description=textwrap.dedent(
+                f'''
+                以下のユーザーに後悔ポイントを付与します。
+                問題ないですか？
+                -# ――――――――――――――――――――
+                {mention_list}
+                -# ――――――――――――――――――――
+                -# ※問題がある場合はこのメッセージを削除してください。
                 '''
             )
         )
@@ -109,7 +125,7 @@ class Points_Thread_Embed(Embed):
             )
         )
         self.set_author(name=f"{user.id}")
-        self.set_footer(name=f"{MAIN_ROLES.ADMINISTRATOR_ONE} / {MAIN_ROLES.ADMINISTRATOR_TWO} / {op_value} / {pt_type}")
+        self.set_footer(text=f"{MAIN_ROLES.ADMINISTRATOR_ONE} / {MAIN_ROLES.ADMINISTRATOR_TWO} / {op_value} / {pt_type}")
 
 class Create_Channel_Embed(Embed):
     def __init__(self, jump_url):

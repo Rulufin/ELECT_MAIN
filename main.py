@@ -16,6 +16,7 @@ extensions = (
     'on_voice_state',
 
     'judging',
+    'judging_temp',
     'list_manager',
     'profile',
     'secret_recruit',
@@ -49,8 +50,9 @@ class MyBot(commands.Bot):
     async def on_ready(self):
         await bot.change_presence(activity=discord.CustomActivity(name="わさびの刺激とビーフの旨み"))
 
-        from on_event.on_ready.on_ready import on_ready_view
+        from on_event.on_ready.on_ready import on_ready_view, on_ready_recover
         await on_ready_view(bot=bot)
+        await on_ready_recover(bot=bot)
 
         from helpers.http import HTTPClient
 

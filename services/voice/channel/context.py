@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from firestores.fs_voice_log import FS_Voice_Log
-from firestores.fs_rank import FS_Rank
 
 
 @dataclass

@@ -1,8 +1,6 @@
 import logging
 from datetime import datetime
-from typing import Optional
 
-import discord
 from discord.ext import commands
 from discord import Member, VoiceState
 
@@ -11,15 +9,20 @@ from firestores.fs_voice_log import FS_Voice_Log
 
 from on_event.on_voice.configs import TIMEZONE
 from on_event.on_voice.context import build_context
-from on_event.on_voice.knock import KnockService
-from on_event.on_voice.logger import VoiceLogService
-from on_event.on_voice.user_limit import UserLimitService
-from on_event.on_voice.quick_match import QM_Service
-from on_event.on_voice.delete import Delete_Service
+
+from services.voice.knock.service import KnockService
+from services.voice.voice_log.service import VoiceLogService
+from services.voice.user_limit.service import UserLimitService
+from services.voice.quick_match.service import QM_Service
+from services.voice.delete.service import Delete_Service
+from services.voice.talk_history.service import TalkHistoryService
+from services.voice.join_notice.registry import build_join_notice_handlers
+from services.voice.join_notice.service import JoinNoticeService
 
 logger = logging.getLogger(__name__)
 
 FILENAME = "on_voice_state_main"
+
 
 class On_Voice_State_Main_Cog(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -27,20 +30,22 @@ class On_Voice_State_Main_Cog(commands.Cog):
         self.fs_vc_tc_sync = FS_VC_TC_SYNC()
         self.fs_voice_log = FS_Voice_Log()
 
-        # ノック関連のサービス
+        # 実処理系サービス
         self.knock_service = KnockService(fs_vc_tc_sync=self.fs_vc_tc_sync)
-        # QM関連のサービス
         self.qm_service = QM_Service()
-
-        # VC_LOG への書き込みサービス
         self.voice_log_service = VoiceLogService(fs_voice_log=self.fs_voice_log)
         self.user_limit_service = UserLimitService()
-
         self.delete_service = Delete_Service()
 
-    # -------------------------
-    # イベント本体
-    # -------------------------
+        self.talk_history_service = TalkHistoryService()
+        self.bot.talk_history_service = self.talk_history_service
+
+        self.join_notice_handlers = build_join_notice_handlers()
+        self.join_notice_service = JoinNoticeService(
+            handlers=self.join_notice_handlers,
+            cooldown_seconds=300,
+            rejoin_suppress_seconds=60,
+        )
 
     @commands.Cog.listener()
     async def on_voice_state_update(
@@ -49,17 +54,6 @@ class On_Voice_State_Main_Cog(commands.Cog):
         before: VoiceState,
         after: VoiceState,
     ):
-        """
-        VCの接続・切断・移動、およびミュート状態の変化を Firestore に記録する。
-
-        記録対象:
-        - JOIN:   before.channel is None, after.channel is not None
-        - LEAVE:  before.channel is not None, after.channel is None
-        - MOVE:   両方 not None かつ channel.id が変化 → LEAVE + JOIN
-        - MUTE_ON / MUTE_OFF: effective_mute の変化時のみ
-
-        ただし NOT_CONNECT_VC_IDS に含まれるVCはログ対象から除外する。
-        """
         try:
             now = datetime.now(TIMEZONE)
 
@@ -67,21 +61,32 @@ class On_Voice_State_Main_Cog(commands.Cog):
             if ctx is None:
                 return
 
-            await self.user_limit_service.handle_user_limit(ctx)
+            channel_changed = before.channel != after.channel
 
+            # botの入退室だけ影響する処理
+            if channel_changed:
+                await self.user_limit_service.handle_user_limit(ctx)
+
+            # 以降は人間ユーザーのみ
             if member.bot:
                 return
 
-            handled = await self.knock_service.handle_knock_flow(ctx)
-            if handled:
-                return
+            # ノック系で処理完結なら後続を止める
+            if channel_changed:
+                handled = await self.knock_service.handle_knock_flow(ctx)
+                if handled:
+                    return
 
-            await self.qm_service.handle_qm_flow(ctx)
+                await self.qm_service.handle_qm_flow(ctx)
+                await self.delete_service.handle_delete_flow(ctx)
 
-            # ★追加：削除（ログより前/後どっちでもいいが、後だと消えた後参照に注意）
-            await self.delete_service.handle_delete_flow(ctx)
+                await self.voice_log_service.log_channel_changes(ctx)
+                await self.join_notice_service.handle(member, before, after)
 
-            await self.voice_log_service.log_channel_changes(ctx)
+            # talk_history は常に通す
+            await self.talk_history_service.handle_voice_state(member, before, after)
+
+            # mute/deaf log も常に通す
             await self.voice_log_service.log_mute_changes(ctx)
 
         except Exception as e:

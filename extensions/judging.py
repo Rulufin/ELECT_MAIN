@@ -4,8 +4,8 @@ from discord import (
     app_commands, Interaction, Embed
 )
 
-from services.judging.embeds import Judging_Guide_Panel_Embed
-from services.judging.views import Judging_Panel_View, Judging_Result_View, Server_Guidance_View, Guide_Panel_View
+from services.judging.profile.ui.embeds import Judging_Guide_Panel_Embed
+from services.judging.profile.ui.views import Judging_Panel_View, Judging_Result_View, Server_Guidance_View, Guide_Panel_View
 
 from utils.colorcodes import COLORS
 
