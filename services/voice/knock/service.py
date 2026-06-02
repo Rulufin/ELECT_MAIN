@@ -17,8 +17,8 @@ from firestores.fs_vc_tc_sync import FS_VC_TC_SYNC
 from services.voice.ui.embeds import VC_Menu_Embed, VC_Knock_Disconnect_Embed
 from services.voice.ui.views import Group_Knock_Menu_View
 
-from on_event.on_voice.configs import FILENAME
-from on_event.on_voice.context import VoiceStateContext
+from services.voice.state.configs import FILENAME
+from services.voice.state.event import VoiceStateContext
 
 from utils.ids import MAIN_CATEGORIES, MAIN_CHANNELS, MAIN_ROLES
 

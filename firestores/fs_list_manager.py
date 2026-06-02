@@ -1,4 +1,4 @@
-# firestores/fs_subscribe_lists.py
+﻿# firestores/fs_subscribe_lists.py
 
 import logging
 from typing import Any, Dict, List, Optional
@@ -7,7 +7,8 @@ from google.cloud.firestore_v1 import AsyncClient
 from google.api_core.exceptions import NotFound, Forbidden
 
 from configs.google_setup import client
-from queuemanagers.google.fs_queuemanager import firestore_queue
+from queuemanager.google.firestore import firestore_queue
+from firestores.base import FirestoreBase
 
 logger = logging.getLogger(__name__)
 
@@ -28,10 +29,10 @@ def _get_async_db() -> AsyncClient:
 # FS_MyList
 # ============================================================
 
-class FS_MyList:
+class FS_MyList(FirestoreBase):
     def __init__(self, queue_manager=firestore_queue) -> None:
-        self.db: AsyncClient = _get_async_db()
-        self.queue = queue_manager
+        _get_async_db()  # validate AsyncClient
+        super().__init__(queue_manager)
 
     # ---------- add_list ----------
 
@@ -40,7 +41,7 @@ class FS_MyList:
             return await self._add_list(owner_id, owner_name, target_id, target_name)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_MyList] add_list queue error: {e}", exc_info=True)
             return "ERROR"
@@ -149,7 +150,7 @@ class FS_MyList:
             return await self._get_list(owner_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_MyList] get_list queue error: {e}", exc_info=True)
             return "NOT_FOUND"
@@ -191,7 +192,7 @@ class FS_MyList:
             return await self._remove_list(owner_id, target_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_MyList] remove_list queue error: {e}", exc_info=True)
             return "ERROR"
@@ -295,7 +296,7 @@ class FS_MyList:
             return await self._rebuild_list_from(member_name_map)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_MyList] rebuild_list_from queue error: {e}", exc_info=True)
             return "ERROR"
@@ -380,17 +381,17 @@ class FS_MyList:
 # FS_BlackList / FS_BlackList_From
 # ============================================================
 
-class FS_BlackList:
+class FS_BlackList(FirestoreBase):
     def __init__(self, queue_manager=firestore_queue) -> None:
-        self.db: AsyncClient = _get_async_db()
-        self.queue = queue_manager
+        _get_async_db()  # validate AsyncClient
+        super().__init__(queue_manager)
 
     async def add_list(self, owner_id, owner_name, target_id, target_name):
         async def runner():
             return await self._add_list(owner_id, owner_name, target_id, target_name)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_BlackList] add_list queue error: {e}", exc_info=True)
             return "ERROR"
@@ -492,7 +493,7 @@ class FS_BlackList:
             return await self._get_list(owner_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_BlackList] get_list queue error: {e}", exc_info=True)
             return "NOT_FOUND"
@@ -532,7 +533,7 @@ class FS_BlackList:
             return await self._remove_list(owner_id, target_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_BlackList] remove_list queue error: {e}", exc_info=True)
             return "ERROR"
@@ -608,17 +609,17 @@ class FS_BlackList:
             return "ERROR"
 
 
-class FS_BlackList_From:
+class FS_BlackList_From(FirestoreBase):
     def __init__(self, queue_manager=firestore_queue) -> None:
-        self.db: AsyncClient = _get_async_db()
-        self.queue = queue_manager
+        _get_async_db()  # validate AsyncClient
+        super().__init__(queue_manager)
 
     async def get_list(self, owner_id):
         async def runner():
             return await self._get_list(owner_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_BlackList_From] get_list queue error: {e}", exc_info=True)
             return "NOT_FOUND"
@@ -658,17 +659,17 @@ class FS_BlackList_From:
 # FS_LikeList / FS_LikedList
 # ============================================================
 
-class FS_LikeList:
+class FS_LikeList(FirestoreBase):
     def __init__(self, queue_manager=firestore_queue) -> None:
-        self.db: AsyncClient = _get_async_db()
-        self.queue = queue_manager
+        _get_async_db()  # validate AsyncClient
+        super().__init__(queue_manager)
 
     async def add_list(self, owner_id, owner_name, target_id, target_name):
         async def runner():
             return await self._add_list(owner_id, owner_name, target_id, target_name)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_LikeList] add_list queue error: {e}", exc_info=True)
             return "ERROR"
@@ -760,7 +761,7 @@ class FS_LikeList:
             return await self._get_list(owner_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_LikeList] get_list queue error: {e}", exc_info=True)
             return "NOT_FOUND"
@@ -800,7 +801,7 @@ class FS_LikeList:
             return await self._remove_list(owner_id, target_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_LikeList] remove_list queue error: {e}", exc_info=True)
             return "ERROR"
@@ -876,17 +877,17 @@ class FS_LikeList:
             return "ERROR"
 
 
-class FS_LikedList:
+class FS_LikedList(FirestoreBase):
     def __init__(self, queue_manager=firestore_queue) -> None:
-        self.db: AsyncClient = _get_async_db()
-        self.queue = queue_manager
+        _get_async_db()  # validate AsyncClient
+        super().__init__(queue_manager)
 
     async def get_list(self, owner_id):
         async def runner():
             return await self._get_list(owner_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_LikedList] get_list queue error: {e}", exc_info=True)
             return "NOT_FOUND"
@@ -926,7 +927,7 @@ class FS_LikedList:
             return await self._get_counts_per_user()
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_LikedList] get_counts_per_user queue error: {e}", exc_info=True)
             return []
@@ -962,17 +963,17 @@ class FS_LikedList:
 # FS_DislikeList / FS_DislikedList
 # ============================================================
 
-class FS_DislikeList:
+class FS_DislikeList(FirestoreBase):
     def __init__(self, queue_manager=firestore_queue) -> None:
-        self.db: AsyncClient = _get_async_db()
-        self.queue = queue_manager
+        _get_async_db()  # validate AsyncClient
+        super().__init__(queue_manager)
 
     async def add_list(self, owner_id, owner_name, target_id, target_name):
         async def runner():
             return await self._add_list(owner_id, owner_name, target_id, target_name)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_DislikeList] add_list queue error: {e}", exc_info=True)
             return "ERROR"
@@ -1064,7 +1065,7 @@ class FS_DislikeList:
             return await self._get_list(owner_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_DislikeList] get_list queue error: {e}", exc_info=True)
             return "NOT_FOUND"
@@ -1104,7 +1105,7 @@ class FS_DislikeList:
             return await self._remove_list(owner_id, target_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_DislikeList] remove_list queue error: {e}", exc_info=True)
             return "ERROR"
@@ -1180,17 +1181,17 @@ class FS_DislikeList:
             return "ERROR"
 
 
-class FS_DislikedList:
+class FS_DislikedList(FirestoreBase):
     def __init__(self, queue_manager=firestore_queue) -> None:
-        self.db: AsyncClient = _get_async_db()
-        self.queue = queue_manager
+        _get_async_db()  # validate AsyncClient
+        super().__init__(queue_manager)
 
     async def get_counts_per_user(self):
         async def runner():
             return await self._get_counts_per_user()
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_DislikedList] get_counts_per_user queue error: {e}", exc_info=True)
             return []
@@ -1226,17 +1227,17 @@ class FS_DislikedList:
 # FS_DeleteList（脱退ユーザーのデータ削除）
 # ============================================================
 
-class FS_DeleteList:
+class FS_DeleteList(FirestoreBase):
     def __init__(self, queue_manager=firestore_queue) -> None:
-        self.db: AsyncClient = _get_async_db()
-        self.queue = queue_manager
+        _get_async_db()  # validate AsyncClient
+        super().__init__(queue_manager)
 
     async def remove_references_of_target(self, target_user_id: str) -> Dict[str, Any]:
         async def runner():
             return await self._remove_references_of_target_job(target_user_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_DeleteList] remove_references_of_target queue error: {e}", exc_info=True)
             return {"success": False, "errors": [{"step": "queue", "message": str(e)}]}
@@ -1408,7 +1409,7 @@ class FS_DeleteList:
             return await self._remove_target_user_doc(target_user_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_DeleteList] remove_target_user_doc queue error: {e}", exc_info=True)
             return {"success": False, "errors": [{"step": "queue", "message": str(e)}]}

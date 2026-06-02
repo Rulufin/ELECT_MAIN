@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import logging
 from datetime import datetime
@@ -10,10 +10,12 @@ from zoneinfo import ZoneInfo
 
 from google.cloud.firestore_v1 import AsyncClient
 from google.cloud import firestore_v1 as firestore
+from google.cloud.firestore_v1.base_query import FieldFilter
 from google.api_core.datetime_helpers import DatetimeWithNanoseconds
 
 from configs.google_setup import client
-from queuemanagers.google.fs_queuemanager import firestore_queue
+from queuemanager.google.firestore import firestore_queue
+from firestores.base import FirestoreBase
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +23,7 @@ IntStr = Union[int, str]
 DateTimeLike = Union[datetime, DatetimeWithNanoseconds]
 
 
-class FS_Message_Log:
+class FS_Message_Log(FirestoreBase):
     """
     メッセージ単位の判定ログ。
 
@@ -75,47 +77,15 @@ class FS_Message_Log:
         if not isinstance(client.firestore_db, AsyncClient):
             raise TypeError("client.firestore_db must be an AsyncClient (async Firestore).")
 
-        self.db: AsyncClient = client.firestore_db
+        super().__init__(queue_manager)
         self.root = root_collection
-        self.queue = queue_manager
 
     # ─────────────────────────
-    # Firestore refs / queue wrappers
+    # Firestore refs
     # ─────────────────────────
 
     def _doc(self, message_id: IntStr):
         return self.db.collection(self.root).document(str(message_id))
-
-    async def _q(self, fn):
-        try:
-            return await self.queue.enqueue(fn)
-        except Exception as e:
-            logger.error(f"[FS_Message_Log] queue error: {e}", exc_info=True)
-            return None
-
-    async def _q_get(self, doc_ref):
-        async def _op():
-            return await doc_ref.get()
-
-        return await self._q(_op)
-
-    async def _q_set(self, doc_ref, data: Dict[str, Any], *, merge: bool = True):
-        async def _op():
-            return await doc_ref.set(data, merge=merge)
-
-        return await self._q(_op)
-
-    async def _q_update(self, doc_ref, data: Dict[str, Any]):
-        async def _op():
-            return await doc_ref.update(data)
-
-        return await self._q(_op)
-
-    async def _q_delete(self, doc_ref):
-        async def _op():
-            return await doc_ref.delete()
-
-        return await self._q(_op)
 
     # ─────────────────────────
     # datetime helpers
@@ -163,13 +133,31 @@ class FS_Message_Log:
     # ─────────────────────────
 
     async def get_log(self, message_id: IntStr) -> Dict[str, Any]:
-        snap = await self._q_get(self._doc(message_id))
+        async def runner():
+            return await self._get_log(message_id)
+        try:
+            return await self._run(runner) or {}
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] get_log queue error: {e}", exc_info=True)
+            return {}
+
+    async def _get_log(self, message_id: IntStr) -> Dict[str, Any]:
+        snap = await self._doc(message_id).get()
         if not snap or not snap.exists:
             return {}
         return snap.to_dict() or {}
 
     async def exists(self, message_id: IntStr) -> bool:
-        snap = await self._q_get(self._doc(message_id))
+        async def runner():
+            return await self._exists(message_id)
+        try:
+            return await self._run(runner) or False
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] exists queue error: {e}", exc_info=True)
+            return False
+
+    async def _exists(self, message_id: IntStr) -> bool:
+        snap = await self._doc(message_id).get()
         return bool(snap and snap.exists)
 
     # ─────────────────────────
@@ -187,6 +175,20 @@ class FS_Message_Log:
         discord.Message からログを作成 / 更新する。
         投稿時 on_message でも、必要なら on_message_edit でも使える。
         """
+        async def runner():
+            return await self._upsert_from_message(message, attachments=attachments, extra=extra)
+        try:
+            await self._run(runner)
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] upsert_from_message queue error: {e}", exc_info=True)
+
+    async def _upsert_from_message(
+        self,
+        message: discord.Message,
+        *,
+        attachments: Optional[List[discord.Attachment]] = None,
+        extra: Optional[Dict[str, Any]] = None,
+    ) -> None:
         now = self._now()
         target_attachments = attachments if attachments is not None else list(message.attachments)
         serialized = self.serialize_attachments(target_attachments)
@@ -204,7 +206,7 @@ class FS_Message_Log:
             "updated_at": now,
         }
 
-        snap = await self._q_get(self._doc(message.id))
+        snap = await self._doc(message.id).get()
         if not snap or not snap.exists:
             data.update({
                 "awarded": False,
@@ -221,7 +223,7 @@ class FS_Message_Log:
         if extra:
             data.update(extra)
 
-        await self._q_set(self._doc(message.id), data, merge=True)
+        await self._doc(message.id).set(data, merge=True)
 
     async def create_log(
         self,
@@ -239,6 +241,36 @@ class FS_Message_Log:
         """
         discord.Message を使わずに直接作成したい場合用。
         """
+        async def runner():
+            return await self._create_log(
+                message_id=message_id,
+                guild_id=guild_id,
+                channel_id=channel_id,
+                user_id=user_id,
+                content=content,
+                attachments=attachments,
+                has_image=has_image,
+                image_count=image_count,
+                extra=extra,
+            )
+        try:
+            await self._run(runner)
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] create_log queue error: {e}", exc_info=True)
+
+    async def _create_log(
+        self,
+        *,
+        message_id: IntStr,
+        guild_id: Optional[IntStr],
+        channel_id: IntStr,
+        user_id: IntStr,
+        content: str = "",
+        attachments: Optional[List[Dict[str, Any]]] = None,
+        has_image: Optional[bool] = None,
+        image_count: Optional[int] = None,
+        extra: Optional[Dict[str, Any]] = None,
+    ) -> None:
         now = self._now()
         payload_attachments = list(attachments or [])
 
@@ -272,7 +304,7 @@ class FS_Message_Log:
         if extra:
             data.update(extra)
 
-        await self._q_set(self._doc(message_id), data, merge=False)
+        await self._doc(message_id).set(data, merge=False)
 
     # ─────────────────────────
     # award / delete / revert
@@ -285,9 +317,22 @@ class FS_Message_Log:
         point_delta: int,
         point_event_id: Optional[str] = None,
     ) -> None:
+        async def runner():
+            return await self._mark_awarded(message_id, point_delta=point_delta, point_event_id=point_event_id)
+        try:
+            await self._run(runner)
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] mark_awarded queue error: {e}", exc_info=True)
+
+    async def _mark_awarded(
+        self,
+        message_id: IntStr,
+        *,
+        point_delta: int,
+        point_event_id: Optional[str] = None,
+    ) -> None:
         now = self._now()
-        await self._q_set(
-            self._doc(message_id),
+        await self._doc(message_id).set(
             {
                 "awarded": True,
                 "point_delta": int(point_delta),
@@ -298,9 +343,16 @@ class FS_Message_Log:
         )
 
     async def clear_awarded(self, message_id: IntStr) -> None:
+        async def runner():
+            return await self._clear_awarded(message_id)
+        try:
+            await self._run(runner)
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] clear_awarded queue error: {e}", exc_info=True)
+
+    async def _clear_awarded(self, message_id: IntStr) -> None:
         now = self._now()
-        await self._q_set(
-            self._doc(message_id),
+        await self._doc(message_id).set(
             {
                 "awarded": False,
                 "point_delta": 0,
@@ -311,9 +363,16 @@ class FS_Message_Log:
         )
 
     async def mark_deleted(self, message_id: IntStr) -> None:
+        async def runner():
+            return await self._mark_deleted(message_id)
+        try:
+            await self._run(runner)
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] mark_deleted queue error: {e}", exc_info=True)
+
+    async def _mark_deleted(self, message_id: IntStr) -> None:
         now = self._now()
-        await self._q_set(
-            self._doc(message_id),
+        await self._doc(message_id).set(
             {
                 "deleted": True,
                 "deleted_at": now,
@@ -326,9 +385,16 @@ class FS_Message_Log:
         """
         必要なら復元用。
         """
+        async def runner():
+            return await self._mark_restored(message_id)
+        try:
+            await self._run(runner)
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] mark_restored queue error: {e}", exc_info=True)
+
+    async def _mark_restored(self, message_id: IntStr) -> None:
         now = self._now()
-        await self._q_set(
-            self._doc(message_id),
+        await self._doc(message_id).set(
             {
                 "deleted": False,
                 "deleted_at": None,
@@ -343,9 +409,21 @@ class FS_Message_Log:
         *,
         revert_event_id: Optional[str] = None,
     ) -> None:
+        async def runner():
+            return await self._mark_reverted(message_id, revert_event_id=revert_event_id)
+        try:
+            await self._run(runner)
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] mark_reverted queue error: {e}", exc_info=True)
+
+    async def _mark_reverted(
+        self,
+        message_id: IntStr,
+        *,
+        revert_event_id: Optional[str] = None,
+    ) -> None:
         now = self._now()
-        await self._q_set(
-            self._doc(message_id),
+        await self._doc(message_id).set(
             {
                 "reverted": True,
                 "reverted_at": now,
@@ -356,9 +434,16 @@ class FS_Message_Log:
         )
 
     async def clear_reverted(self, message_id: IntStr) -> None:
+        async def runner():
+            return await self._clear_reverted(message_id)
+        try:
+            await self._run(runner)
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] clear_reverted queue error: {e}", exc_info=True)
+
+    async def _clear_reverted(self, message_id: IntStr) -> None:
         now = self._now()
-        await self._q_set(
-            self._doc(message_id),
+        await self._doc(message_id).set(
             {
                 "reverted": False,
                 "reverted_at": None,
@@ -378,7 +463,16 @@ class FS_Message_Log:
         - has_image=True
         - awarded=False
         """
-        data = await self.get_log(message_id)
+        async def runner():
+            return await self._should_award(message_id)
+        try:
+            return await self._run(runner) or False
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] should_award queue error: {e}", exc_info=True)
+            return False
+
+    async def _should_award(self, message_id: IntStr) -> bool:
+        data = await self._get_log(message_id)
         if not data:
             return False
 
@@ -396,7 +490,16 @@ class FS_Message_Log:
         - awarded=True
         - reverted=False
         """
-        data = await self.get_log(message_id)
+        async def runner():
+            return await self._should_revert(message_id)
+        try:
+            return await self._run(runner) or False
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] should_revert queue error: {e}", exc_info=True)
+            return False
+
+    async def _should_revert(self, message_id: IntStr) -> bool:
+        data = await self._get_log(message_id)
         if not data:
             return False
 
@@ -419,10 +522,25 @@ class FS_Message_Log:
         limit: int = 200,
         has_image_only: bool = False,
     ) -> List[Dict[str, Any]]:
-        q = self.db.collection(self.root).where("channel_id", "==", int(channel_id))
+        async def runner():
+            return await self._list_logs_by_channel(channel_id, limit=limit, has_image_only=has_image_only)
+        try:
+            return await self._run(runner) or []
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] list_logs_by_channel queue error: {e}", exc_info=True)
+            return []
+
+    async def _list_logs_by_channel(
+        self,
+        channel_id: IntStr,
+        *,
+        limit: int = 200,
+        has_image_only: bool = False,
+    ) -> List[Dict[str, Any]]:
+        q = self.db.collection(self.root).where(filter=FieldFilter("channel_id", "==", int(channel_id)))
 
         if has_image_only:
-            q = q.where("has_image", "==", True)
+            q = q.where(filter=FieldFilter("has_image", "==", True))
 
         q = q.order_by("created_at", direction=firestore.Query.DESCENDING)
 
@@ -436,7 +554,7 @@ class FS_Message_Log:
                 d = snap.to_dict() or {}
                 out.append(d)
         except Exception as e:
-            logger.error(f"[FS_Message_Log] list_logs_by_channel error: {e}", exc_info=True)
+            logger.error(f"[FS_Message_Log] _list_logs_by_channel error: {e}", exc_info=True)
 
         return out
 
@@ -447,10 +565,25 @@ class FS_Message_Log:
         limit: int = 200,
         has_image_only: bool = False,
     ) -> List[Dict[str, Any]]:
-        q = self.db.collection(self.root).where("user_id", "==", int(user_id))
+        async def runner():
+            return await self._list_logs_by_user(user_id, limit=limit, has_image_only=has_image_only)
+        try:
+            return await self._run(runner) or []
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] list_logs_by_user queue error: {e}", exc_info=True)
+            return []
+
+    async def _list_logs_by_user(
+        self,
+        user_id: IntStr,
+        *,
+        limit: int = 200,
+        has_image_only: bool = False,
+    ) -> List[Dict[str, Any]]:
+        q = self.db.collection(self.root).where(filter=FieldFilter("user_id", "==", int(user_id)))
 
         if has_image_only:
-            q = q.where("has_image", "==", True)
+            q = q.where(filter=FieldFilter("has_image", "==", True))
 
         q = q.order_by("created_at", direction=firestore.Query.DESCENDING)
 
@@ -464,7 +597,7 @@ class FS_Message_Log:
                 d = snap.to_dict() or {}
                 out.append(d)
         except Exception as e:
-            logger.error(f"[FS_Message_Log] list_logs_by_user error: {e}", exc_info=True)
+            logger.error(f"[FS_Message_Log] _list_logs_by_user error: {e}", exc_info=True)
 
         return out
 
@@ -473,4 +606,12 @@ class FS_Message_Log:
     # ─────────────────────────
 
     async def delete_log(self, message_id: IntStr) -> None:
-        await self._q_delete(self._doc(message_id))
+        async def runner():
+            return await self._delete_log(message_id)
+        try:
+            await self._run(runner)
+        except Exception as e:
+            logger.error(f"[FS_Message_Log] delete_log queue error: {e}", exc_info=True)
+
+    async def _delete_log(self, message_id: IntStr) -> None:
+        await self._doc(message_id).delete()

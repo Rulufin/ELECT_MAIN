@@ -1,15 +1,17 @@
-import logging
+﻿import logging
 from typing import Any, Dict, Optional
 
 from google.cloud.firestore_v1 import AsyncClient
+from google.cloud.firestore_v1.base_query import FieldFilter
 
 from configs.google_setup import client
-from queuemanagers.google.fs_queuemanager import firestore_queue
+from queuemanager.google.firestore import firestore_queue
+from firestores.base import FirestoreBase
 
 logger = logging.getLogger(__name__)
 
 
-class FS_VC_TC_SYNC:
+class FS_VC_TC_SYNC(FirestoreBase):
     """
     VC と TC の対応を Firestore に保存するラッパー。
 
@@ -39,8 +41,7 @@ class FS_VC_TC_SYNC:
         if not isinstance(client.firestore_db, AsyncClient):
             raise TypeError("client.firestore_db must be an AsyncClient (async Firestore).")
 
-        self.db: AsyncClient = client.firestore_db
-        self.queue = queue_manager
+        super().__init__(queue_manager)
 
     # ─────────────────────────
     # 追加 / 更新
@@ -59,7 +60,7 @@ class FS_VC_TC_SYNC:
             return await self._add_ids(vc_id, tc_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_VC_TC_SYNC] add_ids queue error: {e}", exc_info=True)
             return False
@@ -106,7 +107,7 @@ class FS_VC_TC_SYNC:
             return await self._get_ids(vc_id=vc_id, tc_id=tc_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_VC_TC_SYNC] get_ids queue error: {e}", exc_info=True)
             return None
@@ -144,7 +145,7 @@ class FS_VC_TC_SYNC:
             assert tc_id is not None  # 上で validation 済み
             tc_str = str(tc_id)
 
-            query = collection.where("TC_ID", "==", tc_str).limit(1)
+            query = collection.where(filter=FieldFilter("TC_ID", "==", tc_str)).limit(1)
             async for snap in query.stream():
                 # ドキュメントIDが VC_ID
                 vc_value = int(snap.id)
@@ -188,7 +189,7 @@ class FS_VC_TC_SYNC:
             return await self._delete_ids(vc_id=vc_id, tc_id=tc_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_VC_TC_SYNC] delete_ids queue error: {e}", exc_info=True)
             return False
@@ -217,7 +218,7 @@ class FS_VC_TC_SYNC:
             assert tc_id is not None
             tc_str = str(tc_id)
 
-            query = collection.where("TC_ID", "==", tc_str)
+            query = collection.where(filter=FieldFilter("TC_ID", "==", tc_str))
             deleted_count = 0
 
             async for snap in query.stream():

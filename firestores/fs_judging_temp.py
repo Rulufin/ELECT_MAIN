@@ -1,4 +1,4 @@
-import logging
+﻿import logging
 from typing import Dict, Optional, Tuple, Union, Any
 from datetime import datetime
 
@@ -6,7 +6,8 @@ from google.cloud.firestore_v1 import AsyncClient
 from google.cloud import firestore_v1 as firestore  # noqa: F401  # 将来の拡張用に残しておく
 
 from configs.google_setup import client
-from queuemanagers.google.fs_queuemanager import firestore_queue
+from queuemanager.google.firestore import firestore_queue
+from firestores.base import FirestoreBase
 
 from discord import User
 
@@ -16,7 +17,7 @@ IntStr = Union[int, str]
 DateLike = Union[str, datetime]
 
 
-class FS_Judging_Temp:
+class FS_Judging_Temp(FirestoreBase):
     ROOT_COLLECTION = "Judging_Temp"
     CATEGORY_KEYS = ("circle", "cross", "caution")
 
@@ -28,9 +29,8 @@ class FS_Judging_Temp:
         if not isinstance(client.firestore_db, AsyncClient):
             raise TypeError("client.firestore_db must be an AsyncClient (async Firestore).")
 
-        self.db: AsyncClient = client.firestore_db
+        super().__init__(queue_manager)
         self.root = root_collection
-        self.queue = queue_manager
 
     # ------------- Helpers -------------
 
@@ -235,38 +235,6 @@ class FS_Judging_Temp:
             )
             return False
 
-    # --- Firestore操作をキュー経由にする小ヘルパー群 ---
-
-    async def _q_get(self, doc_ref):
-        async def get_doc():
-            return await doc_ref.get()
-
-        try:
-            return await self.queue.enqueue(get_doc)
-        except Exception as e:
-            logger.error(f"Error in _q_get: {e}")
-            return None
-
-    async def _q_set(self, doc_ref, data: Dict, merge: bool = True):
-        async def set_doc():
-            return await doc_ref.set(data, merge=merge)
-
-        try:
-            return await self.queue.enqueue(set_doc)
-        except Exception as e:
-            logger.error(f"Error in _q_set: {e}")
-            return "error_occurred"
-
-    async def _q_delete(self, doc_ref):
-        async def delete_doc():
-            return await doc_ref.delete()
-
-        try:
-            return await self.queue.enqueue(delete_doc)
-        except Exception as e:
-            logger.error(f"Error in _q_delete: {e}")
-            return "error_occurred"
-
     async def _load_doc(
         self,
         target_id: str,
@@ -274,7 +242,7 @@ class FS_Judging_Temp:
         date_ymd: str,
     ) -> Tuple[Dict, Dict, Dict, Optional[str], Optional[str], bool]:
         doc_ref = self._day_doc(target_id, message_id, date_ymd)
-        snap = await self._q_get(doc_ref)
+        snap = await doc_ref.get()
 
         if not snap or not snap.exists:
             logger.warning(f"Document not found: {target_id} - {message_id} - {date_ymd}")
@@ -321,10 +289,7 @@ class FS_Judging_Temp:
             if user_message_id is not None:
                 data["user_message_id"] = str(user_message_id)
 
-            result = await self._q_set(doc_ref, data, merge=False)
-            if result == "error_occurred":
-                return "error_occurred"
-
+            await doc_ref.set(data, merge=False)
             return "ok"
 
         except Exception as e:
@@ -346,7 +311,7 @@ class FS_Judging_Temp:
         old_doc_ref = self._day_doc(target_id, old_message_id, old_date_ymd)
         new_doc_ref = self._day_doc(target_id, new_message_id, new_date_ymd)
 
-        old_snap = await self._q_get(old_doc_ref)
+        old_snap = await old_doc_ref.get()
         if not old_snap or not old_snap.exists:
             return "not_found"
 
@@ -366,57 +331,53 @@ class FS_Judging_Temp:
             "caution": dict(old_data.get("caution", {}) or {}),
         }
 
-        result = await self._q_set(new_doc_ref, new_data, merge=False)
-        if result == "error_occurred":
-            return "error_occurred"
+        await new_doc_ref.set(new_data, merge=False)
 
         if delete_old:
-            delete_result = await self._q_delete(old_doc_ref)
-            if delete_result == "error_occurred":
-                return "error_occurred"
+            await old_doc_ref.delete()
 
         return "migrated"
 
     # ------------- Read -------------
 
     async def exists(self, target_id: IntStr, message_id: IntStr, date_ymd: DateLike) -> bool:
+        async def runner():
+            return await self._exists(str(target_id), str(message_id), self._normalize_date_ymd(date_ymd))
         try:
-            t_id = str(target_id)
-            m_id = str(message_id)
-            d_ymd = self._normalize_date_ymd(date_ymd)
-
-            doc_ref = self._day_doc(t_id, m_id, d_ymd)
-            snap = await self._q_get(doc_ref)
-            return snap.exists if snap else False
-
+            return await self._run(runner) or False
         except Exception as e:
-            logger.error(f"Error in exists check: {e}")
+            logger.error(f"[FS_Judging_Temp] exists queue error: {e}", exc_info=True)
             return False
 
+    async def _exists(self, target_id: str, message_id: str, date_ymd: str) -> bool:
+        doc_ref = self._day_doc(target_id, message_id, date_ymd)
+        snap = await doc_ref.get()
+        return snap.exists if snap else False
+
     async def get_entry(self, target_id: IntStr, message_id: IntStr, date_ymd: DateLike) -> Dict[str, Dict]:
+        async def runner():
+            return await self._get_entry(str(target_id), str(message_id), self._normalize_date_ymd(date_ymd))
         try:
-            t_id = str(target_id)
-            m_id = str(message_id)
-            d_ymd = self._normalize_date_ymd(date_ymd)
-
-            doc_ref = self._day_doc(t_id, m_id, d_ymd)
-            snap = await self._q_get(doc_ref)
-            if not snap or not snap.exists:
-                return {}
-
-            data = snap.to_dict() or {}
-            return {
-                "admin_thread_id": data.get("admin_thread_id"),
-                "user_thread_id": data.get("user_thread_id"),
-                "user_message_id": data.get("user_message_id"),
-                "circle": dict(data.get("circle", {}) or {}),
-                "cross": dict(data.get("cross", {}) or {}),
-                "caution": dict(data.get("caution", {}) or {}),
-            }
-
+            return await self._run(runner) or {}
         except Exception as e:
-            logger.error(f"Error in get_entry: {e}")
+            logger.error(f"[FS_Judging_Temp] get_entry queue error: {e}", exc_info=True)
             return {}
+
+    async def _get_entry(self, target_id: str, message_id: str, date_ymd: str) -> Dict[str, Dict]:
+        doc_ref = self._day_doc(target_id, message_id, date_ymd)
+        snap = await doc_ref.get()
+        if not snap or not snap.exists:
+            return {}
+
+        data = snap.to_dict() or {}
+        return {
+            "admin_thread_id": data.get("admin_thread_id"),
+            "user_thread_id": data.get("user_thread_id"),
+            "user_message_id": data.get("user_message_id"),
+            "circle": dict(data.get("circle", {}) or {}),
+            "cross": dict(data.get("cross", {}) or {}),
+            "caution": dict(data.get("caution", {}) or {}),
+        }
 
     async def get_category(
         self,
@@ -425,26 +386,34 @@ class FS_Judging_Temp:
         date_ymd: DateLike,
         category: str,
     ) -> Dict:
+        async def runner():
+            return await self._get_category(
+                str(target_id), str(message_id), self._normalize_date_ymd(date_ymd), category
+            )
         try:
-            category = category.lower()
-            if category not in self.CATEGORY_KEYS:
-                raise ValueError("category must be one of circle, cross, caution")
-
-            t_id = str(target_id)
-            m_id = str(message_id)
-            d_ymd = self._normalize_date_ymd(date_ymd)
-
-            circle, cross, caution, _, _, _ = await self._load_doc(t_id, m_id, d_ymd)
-
-            if category == "circle":
-                return circle
-            if category == "cross":
-                return cross
-            return caution
-
+            return await self._run(runner) or {}
         except Exception as e:
-            logger.error(f"Error in get_category: {e}")
+            logger.error(f"[FS_Judging_Temp] get_category queue error: {e}", exc_info=True)
             return {}
+
+    async def _get_category(
+        self,
+        target_id: str,
+        message_id: str,
+        date_ymd: str,
+        category: str,
+    ) -> Dict:
+        category = category.lower()
+        if category not in self.CATEGORY_KEYS:
+            raise ValueError("category must be one of circle, cross, caution")
+
+        circle, cross, caution, _, _, _ = await self._load_doc(target_id, message_id, date_ymd)
+
+        if category == "circle":
+            return circle
+        if category == "cross":
+            return cross
+        return caution
 
     # ------------- Write -------------
 
@@ -457,34 +426,44 @@ class FS_Judging_Temp:
         user: Optional[User],
         comment: Optional[str] = None,
     ) -> str:
-        try:
-            if user is None:
-                raise ValueError("user must not be None")
-
-            category = category.lower()
-            if category not in self.CATEGORY_KEYS:
-                raise ValueError("category must be one of circle, cross, caution")
-
-            t_id = str(target_id)
-            m_id = str(message_id)
-            d_ymd = self._normalize_date_ymd(date_ymd)
-
-            user_name = getattr(user, "display_name", None) or getattr(user, "name", str(user.id))
-            user_id = str(user.id)
-
-            return await self._set_vote_category(
-                target_id=t_id,
-                message_id=m_id,
-                date_ymd=d_ymd,
-                category=category,
-                user_id=user_id,
-                user_name=user_name,
-                comment=comment,
+        async def runner():
+            return await self._set_vote(
+                category, str(target_id), str(message_id), self._normalize_date_ymd(date_ymd), user, comment
             )
-
+        try:
+            return await self._run(runner) or "error_occurred"
         except Exception as e:
-            logger.error(f"Error in set_vote: {e}")
+            logger.error(f"[FS_Judging_Temp] set_vote queue error: {e}", exc_info=True)
             return "error_occurred"
+
+    async def _set_vote(
+        self,
+        category: str,
+        target_id: str,
+        message_id: str,
+        date_ymd: str,
+        user: Optional[User],
+        comment: Optional[str] = None,
+    ) -> str:
+        if user is None:
+            raise ValueError("user must not be None")
+
+        category = category.lower()
+        if category not in self.CATEGORY_KEYS:
+            raise ValueError("category must be one of circle, cross, caution")
+
+        user_name = getattr(user, "display_name", None) or getattr(user, "name", str(user.id))
+        user_id = str(user.id)
+
+        return await self._set_vote_category(
+            target_id=target_id,
+            message_id=message_id,
+            date_ymd=date_ymd,
+            category=category,
+            user_id=user_id,
+            user_name=user_name,
+            comment=comment,
+        )
 
     async def _set_vote_category(
         self,
@@ -619,111 +598,120 @@ class FS_Judging_Temp:
         category: str,
         user_id: IntStr,
     ) -> str:
+        async def runner():
+            return await self._remove_from_category(
+                str(target_id), str(message_id), self._normalize_date_ymd(date_ymd), category, str(user_id)
+            )
         try:
-            category = category.lower()
-            if category not in self.CATEGORY_KEYS:
-                raise ValueError("category must be one of circle, cross, caution")
-
-            t_id = str(target_id)
-            m_id = str(message_id)
-            d_ymd = self._normalize_date_ymd(date_ymd)
-            u_id = str(user_id)
-
-            circle, cross, caution, admin_thread_id, user_thread_id, exists = await self._load_doc(
-                t_id, m_id, d_ymd
-            )
-            if not exists:
-                return "not_found"
-
-            removed = False
-
-            if category == "circle":
-                idx = self._find_user_index(circle, u_id)
-                if idx is not None:
-                    circle.pop(idx, None)
-                    removed = True
-
-            elif category == "cross":
-                idx = self._find_user_index(cross, u_id)
-                if idx is not None:
-                    cross.pop(idx, None)
-                    removed = True
-
-            else:
-                idx = self._find_user_index(caution, u_id)
-                if idx is not None:
-                    caution.pop(idx, None)
-                    removed = True
-
-            if not removed:
-                return "not_found"
-
-            save_result = await self._save_entry(
-                target_id=t_id,
-                message_id=m_id,
-                date_ymd=d_ymd,
-                admin_thread_id=admin_thread_id,
-                user_thread_id=user_thread_id,
-                circle=circle,
-                cross=cross,
-                caution=caution,
-            )
-            if save_result == "error_occurred":
-                return "error_occurred"
-
-            return "removed"
-
+            return await self._run(runner) or "error_occurred"
         except Exception as e:
-            logger.error(f"Error in remove_from_category: {e}")
+            logger.error(f"[FS_Judging_Temp] remove_from_category queue error: {e}", exc_info=True)
             return "error_occurred"
+
+    async def _remove_from_category(
+        self,
+        target_id: str,
+        message_id: str,
+        date_ymd: str,
+        category: str,
+        user_id: str,
+    ) -> str:
+        category = category.lower()
+        if category not in self.CATEGORY_KEYS:
+            raise ValueError("category must be one of circle, cross, caution")
+
+        circle, cross, caution, admin_thread_id, user_thread_id, exists = await self._load_doc(
+            target_id, message_id, date_ymd
+        )
+        if not exists:
+            return "not_found"
+
+        removed = False
+
+        if category == "circle":
+            idx = self._find_user_index(circle, user_id)
+            if idx is not None:
+                circle.pop(idx, None)
+                removed = True
+
+        elif category == "cross":
+            idx = self._find_user_index(cross, user_id)
+            if idx is not None:
+                cross.pop(idx, None)
+                removed = True
+
+        else:
+            idx = self._find_user_index(caution, user_id)
+            if idx is not None:
+                caution.pop(idx, None)
+                removed = True
+
+        if not removed:
+            return "not_found"
+
+        save_result = await self._save_entry(
+            target_id=target_id,
+            message_id=message_id,
+            date_ymd=date_ymd,
+            admin_thread_id=admin_thread_id,
+            user_thread_id=user_thread_id,
+            circle=circle,
+            cross=cross,
+            caution=caution,
+        )
+        if save_result == "error_occurred":
+            return "error_occurred"
+
+        return "removed"
 
     async def clear_all_categories(self, target_id: IntStr, message_id: IntStr, date_ymd: DateLike) -> str:
+        async def runner():
+            return await self._clear_all_categories(
+                str(target_id), str(message_id), self._normalize_date_ymd(date_ymd)
+            )
         try:
-            t_id = str(target_id)
-            m_id = str(message_id)
-            d_ymd = self._normalize_date_ymd(date_ymd)
-
-            circle, cross, caution, admin_thread_id, user_thread_id, exists = await self._load_doc(
-                t_id, m_id, d_ymd
-            )
-            if not exists:
-                return "not_found"
-
-            save_result = await self._save_entry(
-                target_id=t_id,
-                message_id=m_id,
-                date_ymd=d_ymd,
-                admin_thread_id=admin_thread_id,
-                user_thread_id=user_thread_id,
-                circle={},
-                cross={},
-                caution={},
-            )
-            if save_result == "error_occurred":
-                return "error_occurred"
-
-            return "cleared"
-
+            return await self._run(runner) or "error_occurred"
         except Exception as e:
-            logger.error(f"Error in clear_all_categories: {e}")
+            logger.error(f"[FS_Judging_Temp] clear_all_categories queue error: {e}", exc_info=True)
             return "error_occurred"
+
+    async def _clear_all_categories(self, target_id: str, message_id: str, date_ymd: str) -> str:
+        _, _, _, admin_thread_id, user_thread_id, exists = await self._load_doc(
+            target_id, message_id, date_ymd
+        )
+        if not exists:
+            return "not_found"
+
+        save_result = await self._save_entry(
+            target_id=target_id,
+            message_id=message_id,
+            date_ymd=date_ymd,
+            admin_thread_id=admin_thread_id,
+            user_thread_id=user_thread_id,
+            circle={},
+            cross={},
+            caution={},
+        )
+        if save_result == "error_occurred":
+            return "error_occurred"
+
+        return "cleared"
 
     async def clear_message_date(self, target_id: IntStr, message_id: IntStr, date_ymd: DateLike) -> str:
+        async def runner():
+            return await self._clear_message_date(
+                str(target_id), str(message_id), self._normalize_date_ymd(date_ymd)
+            )
         try:
-            t_id = str(target_id)
-            m_id = str(message_id)
-            d_ymd = self._normalize_date_ymd(date_ymd)
-
-            doc_ref = self._day_doc(t_id, m_id, d_ymd)
-            result = await self._q_delete(doc_ref)
-            if result == "error_occurred":
-                return "error_occurred"
-
-            return "deleted"
-
+            return await self._run(runner) or "error_occurred"
         except Exception as e:
-            logger.error(f"Error in clear_message_date: {e}")
+            logger.error(f"[FS_Judging_Temp] clear_message_date queue error: {e}", exc_info=True)
             return "error_occurred"
+
+    async def _clear_message_date(self, target_id: str, message_id: str, date_ymd: str) -> str:
+        doc_ref = self._day_doc(target_id, message_id, date_ymd)
+        await doc_ref.delete()
+        return "deleted"
 
     async def init_day_entry(
         self,
@@ -734,59 +722,121 @@ class FS_Judging_Temp:
         user_thread_id: IntStr,
         overwrite: bool = False,
     ) -> str:
+        async def runner():
+            return await self._init_day_entry(
+                str(target_id),
+                str(message_id),
+                self._normalize_date_ymd(date_ymd),
+                str(admin_thread_id),
+                str(user_thread_id),
+                overwrite,
+            )
         try:
-            t_id = str(target_id)
-            m_id = str(message_id)
-            d_ymd = self._normalize_date_ymd(date_ymd)
-            admin_th_id = str(admin_thread_id)
-            user_th_id = str(user_thread_id)
-
-            doc_ref = self._day_doc(t_id, m_id, d_ymd)
-
-            snap = await self._q_get(doc_ref)
-            if snap and snap.exists and not overwrite:
-                return "exists"
-
-            data = {
-                "admin_thread_id": admin_th_id,
-                "user_thread_id": user_th_id,
-                "circle": {},
-                "cross": {},
-                "caution": {},
-            }
-
-            await self._q_set(doc_ref, data, merge=not overwrite)
-            return "initialized"
-
+            return await self._run(runner) or "error_occurred"
         except Exception as e:
-            logger.error(f"Error in init_day_entry: {e}")
+            logger.error(f"[FS_Judging_Temp] init_day_entry queue error: {e}", exc_info=True)
             return "error_occurred"
+
+    async def _init_day_entry(
+        self,
+        target_id: str,
+        message_id: str,
+        date_ymd: str,
+        admin_thread_id: str,
+        user_thread_id: str,
+        overwrite: bool = False,
+    ) -> str:
+        doc_ref = self._day_doc(target_id, message_id, date_ymd)
+
+        snap = await doc_ref.get()
+        if snap and snap.exists and not overwrite:
+            return "exists"
+
+        data = {
+            "admin_thread_id": admin_thread_id,
+            "user_thread_id": user_thread_id,
+            "circle": {},
+            "cross": {},
+            "caution": {},
+        }
+
+        await doc_ref.set(data, merge=not overwrite)
+        return "initialized"
 
     async def get_all_for_target_date(
         self,
         target_id: IntStr,
         date_ymd: DateLike
     ) -> Dict[str, Dict]:
-        t_id = str(target_id)
-        d_ymd = self._normalize_date_ymd(date_ymd)
+        async def runner():
+            return await self._get_all_for_target_date(str(target_id), self._normalize_date_ymd(date_ymd))
+        try:
+            return await self._run(runner) or {}
+        except Exception as e:
+            logger.error(f"[FS_Judging_Temp] get_all_for_target_date queue error: {e}", exc_info=True)
+            return {}
 
+    async def _get_all_for_target_date(
+        self,
+        target_id: str,
+        date_ymd: str,
+    ) -> Dict[str, Dict]:
         result: Dict[str, Dict] = {}
 
+        target_doc_ref = self.db.collection(self.root).document(target_id)
+
+        async for msg_subcol in target_doc_ref.collections():
+            message_id = msg_subcol.id
+
+            day_doc_ref = msg_subcol.document(date_ymd)
+            snap = await day_doc_ref.get()
+
+            if not snap or not snap.exists:
+                continue
+
+            data = snap.to_dict() or {}
+
+            result[message_id] = {
+                "admin_thread_id": data.get("admin_thread_id"),
+                "user_thread_id": data.get("user_thread_id"),
+                "user_message_id": data.get("user_message_id"),
+                "circle": dict(data.get("circle", {}) or {}),
+                "cross": dict(data.get("cross", {}) or {}),
+                "caution": dict(data.get("caution", {}) or {}),
+            }
+
+        return result
+
+    async def get_latest_entry_for_target(self, target_id: IntStr) -> Dict[str, Dict]:
+        async def runner():
+            return await self._get_latest_entry_for_target(str(target_id))
         try:
-            target_doc_ref = self.db.collection(self.root).document(t_id)
+            return await self._run(runner) or {}
+        except Exception as e:
+            logger.error(f"[FS_Judging_Temp] get_latest_entry_for_target queue error: {e}", exc_info=True)
+            return {}
 
-            async for msg_subcol in target_doc_ref.collections():
-                message_id = msg_subcol.id
+    async def _get_latest_entry_for_target(self, target_id: str) -> Dict[str, Dict]:
+        latest_doc: dict | None = None
 
-                day_doc_ref = msg_subcol.document(d_ymd)
-                snap = await self._q_get(day_doc_ref)
+        target_doc_ref = self.db.collection(self.root).document(target_id)
 
-                if not snap or not snap.exists:
+        async for msg_subcol in target_doc_ref.collections():
+            message_id = str(msg_subcol.id)
+
+            async for snap in msg_subcol.stream():
+                if not snap.exists:
+                    continue
+
+                date_ymd = str(snap.id)
+                if date_ymd == "None":
                     continue
 
                 data = snap.to_dict() or {}
 
-                result[message_id] = {
+                current = {
+                    "message_id": message_id,
+                    "date_ymd": date_ymd,
                     "admin_thread_id": data.get("admin_thread_id"),
                     "user_thread_id": data.get("user_thread_id"),
                     "user_message_id": data.get("user_message_id"),
@@ -795,62 +845,21 @@ class FS_Judging_Temp:
                     "caution": dict(data.get("caution", {}) or {}),
                 }
 
-        except Exception as e:
-            logger.error(f"Error in get_all_for_target_date: {e}")
+                if latest_doc is None:
+                    latest_doc = current
+                    continue
 
-        return result
+                current_key = (
+                    self._safe_int(current["message_id"]),
+                    current["date_ymd"],
+                )
+                latest_key = (
+                    self._safe_int(latest_doc["message_id"]),
+                    latest_doc["date_ymd"],
+                )
 
-    async def get_latest_entry_for_target(self, target_id: IntStr) -> Dict[str, Dict]:
-        t_id = str(target_id)
-
-        latest_doc: dict | None = None
-
-        try:
-            target_doc_ref = self.db.collection(self.root).document(t_id)
-
-            async for msg_subcol in target_doc_ref.collections():
-                message_id = str(msg_subcol.id)
-
-                async for snap in msg_subcol.stream():
-                    if not snap.exists:
-                        continue
-
-                    date_ymd = str(snap.id)
-                    if date_ymd == "None":
-                        continue
-
-                    data = snap.to_dict() or {}
-
-                    current = {
-                        "message_id": message_id,
-                        "date_ymd": date_ymd,
-                        "admin_thread_id": data.get("admin_thread_id"),
-                        "user_thread_id": data.get("user_thread_id"),
-                        "user_message_id": data.get("user_message_id"),
-                        "circle": dict(data.get("circle", {}) or {}),
-                        "cross": dict(data.get("cross", {}) or {}),
-                        "caution": dict(data.get("caution", {}) or {}),
-                    }
-
-                    if latest_doc is None:
-                        latest_doc = current
-                        continue
-
-                    current_key = (
-                        self._safe_int(current["message_id"]),
-                        current["date_ymd"],
-                    )
-                    latest_key = (
-                        self._safe_int(latest_doc["message_id"]),
-                        latest_doc["date_ymd"],
-                    )
-
-                    if current_key > latest_key:
-                        latest_doc = current
-
-        except Exception as e:
-            logger.error(f"Error in get_latest_entry_for_target: {e}")
-            return {}
+                if current_key > latest_key:
+                    latest_doc = current
 
         return latest_doc or {}
 
@@ -866,33 +875,54 @@ class FS_Judging_Temp:
         user_message_id: IntStr | None = None,
         delete_old: bool = True,
     ) -> str:
-        try:
-            t_id = str(target_id)
-            old_m_id = str(old_message_id)
-            new_m_id = str(new_message_id)
-            new_d_ymd = self._normalize_date_ymd(date_ymd)
-            old_d_ymd = self._normalize_date_ymd(old_date_ymd if old_date_ymd is not None else date_ymd)
-            user_th_id = str(user_thread_id)
-            user_msg_id = str(user_message_id) if user_message_id is not None else None
-
-            if old_m_id == new_m_id and old_d_ymd == new_d_ymd:
-                return "same_message_id"
-
-            result = await self._copy_doc(
-                target_id=t_id,
-                old_message_id=old_m_id,
-                old_date_ymd=old_d_ymd,
-                new_message_id=new_m_id,
-                new_date_ymd=new_d_ymd,
-                user_thread_id=user_th_id,
-                user_message_id=user_msg_id,
+        async def runner():
+            return await self._migrate_message_entry(
+                target_id=str(target_id),
+                old_message_id=str(old_message_id),
+                new_message_id=str(new_message_id),
+                date_ymd=date_ymd,
+                old_date_ymd=old_date_ymd,
+                user_thread_id=user_thread_id,
+                user_message_id=user_message_id,
                 delete_old=delete_old,
             )
-            return result
-
+        try:
+            return await self._run(runner) or "error_occurred"
         except Exception as e:
-            logger.error(f"Error in migrate_message_entry: {e}")
+            logger.error(f"[FS_Judging_Temp] migrate_message_entry queue error: {e}", exc_info=True)
             return "error_occurred"
+
+    async def _migrate_message_entry(
+        self,
+        *,
+        target_id: str,
+        old_message_id: str,
+        new_message_id: str,
+        date_ymd: DateLike,
+        old_date_ymd: DateLike | None = None,
+        user_thread_id: IntStr,
+        user_message_id: IntStr | None = None,
+        delete_old: bool = True,
+    ) -> str:
+        new_d_ymd = self._normalize_date_ymd(date_ymd)
+        old_d_ymd = self._normalize_date_ymd(old_date_ymd if old_date_ymd is not None else date_ymd)
+        user_th_id = str(user_thread_id)
+        user_msg_id = str(user_message_id) if user_message_id is not None else None
+
+        if old_message_id == new_message_id and old_d_ymd == new_d_ymd:
+            return "same_message_id"
+
+        result = await self._copy_doc(
+            target_id=target_id,
+            old_message_id=old_message_id,
+            old_date_ymd=old_d_ymd,
+            new_message_id=new_message_id,
+            new_date_ymd=new_d_ymd,
+            user_thread_id=user_th_id,
+            user_message_id=user_msg_id,
+            delete_old=delete_old,
+        )
+        return result
 
     async def repair_none_date_entry(
         self,
@@ -902,27 +932,41 @@ class FS_Judging_Temp:
         correct_date_ymd: DateLike,
         delete_old: bool = True,
     ) -> str:
-        try:
-            t_id = str(target_id)
-            m_id = str(message_id)
-            new_d_ymd = self._normalize_date_ymd(correct_date_ymd)
-
-            if new_d_ymd == "None":
-                return "invalid_date_ymd"
-
-            result = await self._copy_doc(
-                target_id=t_id,
-                old_message_id=m_id,
-                old_date_ymd="None",
-                new_message_id=m_id,
-                new_date_ymd=new_d_ymd,
+        async def runner():
+            return await self._repair_none_date_entry(
+                target_id=str(target_id),
+                message_id=str(message_id),
+                correct_date_ymd=correct_date_ymd,
                 delete_old=delete_old,
             )
-            return result
-
+        try:
+            return await self._run(runner) or "error_occurred"
         except Exception as e:
-            logger.error(f"Error in repair_none_date_entry: {e}")
+            logger.error(f"[FS_Judging_Temp] repair_none_date_entry queue error: {e}", exc_info=True)
             return "error_occurred"
+
+    async def _repair_none_date_entry(
+        self,
+        *,
+        target_id: str,
+        message_id: str,
+        correct_date_ymd: DateLike,
+        delete_old: bool = True,
+    ) -> str:
+        new_d_ymd = self._normalize_date_ymd(correct_date_ymd)
+
+        if new_d_ymd == "None":
+            return "invalid_date_ymd"
+
+        result = await self._copy_doc(
+            target_id=target_id,
+            old_message_id=message_id,
+            old_date_ymd="None",
+            new_message_id=message_id,
+            new_date_ymd=new_d_ymd,
+            delete_old=delete_old,
+        )
+        return result
 
     async def repair_none_date_entry_to_new_message(
         self,
@@ -935,58 +979,81 @@ class FS_Judging_Temp:
         user_message_id: IntStr | None = None,
         delete_old: bool = True,
     ) -> str:
-        try:
-            t_id = str(target_id)
-            old_m_id = str(old_message_id)
-            new_m_id = str(new_message_id)
-            new_d_ymd = self._normalize_date_ymd(correct_date_ymd)
-
-            if new_d_ymd == "None":
-                return "invalid_date_ymd"
-
-            result = await self._copy_doc(
-                target_id=t_id,
-                old_message_id=old_m_id,
-                old_date_ymd="None",
-                new_message_id=new_m_id,
-                new_date_ymd=new_d_ymd,
-                user_thread_id=str(user_thread_id) if user_thread_id is not None else None,
-                user_message_id=str(user_message_id) if user_message_id is not None else None,
+        async def runner():
+            return await self._repair_none_date_entry_to_new_message(
+                target_id=str(target_id),
+                old_message_id=str(old_message_id),
+                new_message_id=str(new_message_id),
+                correct_date_ymd=correct_date_ymd,
+                user_thread_id=user_thread_id,
+                user_message_id=user_message_id,
                 delete_old=delete_old,
             )
-            return result
-
+        try:
+            return await self._run(runner) or "error_occurred"
         except Exception as e:
-            logger.error(f"Error in repair_none_date_entry_to_new_message: {e}")
+            logger.error(f"[FS_Judging_Temp] repair_none_date_entry_to_new_message queue error: {e}", exc_info=True)
             return "error_occurred"
 
+    async def _repair_none_date_entry_to_new_message(
+        self,
+        *,
+        target_id: str,
+        old_message_id: str,
+        new_message_id: str,
+        correct_date_ymd: DateLike,
+        user_thread_id: IntStr | None = None,
+        user_message_id: IntStr | None = None,
+        delete_old: bool = True,
+    ) -> str:
+        new_d_ymd = self._normalize_date_ymd(correct_date_ymd)
+
+        if new_d_ymd == "None":
+            return "invalid_date_ymd"
+
+        result = await self._copy_doc(
+            target_id=target_id,
+            old_message_id=old_message_id,
+            old_date_ymd="None",
+            new_message_id=new_message_id,
+            new_date_ymd=new_d_ymd,
+            user_thread_id=str(user_thread_id) if user_thread_id is not None else None,
+            user_message_id=str(user_message_id) if user_message_id is not None else None,
+            delete_old=delete_old,
+        )
+        return result
+
     async def find_none_date_entries_for_target(self, target_id: IntStr) -> Dict[str, Dict]:
-        t_id = str(target_id)
+        async def runner():
+            return await self._find_none_date_entries_for_target(str(target_id))
+        try:
+            return await self._run(runner) or {}
+        except Exception as e:
+            logger.error(f"[FS_Judging_Temp] find_none_date_entries_for_target queue error: {e}", exc_info=True)
+            return {}
+
+    async def _find_none_date_entries_for_target(self, target_id: str) -> Dict[str, Dict]:
         result: Dict[str, Dict] = {}
 
-        try:
-            target_doc_ref = self.db.collection(self.root).document(t_id)
+        target_doc_ref = self.db.collection(self.root).document(target_id)
 
-            async for msg_subcol in target_doc_ref.collections():
-                message_id = msg_subcol.id
-                none_doc_ref = msg_subcol.document("None")
-                snap = await self._q_get(none_doc_ref)
+        async for msg_subcol in target_doc_ref.collections():
+            message_id = msg_subcol.id
+            none_doc_ref = msg_subcol.document("None")
+            snap = await none_doc_ref.get()
 
-                if not snap or not snap.exists:
-                    continue
+            if not snap or not snap.exists:
+                continue
 
-                data = snap.to_dict() or {}
-                result[message_id] = {
-                    "admin_thread_id": data.get("admin_thread_id"),
-                    "user_thread_id": data.get("user_thread_id"),
-                    "user_message_id": data.get("user_message_id"),
-                    "circle": dict(data.get("circle", {}) or {}),
-                    "cross": dict(data.get("cross", {}) or {}),
-                    "caution": dict(data.get("caution", {}) or {}),
-                }
-
-        except Exception as e:
-            logger.error(f"Error in find_none_date_entries_for_target: {e}")
+            data = snap.to_dict() or {}
+            result[message_id] = {
+                "admin_thread_id": data.get("admin_thread_id"),
+                "user_thread_id": data.get("user_thread_id"),
+                "user_message_id": data.get("user_message_id"),
+                "circle": dict(data.get("circle", {}) or {}),
+                "cross": dict(data.get("cross", {}) or {}),
+                "caution": dict(data.get("caution", {}) or {}),
+            }
 
         return result
 
@@ -996,35 +1063,37 @@ class FS_Judging_Temp:
         target_id: IntStr,
         message_id: IntStr,
     ) -> dict:
-        t_id = str(target_id)
-        m_id = str(message_id)
-
+        async def runner():
+            return await self._find_entry_by_message_id(str(target_id), str(message_id))
         try:
-            msg_col_ref = (
-                self.db.collection(self.root)
-                .document(t_id)
-                .collection(m_id)
-            )
-
-            async for snap in msg_col_ref.stream():
-                if not snap.exists:
-                    continue
-
-                data = snap.to_dict() or {}
-                return {
-                    "target_id": t_id,
-                    "message_id": m_id,
-                    "date_ymd": str(snap.id),
-                    "admin_thread_id": data.get("admin_thread_id"),
-                    "user_thread_id": data.get("user_thread_id"),
-                    "user_message_id": data.get("user_message_id"),
-                    "circle": dict(data.get("circle", {}) or {}),
-                    "cross": dict(data.get("cross", {}) or {}),
-                    "caution": dict(data.get("caution", {}) or {}),
-                }
-
+            return await self._run(runner) or {}
         except Exception as e:
-            logger.error(f"Error in find_entry_by_message_id: {e}")
+            logger.error(f"[FS_Judging_Temp] find_entry_by_message_id queue error: {e}", exc_info=True)
+            return {}
+
+    async def _find_entry_by_message_id(self, target_id: str, message_id: str) -> dict:
+        msg_col_ref = (
+            self.db.collection(self.root)
+            .document(target_id)
+            .collection(message_id)
+        )
+
+        async for snap in msg_col_ref.stream():
+            if not snap.exists:
+                continue
+
+            data = snap.to_dict() or {}
+            return {
+                "target_id": target_id,
+                "message_id": message_id,
+                "date_ymd": str(snap.id),
+                "admin_thread_id": data.get("admin_thread_id"),
+                "user_thread_id": data.get("user_thread_id"),
+                "user_message_id": data.get("user_message_id"),
+                "circle": dict(data.get("circle", {}) or {}),
+                "cross": dict(data.get("cross", {}) or {}),
+                "caution": dict(data.get("caution", {}) or {}),
+            }
 
         return {}
 
@@ -1033,35 +1102,41 @@ class FS_Judging_Temp:
         target_id: int,
         admin_thread_id: int,
     ) -> dict | None:
-
-        t_id = str(target_id)
-        admin_thread_id = str(admin_thread_id)
-
-        try:
-            target_doc_ref = self.db.collection(self.root).document(t_id)
-
-            async for message_subcol in target_doc_ref.collections():
-                message_id = message_subcol.id
-
-                async for snap in message_subcol.stream():
-                    if not snap.exists:
-                        continue
-
-                    data = snap.to_dict() or {}
-
-                    if str(data.get("admin_thread_id")) == admin_thread_id:
-                        return {
-                            "target_id": t_id,
-                            "message_id": message_id,
-                            "date_ymd": snap.id,
-                            **data,
-                        }
-
-        except Exception as e:
-            logger.error(
-                "[FS_Judging_Temp] get_entry_by_target_and_admin_thread_id failed: %s",
-                e,
+        async def runner():
+            return await self._get_entry_by_target_and_admin_thread_id(
+                str(target_id), str(admin_thread_id)
             )
+        try:
+            result = await self._run(runner)
+            # _run が None を返した場合は None のまま返す（デフォルト値 None）
+            return result
+        except Exception as e:
+            logger.error(f"[FS_Judging_Temp] get_entry_by_target_and_admin_thread_id queue error: {e}", exc_info=True)
+            return None
+
+    async def _get_entry_by_target_and_admin_thread_id(
+        self,
+        target_id: str,
+        admin_thread_id: str,
+    ) -> dict | None:
+        target_doc_ref = self.db.collection(self.root).document(target_id)
+
+        async for message_subcol in target_doc_ref.collections():
+            message_id = message_subcol.id
+
+            async for snap in message_subcol.stream():
+                if not snap.exists:
+                    continue
+
+                data = snap.to_dict() or {}
+
+                if str(data.get("admin_thread_id")) == admin_thread_id:
+                    return {
+                        "target_id": target_id,
+                        "message_id": message_id,
+                        "date_ymd": snap.id,
+                        **data,
+                    }
 
         return None
 
@@ -1093,15 +1168,29 @@ class FS_Judging_Temp:
             "deleted_docs": 3,
         }
         """
-        t_id = str(target_id)
-
+        async def runner():
+            return await self._unify_target_keep_latest_message(
+                target_id=str(target_id), delete_old=delete_old
+            )
         try:
-            scanned = await self._iter_all_docs_for_target(t_id)
+            return await self._run(runner) or "error_occurred"
+        except Exception as e:
+            logger.error(f"[FS_Judging_Temp] unify_target_keep_latest_message queue error: {e}", exc_info=True)
+            return "error_occurred"
+
+    async def _unify_target_keep_latest_message(
+        self,
+        *,
+        target_id: str,
+        delete_old: bool = True,
+    ) -> dict:
+        try:
+            scanned = await self._iter_all_docs_for_target(target_id)
 
             if not scanned:
                 return {
                     "status": "not_found",
-                    "target_id": t_id,
+                    "target_id": target_id,
                     "scanned_docs": 0,
                     "deleted_docs": 0,
                 }
@@ -1114,7 +1203,7 @@ class FS_Judging_Temp:
             if not valid_docs:
                 return {
                     "status": "no_valid_date_doc",
-                    "target_id": t_id,
+                    "target_id": target_id,
                     "scanned_docs": len(scanned),
                     "deleted_docs": 0,
                 }
@@ -1204,7 +1293,7 @@ class FS_Judging_Temp:
             filtered_caution = self._reindex_category_map(filtered_caution)
 
             save_result = await self._save_entry(
-                target_id=t_id,
+                target_id=target_id,
                 message_id=str(canonical["message_id"]),
                 date_ymd=str(canonical["date_ymd"]),
                 admin_thread_id=admin_thread_id,
@@ -1217,7 +1306,7 @@ class FS_Judging_Temp:
             if save_result == "error_occurred":
                 return {
                     "status": "error_occurred",
-                    "target_id": t_id,
+                    "target_id": target_id,
                     "scanned_docs": len(scanned),
                     "deleted_docs": 0,
                 }
@@ -1235,21 +1324,21 @@ class FS_Judging_Temp:
                     ):
                         continue
 
-                    delete_result = await self.clear_message_date(
-                        target_id=t_id,
+                    delete_result = await self._clear_message_date(
+                        target_id=target_id,
                         message_id=doc_message_id,
                         date_ymd=doc_date_ymd,
                     )
                     if delete_result == "deleted":
                         deleted_docs += 1
                         await self._delete_message_subcollection_if_empty(
-                            target_id=t_id,
+                            target_id=target_id,
                             message_id=doc_message_id,
                         )
 
             return {
                 "status": "ok",
-                "target_id": t_id,
+                "target_id": target_id,
                 "target_message_id": str(canonical["message_id"]),
                 "target_date_ymd": str(canonical["date_ymd"]),
                 "admin_thread_id": admin_thread_id,
@@ -1264,12 +1353,12 @@ class FS_Judging_Temp:
 
         except Exception as e:
             logger.error(
-                "[FS_Judging_Temp] unify_target_keep_latest_message failed: %s",
+                "[FS_Judging_Temp] _unify_target_keep_latest_message failed: %s",
                 e,
             )
             return {
                 "status": "error_occurred",
-                "target_id": t_id,
+                "target_id": target_id,
                 "scanned_docs": 0,
                 "deleted_docs": 0,
             }

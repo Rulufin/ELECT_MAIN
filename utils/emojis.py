@@ -1,6 +1,6 @@
 # Emoji_Manager
 class CUSTOM:
-    pass
+    TOKEN = "<:et:1503417562439090206>"
 
 class DEFAULT:
     TRASH = "🗑️"
@@ -14,6 +14,7 @@ class DEFAULT:
     MEMO = "📝"
     PIN = "📌"
     MALE_HEART = "💌"
+    RATED = "🔞"
 
     ZERO = "0️⃣"
     ONE = "1️⃣"

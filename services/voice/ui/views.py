@@ -23,9 +23,10 @@ import os
 import pytz
 import textwrap
 from datetime import datetime, timedelta
-from typing import Optional, Set, cast
+from typing import List, Optional, Set, cast
 
-from helpers.http import *
+from utils.discord.safe_calls.channels import safe_channel_edit
+from utils.discord.safe_calls.errors import RateLimitInfo
 
 from services.voice.ui.embeds import *
 from services.system.embeds import *
@@ -38,7 +39,6 @@ from utils.ids import *
 from utils.emojis import *
 from utils.colorcodes import *
 
-from utils.discord.latelimit import check_button_cooldown
 
 FILENAME = "voice_channel_views"
 
@@ -239,25 +239,26 @@ class Name_Change_Modal(Modal):
 
         try:
             if new_name_text != self.def_name:
-                result = await DiscordHTTP().edit_voice_channel(
-                    channel_id=interaction.channel.id,
+                retry_info: list[float] = []
+                async def _on_rl_name(info: RateLimitInfo) -> None:
+                    retry_info.append(info.retry_after)
+
+                result = await safe_channel_edit(
+                    channel=interaction.channel,
                     name=new_name,
+                    on_rate_limit=_on_rl_name,
+                    use_queue=True,
                 )
 
-                if result.get("status") == "rate_limit":
-                    retry_after = result.get("retry_after", 0)
-                    embed = VC_RateLimit_Embed(retry_after=retry_after)
+                if result is None:
+                    embed = VC_RateLimit_Embed(retry_after=retry_info[0]) if retry_info else VC_Error_Embed()
                     await interaction.followup.send(embed=embed, ephemeral=True)
                     return
 
-                if result.get("status") == "success":
-                    if new_status:
-                        await interaction.channel.edit(status=new_status)  # チャンネルのステータスを編集
-                    success_embed = VC_Status_Change_Embed("Name", name=new_name, status=new_status)
-                    await interaction.followup.send(embed=success_embed)
-                else:
-                    error_embed = VC_Error_Embed()
-                    await interaction.followup.send(embed=error_embed, ephemeral=True)
+                if new_status:
+                    await interaction.channel.edit(status=new_status)
+                success_embed = VC_Status_Change_Embed("Name", name=new_name, status=new_status)
+                await interaction.followup.send(embed=success_embed)
             else:
                 if new_status:
                     await interaction.channel.edit(status=new_status)  # チャンネルのステータスを編集
@@ -315,23 +316,24 @@ class UserLimit_Change_Modal(Modal):
         user_limit = int(numbers)
 
         try:
-            result = await DiscordHTTP().edit_voice_channel(
-                channel_id=interaction.channel.id,
+            retry_info_limit: list[float] = []
+            async def _on_rl_limit(info: RateLimitInfo) -> None:
+                retry_info_limit.append(info.retry_after)
+
+            result = await safe_channel_edit(
+                channel=interaction.channel,
                 user_limit=user_limit,
+                on_rate_limit=_on_rl_limit,
+                use_queue=True,
             )
 
-            if result.get("status") == "rate_limit":
-                retry_after = result.get("retry_after", 0)
-                embed = VC_RateLimit_Embed(retry_after=retry_after)
+            if result is None:
+                embed = VC_RateLimit_Embed(retry_after=retry_info_limit[0]) if retry_info_limit else VC_Error_Embed()
                 await interaction.followup.send(embed=embed, ephemeral=True)
                 return
 
-            if result.get("status") == "success":
-                success_embed = VC_Status_Change_Embed("Limit", user_limit=user_limit)
-                await interaction.followup.send(embed=success_embed)
-            else:
-                error_embed = VC_Error_Embed()
-                await interaction.followup.send(embed=error_embed, ephemeral=True)
+            success_embed = VC_Status_Change_Embed("Limit", user_limit=user_limit)
+            await interaction.followup.send(embed=success_embed)
 
         except Exception as e:
             logger.error(f"Failed to edit channel name: {e}", exc_info=True)
@@ -396,23 +398,24 @@ class Bitrate_Change_Modal(Modal):
             return
 
         try:
-            result = await DiscordHTTP().edit_voice_channel(
-                channel_id=interaction.channel.id,
+            retry_info_bitrate: list[float] = []
+            async def _on_rl_bitrate(info: RateLimitInfo) -> None:
+                retry_info_bitrate.append(info.retry_after)
+
+            result = await safe_channel_edit(
+                channel=interaction.channel,
                 bitrate=change_bitrate,
+                on_rate_limit=_on_rl_bitrate,
+                use_queue=True,
             )
 
-            if result.get("status") == "rate_limit":
-                retry_after = result.get("retry_after", 0)
-                embed = VC_RateLimit_Embed(retry_after=retry_after)
+            if result is None:
+                embed = VC_RateLimit_Embed(retry_after=retry_info_bitrate[0]) if retry_info_bitrate else VC_Error_Embed()
                 await interaction.followup.send(embed=embed, ephemeral=True)
                 return
 
-            if result.get("status") == "success":
-                success_embed = VC_Status_Change_Embed("Bitrate", bitrate=change_bitrate)
-                await interaction.followup.send(embed=success_embed)
-            else:
-                error_embed = VC_Error_Embed()
-                await interaction.followup.send(embed=error_embed, ephemeral=True)
+            success_embed = VC_Status_Change_Embed("Bitrate", bitrate=change_bitrate)
+            await interaction.followup.send(embed=success_embed)
 
         except Exception as e:
             logger.error(f"Failed to edit channel name: {e}", exc_info=True)

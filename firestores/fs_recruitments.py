@@ -1,4 +1,4 @@
-# firestores/fs_recruit.py みたいな想定
+﻿# firestores/fs_recruit.py みたいな想定
 
 import asyncio
 import logging
@@ -10,7 +10,8 @@ from google.cloud.firestore_v1.async_transaction import async_transactional
 from google.cloud.firestore_v1.base_query import FieldFilter
 
 from configs.google_setup import client
-from queuemanagers.google.fs_queuemanager import firestore_queue
+from queuemanager.google.firestore import firestore_queue
+from firestores.base import FirestoreBase
 
 logger = logging.getLogger(__name__)
 
@@ -21,13 +22,12 @@ IntStr = Union[int, str]
 # FS_Number : 募集用の通し番号（Recruitments/Number）
 # ============================================================
 
-class FS_Number:
+class FS_Number(FirestoreBase):
     def __init__(self, queue_manager=firestore_queue) -> None:
         if not isinstance(client.firestore_db, AsyncClient):
             raise TypeError("client.firestore_db must be an AsyncClient (async Firestore).")
 
-        self.db: AsyncClient = client.firestore_db
-        self.queue = queue_manager
+        super().__init__(queue_manager)
 
     async def get_number(self) -> Union[int, str]:
         """
@@ -38,7 +38,7 @@ class FS_Number:
             return await self._get_number()
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Number] get_number queue error: {e}")
             return "ERROR"
@@ -75,13 +75,12 @@ class FS_Number:
 # FS_Recruitments : 募集データ本体 (Recruitments コレクション)
 # ============================================================
 
-class FS_Recruitments:
+class FS_Recruitments(FirestoreBase):
     def __init__(self, queue_manager=firestore_queue) -> None:
         if not isinstance(client.firestore_db, AsyncClient):
             raise TypeError("client.firestore_db must be an AsyncClient (async Firestore).")
 
-        self.db: AsyncClient = client.firestore_db
-        self.queue = queue_manager
+        super().__init__(queue_manager)
 
     # ------------- add / set -------------
 
@@ -90,7 +89,7 @@ class FS_Recruitments:
             return await self._add_recruit_data(owner_id, data)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Recruitments] add_recruit_data queue error: {e}")
             return "ERROR"
@@ -119,7 +118,7 @@ class FS_Recruitments:
             return await self._get_recruit_data(user_id, anonymity)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Recruitments] get_recruit_data queue error: {e}")
             return "ERROR"
@@ -173,7 +172,7 @@ class FS_Recruitments:
             return await self._get_content_data(user_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Recruitments] get_content_data queue error: {e}")
             return "ERROR"
@@ -201,7 +200,7 @@ class FS_Recruitments:
             return await self._check_data(owner_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Recruitments] check_data queue error: {e}")
             return "ERROR"
@@ -221,7 +220,7 @@ class FS_Recruitments:
             return await self._delete_data(owner_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Recruitments] delete_data queue error: {e}")
             return "ERROR"
@@ -240,7 +239,7 @@ class FS_Recruitments:
             return await self._get_number_to_id(message_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Recruitments] get_number_to_id queue error: {e}")
             return "ERROR"
@@ -269,7 +268,7 @@ class FS_Recruitments:
             return await self._loop_delete_data(current_time_str)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Recruitments] loop_delete_data queue error: {e}")
             return []
@@ -326,20 +325,19 @@ class FS_Recruitments:
 # FS_Rec_Message : Recruit_Message (number 単位で entries 配列)
 # ============================================================
 
-class FS_Rec_Message:
+class FS_Rec_Message(FirestoreBase):
     def __init__(self, queue_manager=firestore_queue) -> None:
         if not isinstance(client.firestore_db, AsyncClient):
             raise TypeError("client.firestore_db must be an AsyncClient (async Firestore).")
 
-        self.db: AsyncClient = client.firestore_db
-        self.queue = queue_manager
+        super().__init__(queue_manager)
 
     async def add_data(self, number: int, user_id: int, thread_id: int, message_id: int) -> str:
         async def runner():
             return await self._add_data(number, user_id, thread_id, message_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Rec_Message] add_data queue error: {e}")
             return "ERROR"
@@ -398,7 +396,7 @@ class FS_Rec_Message:
             return await self._get_data(number, user_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Rec_Message] get_data queue error: {e}")
             return "ERROR"
@@ -435,7 +433,7 @@ class FS_Rec_Message:
             return await self._delete_data(number, user_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Rec_Message] delete_data queue error: {e}")
             return "ERROR"

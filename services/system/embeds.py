@@ -45,6 +45,16 @@ class System_Error_Embed(Embed):
             )
         )
 
+class No_Permission_Embed(Embed):
+    def __init__(self):
+        super().__init__(
+            description=textwrap.dedent(
+                '''
+                この操作を行える権限がありません。
+                '''
+            )
+        )
+
 class Profile_Embed(Embed):
     def __init__(self, target: Member, profile_url: str, thread_url: Optional[str]):
         super().__init__(

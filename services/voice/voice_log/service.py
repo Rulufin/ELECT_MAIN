@@ -6,8 +6,8 @@ from typing import Optional, Dict, Any
 from discord import Member, VoiceState
 
 from firestores.fs_voice_log import FS_Voice_Log
-from on_event.on_voice.context import VoiceStateContext
-from on_event.on_voice.configs import NOT_CONNECT_VC_IDS
+from services.voice.state.event import VoiceStateContext
+from services.voice.state.configs import NOT_CONNECT_VC_IDS
 
 logger = logging.getLogger(__name__)
 

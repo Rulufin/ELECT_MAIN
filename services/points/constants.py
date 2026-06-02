@@ -23,6 +23,12 @@ REQUEST_OP = [
     ),
 ]
 
+# =========================================================
+# post points
+# =========================================================
+
+POST_POINT_PHOTO = 10
+POST_NOTE_PHOTO = "画像投稿ポイント"
 
 # =========================================================
 # check
@@ -55,7 +61,7 @@ CHECK_OP = [
 # use
 # =========================================================
 
-USE_OP = [
+EXCHANGE_OP = [
     SelectOption(label="01-01. アイコンor絵文字作成", value="01-01", description="3,000"),
     SelectOption(label="02-01. 個人TC作成", value="02-01", description="1,000"),
     SelectOption(label="03-01. 専用ロール作成", value="03-01", description="1,000"),
@@ -67,9 +73,9 @@ USE_OP = [
     SelectOption(label="99-02. 山葵の晩ごはんレシピ", value="99-02", description="500"),
 ]
 
-USE_OP_MAP: dict[str, SelectOption] = {
+EXCHANGE_OP_MAP: dict[str, SelectOption] = {
     option.value: option
-    for option in USE_OP
+    for option in EXCHANGE_OP
 }
 
 
@@ -77,7 +83,7 @@ USE_OP_MAP: dict[str, SelectOption] = {
 # use group
 # =========================================================
 
-USE_GROUP_MAP: dict[str, str] = {
+EXCHANGE_GROUP_MAP: dict[str, str] = {
     "01": "CONTENT",
     "02": "CHANNEL",
     "03": "ROLE",
@@ -89,7 +95,7 @@ USE_GROUP_MAP: dict[str, str] = {
 # use event type
 # =========================================================
 
-USE_EVENT_TYPE_MAP: dict[str, Points_Type] = {
+EXCHANGE_EVENT_TYPE_MAP: dict[str, Points_Type] = {
     "01-01": Points_Type.USE_ICON_EMOJI,
     "02-01": Points_Type.USE_PRIVATE_TC,
     "03-01": Points_Type.USE_ROLE_CREATE,
@@ -106,7 +112,7 @@ USE_EVENT_TYPE_MAP: dict[str, Points_Type] = {
 # thread display
 # =========================================================
 
-THREAD_NAME_MAP: dict[str, tuple[str, str]] = {
+EXCHANGE_THREAD_NAME_MAP: dict[str, tuple[str, str]] = {
     "01": ("📌ICON", "アイコン作成"),
     "02": ("📌TC", "個人TC作成"),
     "03": ("📌ROLE", "専用ロール"),
@@ -118,28 +124,9 @@ THREAD_NAME_MAP: dict[str, tuple[str, str]] = {
 # helpers
 # =========================================================
 
-def get_use_option(value: str) -> SelectOption | None:
-    return USE_OP_MAP.get(value)
+def get_exchange_option(value: str) -> SelectOption | None:
+    return EXCHANGE_OP_MAP.get(value)
 
 
 def parse_price_text(price_text: str) -> int:
     return int((price_text or "0").replace(",", "").strip())
-
-
-def split_group_code(value: str) -> str:
-    return value.split("-")[0]
-
-
-def get_use_event_type(value: str) -> Points_Type | None:
-    return USE_EVENT_TYPE_MAP.get(value)
-
-
-def get_thread_info(value: str) -> tuple[str, str, Points_Type]:
-    group_code = split_group_code(value)
-    prefix, title = THREAD_NAME_MAP.get(group_code, ("📌ETC", "その他"))
-
-    event_type = get_use_event_type(value)
-    if event_type is None:
-        raise ValueError(f"unknown use event type: {value}")
-
-    return prefix, title, event_type

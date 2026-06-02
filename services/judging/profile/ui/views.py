@@ -30,19 +30,19 @@ from services.judging.helper.text import chunk_lines
 from utils.emojis import *
 from utils.colorcodes import *
 from utils.ids import *
-from utils.discord_helpers.resolve import (
+from utils.discord.helpers.resolve import (
     resolve_role,
     resolve_target_member,
     resolve_channel,
     resolve_message,
 )
-from utils.discord_helpers.check import has_any_role
-from utils.discord_helpers.embed import (
+from utils.discord.helpers.check import has_any_role
+from utils.discord.helpers.embed import (
     get_first_embed_from_message,
     extract_user_id_from_author_name,
     extract_user_id_from_author_url,
 )
-from utils.discord_helpers.thread import switch_thread_tag
+from utils.discord.helpers.thread import switch_thread_tag
 
 FILENAME = "judging_views"
 logger = logging.getLogger(__name__)

@@ -4,7 +4,7 @@ import logging
 
 import discord
 
-from on_event.on_voice.context import VoiceStateContext
+from services.voice.state.event import VoiceStateContext
 
 logger = logging.getLogger(__name__)
 

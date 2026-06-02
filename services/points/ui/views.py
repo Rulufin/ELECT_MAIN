@@ -2,373 +2,82 @@
 
 from __future__ import annotations
 
-from typing import Any, Callable, Optional, Sequence
+from typing import Optional
 
-import discord
-from discord import ButtonStyle, Embed, Interaction
-from discord.ui import Button, Select, UserSelect, View
+from discord import ButtonStyle, Interaction, Member, SelectOption
+from discord.ui import Button, Select, UserSelect, View, LayoutView, TextDisplay, Section
 
 from firestores.fs_points import FS_Points
 
-from services.points.constants import CHECK_OP, REQUEST_OP, USE_OP, get_use_option
+from services.points.constants import CHECK_OP, EXCHANGE_OP, get_exchange_option
 from services.points.service import (
     check_points_summary,
-    close_current_thread,
-    confirm_thread_point_use,
-    consume_points_and_open_destination,
+    confirm_exchange_grant,
     create_public_request_thread,
-    open_public_request_review,
+    execute_exchange,
     record_public_play_points,
 )
 from services.points.ui.embeds import (
     Point_Check_Embed,
-    Point_Request_Embed,
-    Point_Request_Public_UserSelect_Embed,
-    Point_Use_Embed,
-    Thread_Close_Embed,
+    Point_Request_Public_Select_Embed,
+    Point_Request_Confirm_Check_Embed,
+    Point_Request_Confirm_Result_Embed,
+    Point_Exchange_Embed,
+    Point_Exchange_Review_Embed,
+    Point_Exchange_Thread_Review_Embed,
+    Point_Exchange_Thread_Result_Embed,
+    Point_Thread_Close_Embed,
+    Point_Channel_Create_Embed,
 )
-from utils.discord_helpers.user_ids import coerce_user_ids
-from utils.discord_tasks.channel_message import safe_message_delete
-from utils.discord_tasks.interaction import (
+from services.system.embeds import No_Permission_Embed
+
+from utils.discord.helpers.user_ids import coerce_user_ids
+from utils.discord.helpers.resolve import resolve_member
+from utils.discord.helpers.check import has_any_role
+from utils.discord.safe_calls.interaction import (
     safe_defer,
     safe_response_edit,
     safe_response_send,
+    safe_followup_send,
+    safe_delete_original_response,
+    safe_edit_original_response,
 )
-from utils.emojis import DEFAULT
+from utils.discord.safe_calls.threads import safe_delete_tc_thread
+from utils.discord.helpers.components import Menu_Container
+from utils.emojis import DEFAULT, CUSTOM
+from utils.ids import MAIN_ROLES
+
 
 FILENAME = "Points_Views"
 
 
-# =========================================================
-# base
-# =========================================================
-
-def make_custom_id(name: str) -> str:
-    return f"{FILENAME}_{name}"
-
-
-class BaseButton(Button):
-    def __init__(
-        self,
-        *,
-        label: str,
-        emoji: Any,
-        style: ButtonStyle,
-        row: Optional[int] = None,
-        disabled: bool = False,
-        custom_id_suffix: Optional[str] = None,
-    ):
-        custom_id_name = self.__class__.__name__
-        if custom_id_suffix:
-            custom_id_name = f"{custom_id_name}_{custom_id_suffix}"
-
-        super().__init__(
-            label=label,
-            emoji=emoji,
-            style=style,
-            row=row,
-            disabled=disabled,
-            custom_id=make_custom_id(custom_id_name),
-        )
-
-
-class BaseSelect(Select):
-    def __init__(self, **kwargs: Any):
-        kwargs.setdefault("custom_id", make_custom_id(self.__class__.__name__))
-        super().__init__(**kwargs)
-
-
-class SingleItemView(View):
-    def __init__(self, item: discord.ui.Item[Any], *, timeout: Optional[float] = None):
-        super().__init__(timeout=timeout)
-        self.add_item(item)
-
-
-class OpenViewButton(BaseButton):
-    def __init__(
-        self,
-        *,
-        label: str,
-        emoji: Any,
-        style: ButtonStyle,
-        row: int,
-        embed_factory: Callable[[], Embed],
-        view_factory: Callable[[], View],
-        custom_id_suffix: str,
-    ):
-        super().__init__(
-            label=label,
-            emoji=emoji,
-            style=style,
-            row=row,
-            custom_id_suffix=custom_id_suffix,
-        )
-        self.embed_factory = embed_factory
-        self.view_factory = view_factory
+class Point_Check_Button(Button):
+    def __init__(self):
+        super().__init__(label="確認", emoji=DEFAULT.EYES, style=ButtonStyle.gray, custom_id=f"{FILENAME}_{self.__class__.__name__}")
 
     async def callback(self, interaction: Interaction):
+        embed = Point_Check_Embed()
+        view = Point_Check_View()
         await safe_response_send(
             interaction=interaction,
-            embed=self.embed_factory(),
-            view=self.view_factory(),
-            ephemeral=True,
-        )
+            embed=embed,
+            view=view,
+            ephemeral=True
+            )
 
-
-# =========================================================
-# common
-# =========================================================
-
-class CancelEditButton(BaseButton):
-    def __init__(self):
-        super().__init__(
-            label="キャンセル",
-            emoji=DEFAULT.CROSS,
-            style=ButtonStyle.gray,
-            row=1,
-        )
-
-    async def callback(self, interaction: Interaction):
-        await safe_response_edit(
-            interaction=interaction,
-            content="🗑️キャンセルしました。",
-            view=None,
-        )
-
-
-class ThreadCloseAskButton(BaseButton):
-    def __init__(self):
-        super().__init__(
-            label="スレッドを閉じる",
-            emoji=DEFAULT.TRASH,
-            style=ButtonStyle.gray,
-            row=0,
-        )
-
-    async def callback(self, interaction: Interaction):
-        await safe_response_send(
-            interaction=interaction,
-            embed=Thread_Close_Embed(),
-            view=ThreadCloseConfirmView(),
-            ephemeral=True,
-        )
-
-
-class ThreadCloseConfirmButton(BaseButton):
-    def __init__(self):
-        super().__init__(
-            label="おっけー",
-            emoji=DEFAULT.CIRCLE,
-            style=ButtonStyle.gray,
-            row=0,
-        )
-
-    async def callback(self, interaction: Interaction):
-        await safe_defer(interaction=interaction, ephemeral=True)
-        await close_current_thread(interaction=interaction)
-
-
-class ThreadCloseCancelButton(BaseButton):
-    def __init__(self):
-        super().__init__(
-            label="やめとく",
-            emoji=DEFAULT.CROSS,
-            style=ButtonStyle.gray,
-            row=0,
-        )
-
-    async def callback(self, interaction: Interaction):
-        await safe_response_send(
-            interaction=interaction,
-            content="キャンセルしました。",
-            ephemeral=True,
-        )
-        if interaction.message is not None:
-            await safe_message_delete(message=interaction.message)
-
-
-class ThreadCloseConfirmView(View):
+class Point_Check_View(View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.add_item(ThreadCloseConfirmButton())
-        self.add_item(ThreadCloseCancelButton())
+        self.add_item(Point_Check_Select())
 
-
-# =========================================================
-# request
-# =========================================================
-
-class RequestSelect(BaseSelect):
-    def __init__(self):
-        super().__init__(
-            placeholder="コンテンツを選択してください。",
-            min_values=1,
-            max_values=1,
-            options=REQUEST_OP,
-            row=1,
-        )
-
-    async def callback(self, interaction: Interaction):
-        selected_value = self.values[0]
-
-        if selected_value == "01":
-            view = PublicRequestUserSelectView(selected_value=selected_value)
-
-            await safe_response_send(
-                interaction=interaction,
-                embed=Point_Request_Public_UserSelect_Embed(),
-                view=view,
-                ephemeral=True,
-            )
-            return
-
-        await safe_response_send(
-            interaction=interaction,
-            content="対象項目の読み込みに失敗しました。",
-            ephemeral=True,
-        )
-
-
-class PublicRequestUserSelect(UserSelect):
-    def __init__(self):
-        super().__init__(
-            placeholder="ユーザーを選択してください。",
-            min_values=1,
-            max_values=25,
-            custom_id=make_custom_id(self.__class__.__name__),
-        )
-
-    async def callback(self, interaction: Interaction):
-        view = self.view
-        if not isinstance(view, PublicRequestUserSelectView):
-            await safe_response_send(
-                interaction=interaction,
-                content="Viewの取得に失敗しました。",
-                ephemeral=True,
-            )
-            return
-
-        view.selected_users = list(self.values)
-        view.confirm_button.disabled = False
-        await interaction.response.edit_message(view=view)
-
-
-class PublicRequestCreateThreadButton(BaseButton):
-    def __init__(self, *, disabled: bool = True):
-        super().__init__(
-            label="おっけー",
-            emoji=DEFAULT.CHECK,
-            style=ButtonStyle.blurple,
-            row=1,
-            disabled=disabled,
-        )
-
-    async def callback(self, interaction: Interaction):
-        view = self.view
-        if not isinstance(view, PublicRequestUserSelectView):
-            await safe_response_send(
-                interaction=interaction,
-                content="Viewの取得に失敗しました。",
-                ephemeral=True,
-            )
-            return
-
-        if not view.selected_value:
-            await safe_response_send(
-                interaction=interaction,
-                content="申請項目の取得に失敗しました。もう一度最初から選択してください。",
-                ephemeral=True,
-            )
-            return
-
-        await safe_defer(interaction=interaction, ephemeral=True)
-        await create_public_request_thread(
-            interaction=interaction,
-            selected_users=view.selected_users,
-            selected_value=view.selected_value,
-            thread_view=PublicRequestThreadView(),
-        )
-
-
-class PublicRequestUserSelectView(View):
-    def __init__(self, *, selected_value: str | None = None):
-        super().__init__(timeout=None)
-        self.selected_value = selected_value
-        self.selected_users: list[discord.abc.User] = []
-        self.confirm_button = PublicRequestCreateThreadButton(disabled=True)
-
-        self.add_item(PublicRequestUserSelect())
-        self.add_item(self.confirm_button)
-        self.add_item(CancelEditButton())
-
-class PublicRequestReviewButton(BaseButton):
-    def __init__(self):
-        super().__init__(
-            label="確定",
-            emoji=DEFAULT.CHECK,
-            style=ButtonStyle.blurple,
-            row=0,
-        )
-
-    async def callback(self, interaction: Interaction):
-        await safe_defer(interaction=interaction, ephemeral=True)
-
-        msg = interaction.message
-        message_content = msg.content if msg else ""
-        user_ids = sorted(coerce_user_ids(message_content))
-
-        await open_public_request_review(
-            interaction=interaction,
-            message_content=message_content,
-            confirm_view=PublicRequestConfirmView(user_ids=user_ids),
-        )
-
-
-class PublicRequestConfirmButton(BaseButton):
-    def __init__(self, *, user_ids: Sequence[int], fs_points: Optional[FS_Points] = None):
-        super().__init__(
-            label="おっけー",
-            emoji=DEFAULT.CHECK,
-            style=ButtonStyle.gray,
-            row=0,
-        )
-        self.user_ids = list(user_ids)
-        self.fs_points = fs_points or FS_Points()
-
-    async def callback(self, interaction: Interaction):
-        await safe_defer(interaction=interaction, ephemeral=True)
-        await record_public_play_points(
-            interaction=interaction,
-            user_ids=self.user_ids,
-            fs_points=self.fs_points,
-        )
-
-
-class PublicRequestConfirmView(View):
-    def __init__(self, *, user_ids: Sequence[int]):
-        super().__init__(timeout=None)
-        self.add_item(PublicRequestConfirmButton(user_ids=user_ids))
-
-
-class PublicRequestThreadView(View):
-    def __init__(self):
-        super().__init__(timeout=None)
-        self.add_item(ThreadCloseAskButton())
-        self.add_item(PublicRequestReviewButton())
-
-
-# =========================================================
-# check
-# =========================================================
-
-class CheckSelect(BaseSelect):
+class Point_Check_Select(Select):
     def __init__(self, *, fs_points: Optional[FS_Points] = None):
         super().__init__(
             placeholder="期間を選択してください。",
             min_values=1,
             max_values=1,
             options=CHECK_OP,
-            row=1,
+            row=0,
         )
         self.fs_points = fs_points or FS_Points()
 
@@ -380,106 +89,426 @@ class CheckSelect(BaseSelect):
             fs_points=self.fs_points,
         )
 
+class Point_Request_Public_Button(Button):
+    def __init__(self):
+        super().__init__(label="申請", emoji=DEFAULT.RATED, style=ButtonStyle.gray, custom_id=f"{FILENAME}_{self.__class__.__name__}")
 
-# =========================================================
-# use
-# =========================================================
+    async def callback(self, interaction: Interaction):
+        embed = Point_Request_Public_Select_Embed()
+        view = Point_Request_Public_View()
 
-class UseSelect(BaseSelect):
-    def __init__(self, *, fs_points: Optional[FS_Points] = None):
-        super().__init__(
-            placeholder="コンテンツを選択してください。",
-            min_values=1,
-            max_values=1,
-            options=USE_OP,
+        await safe_response_send(
+            interaction=interaction,
+            embed=embed,
+            view=view,
+            ephemeral=True
         )
-        self.fs_points = fs_points or FS_Points()
+
+class Point_Request_Public_View(View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(Point_Request_Public_UserSelect())
+        self.add_item(Point_Request_Public_Confirm_Button())
+
+class Point_Request_Public_UserSelect(UserSelect):
+    def __init__(self):
+        super().__init__(
+            placeholder="公開した相手を選択",
+            min_values=1,
+            max_values=25,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
+        )
+
+    async def callback(self, interaction: Interaction):
+        await safe_defer(interaction=interaction)
+
+        self.view.selected_users = self.values
+
+        for item in self.view.children:
+            if isinstance(item, Point_Request_Public_Confirm_Button):
+                item.disabled = False
+                break
+
+        await safe_edit_original_response(interaction=interaction, view=self.view)
+
+class Point_Request_Public_Confirm_Button(Button):
+    def __init__(self):
+        super().__init__(
+            label="おっけー",
+            style=ButtonStyle.green,
+            disabled=True,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
+        )
+
+    async def callback(self, interaction: Interaction):
+        await safe_defer(interaction=interaction)
+
+        selected_users = getattr(self.view, "selected_users", [])
+
+        jump_url = await create_public_request_thread(
+            interaction=interaction,
+            selected_users=selected_users,
+            thread_view=Point_Request_Public_Thread_View(),
+        )
+
+        await safe_edit_original_response(
+            interaction=interaction,
+            embed=Point_Channel_Create_Embed(jump_url),
+            view=None
+        )
+        
+class Point_Request_Public_Thread_View(View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(Point_Thread_Close_Button())
+        self.add_item(Point_Request_Public_Grant_Button())
+
+class Point_Thread_Close_Button(Button):
+    def __init__(self):
+        super().__init__(
+            label="スレッドを閉じる",
+            emoji=DEFAULT.TRASH,
+            style=ButtonStyle.gray,
+            row=0,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
+            )
+    
+    async def callback(self, interaction: Interaction):
+        embed = Point_Thread_Close_Embed()
+        view = Point_Thread_Close_View()
+        await safe_response_send(
+            interaction=interaction,
+            embed=embed,
+            view=view
+        )
+
+class Point_Thread_Close_View(View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(Point_Thread_Close_Confirm_Button())
+        self.add_item(Point_Thread_Close_Cancel_Button())
+
+class Point_Thread_Close_Confirm_Button(Button):
+    def __init__(self):
+        super().__init__(
+            label="おっけー",
+            emoji=DEFAULT.CHECK,
+            style=ButtonStyle.gray,
+            row=0,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
+        )
+
+    async def callback(self, interaction: Interaction):
+        await safe_response_send(
+            interaction=interaction,
+            content="スレッドを削除します。"
+        )
+
+        await safe_delete_tc_thread(
+            thread = interaction.channel,
+            reason = "スレッド削除コマンド",
+            use_queue=True
+        )
+
+class Point_Thread_Close_Cancel_Button(Button):
+    def __init__(self):
+        super().__init__(
+            label="キャンセル",
+            emoji=DEFAULT.CROSS,
+            style=ButtonStyle.gray,
+            row=0,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
+        )
+
+    async def callback(self, interaction: Interaction):
+        await safe_delete_original_response(interaction=interaction)
+
+class Point_Request_Public_Grant_Button(Button):
+    def __init__(self):
+        super().__init__(
+            label="付与",
+            emoji=DEFAULT.CHECK,
+            style=ButtonStyle.gray,
+            row=0,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
+        )
 
     async def callback(self, interaction: Interaction):
         await safe_defer(interaction=interaction, ephemeral=True)
 
-        selected_option = get_use_option(self.values[0])
-        if selected_option is None:
-            await safe_response_send(
+        user = interaction.user
+        if not has_any_role(user, [MAIN_ROLES.ADMINISTRATOR_ONE, MAIN_ROLES.ADMINISTRATOR_TWO]):
+            await safe_followup_send(
                 interaction=interaction,
-                content="利用項目の取得に失敗しました。",
-                ephemeral=True,
+                embed=No_Permission_Embed(),
+                ephemeral=True
             )
             return
 
-        await consume_points_and_open_destination(
-            interaction=interaction,
-            selected_option=selected_option,
-            fs_points=self.fs_points,
-            thread_view=PointsThreadView(),
+        msg = interaction.message
+        content = msg.content
+
+        user_ids = coerce_user_ids(content)
+        guild = interaction.guild
+
+        members = []
+        for user_id in user_ids:
+            member = await resolve_member(guild=guild, user_id=user_id)
+            if member:
+                members.append(member)
+
+        mention_list = "\n".join(
+            f"{i + 1:02d}. {m.display_name} ({m.mention})"
+            for i, m in enumerate(members)
         )
 
+        embed = Point_Request_Confirm_Check_Embed(
+            mention_list=mention_list
+        )
+        view = Point_Request_Public_Grant_View(user_ids=user_ids)
 
-class PointsThreadConfirmButton(BaseButton):
-    def __init__(self, *, fs_points: Optional[FS_Points] = None):
+        await safe_followup_send(
+            interaction=interaction,
+            embed=embed,
+            view=view,
+            ephemeral=True
+        )
+
+class Point_Request_Public_Grant_View(View):
+    def __init__(self, user_ids):
+        super().__init__(timeout=None)
+        self.add_item(Point_Request_Public_Grant_Confirm_Button(user_ids))
+
+class Point_Request_Public_Grant_Confirm_Button(Button):
+    def __init__(self, user_ids):
+        super().__init__(
+            label="おっけー",
+            emoji=DEFAULT.CHECK,
+            style=ButtonStyle.gray,
+            row=0,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
+        )
+        self.user_ids = user_ids
+        self.fs_points = FS_Points()
+    
+    async def callback(self, interaction: Interaction):
+        await safe_defer(interaction=interaction, ephemeral=True)
+
+        result = await record_public_play_points(
+            interaction=interaction,
+            user_ids=self.user_ids,
+            fs_points=self.fs_points,
+        )
+
+        guild = interaction.guild
+
+        async def fmt(uids: list[int]) -> str:
+            lines = []
+            for i, uid in enumerate(uids):
+                member = await resolve_member(guild=guild, user_id=uid)
+                if member:
+                    lines.append(f"{i + 1:02d}. {member.display_name} ({member.mention})")
+                else:
+                    lines.append(f"{i + 1:02d}. <@{uid}>")
+            return "\n".join(lines)
+
+        ok_text = await fmt(result.ok)
+        ng_text = await fmt(result.ng)
+
+        await safe_followup_send(
+            interaction=interaction,
+            embed=Point_Request_Confirm_Result_Embed(ok_text=ok_text, ng_text=ng_text),
+            ephemeral=True,
+        )
+
+class Point_Exchange_Button(Button):
+    def __init__(self):
+        super().__init__(
+            label="交換",
+            emoji=DEFAULT.RESET,
+            style=ButtonStyle.gray,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
+        )
+
+    async def callback(self, interaction: Interaction):
+        embed = Point_Exchange_Embed()
+        view = Point_Exchange_View()
+        await safe_response_send(
+            interaction=interaction,
+            embed=embed,
+            view=view,
+            ephemeral=True
+            )
+        
+class Point_Exchange_View(View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(Point_Exchange_Select())
+
+class Point_Exchange_Select(Select):
+    def __init__(self):
+        super().__init__(
+            placeholder="使用したいコンテンツを選択してください。",
+            min_values=1,
+            max_values=1,
+            options=EXCHANGE_OP,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
+        )
+
+    async def callback(self, interaction: Interaction):
+        await safe_defer(interaction=interaction, ephemeral=True)
+
+        op = get_exchange_option(self.values[0])
+
+        embed = Point_Exchange_Review_Embed(op=op)
+        view = Point_Exchange_Check_View(op=op)
+
+        await safe_edit_original_response(
+            interaction=interaction,
+            embed=embed,
+            view=view
+            )
+        
+class Point_Exchange_Check_View(View):
+    def __init__(self, op):
+        super().__init__(timeout=None)
+        self.add_item(Point_Exchange_Confirm_Button(op))
+        self.add_item(Point_Exchange_Cancel_Button())
+
+class Point_Exchange_Confirm_Button(Button):
+    def __init__(self, op: SelectOption):
+        super().__init__(
+            label="おっけー",
+            emoji=DEFAULT.CHECK,
+            style=ButtonStyle.gray,
+            row=0,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
+        )
+        self.op = op
+        self.fs_point = FS_Points()
+
+    async def callback(self, interaction: Interaction):
+        await safe_defer(interaction=interaction)
+        embed = await execute_exchange(
+            interaction=interaction,
+            op=self.op,
+            fs_points=self.fs_point,
+            thread_view=Point_Exchange_Thread_View(),
+        )
+        await safe_edit_original_response(interaction=interaction, embed=embed)
+
+class Point_Exchange_Cancel_Button(Button):
+    def __init__(self):
+        super().__init__(
+            label="キャンセル",
+            emoji=DEFAULT.TRASH,
+            style=ButtonStyle.gray,
+            row=0,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
+        )
+
+    async def callback(self, interaction: Interaction):
+        await safe_response_edit(
+            interaction=interaction,
+            content="-# キャンセルしました。",
+            view=None,
+        )
+
+class Point_Exchange_Thread_View(View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(Point_Thread_Close_Button())
+        self.add_item(Point_Exchange_Thread_Grant_Button())
+
+class Point_Exchange_Thread_Grant_Button(Button):
+    def __init__(self):
         super().__init__(
             label="確定",
             emoji=DEFAULT.CHECK,
             style=ButtonStyle.gray,
             row=0,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
         )
-        self.fs_points = fs_points or FS_Points()
+
+    async def callback(self, interaction: Interaction):
+        user = interaction.user
+        if not has_any_role(user, [MAIN_ROLES.ADMINISTRATOR_ONE, MAIN_ROLES.ADMINISTRATOR_TWO]):
+            await safe_response_send(
+                interaction=interaction,
+                embed=No_Permission_Embed(),
+                ephemeral=True
+            )
+            return
+
+        msg = interaction.message
+        panel_embed = msg.embeds[0]
+        user_id = int(panel_embed.author.name)
+        guild = interaction.guild
+        user = await resolve_member(guild=guild, user_id=user_id)
+        value = panel_embed.footer.text
+        
+        embed = Point_Exchange_Thread_Review_Embed(user=user)
+        view = Point_Exchange_Thread_Grant_View(user=user, value=value)
+
+        await safe_response_send(
+            interaction=interaction,
+            embed=embed,
+            view=view,
+            ephemeral=True
+        )
+
+class Point_Exchange_Thread_Grant_View(View):
+    def __init__(self, user: Member, value):
+        super().__init__(timeout=None)
+        self.add_item(Point_Exchange_Thread_Grant_Confirm_Button(user, value))
+
+class Point_Exchange_Thread_Grant_Confirm_Button(Button):
+    def __init__(self, user: Member, value):
+        super().__init__(
+            label="おっけー",
+            emoji=DEFAULT.CHECK,
+            style=ButtonStyle.gray,
+            row=0,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}"
+        )
+        self.user = user
+        self.value = value
+        self.fs_points = FS_Points()
 
     async def callback(self, interaction: Interaction):
         await safe_defer(interaction=interaction, ephemeral=True)
-        await confirm_thread_point_use(
-            interaction=interaction,
+        op, total_point = await confirm_exchange_grant(
+            user=self.user,
+            value=self.value,
             fs_points=self.fs_points,
         )
-
-
-class PointsThreadView(View):
-    def __init__(self):
-        super().__init__(timeout=None)
-        self.add_item(ThreadCloseAskButton())
-        self.add_item(PointsThreadConfirmButton())
+        embed = Point_Exchange_Thread_Result_Embed(option=op, total_point=total_point)
+        await safe_followup_send(interaction=interaction, embed=embed)
 
 
 # =========================================================
 # panel
 # =========================================================
 
-class Point_Panel_View(View):
+class Point_Manage_Panel_Container(Menu_Container):
+    def __init__(self):
+        super().__init__(
+            TextDisplay(f"## {CUSTOM.TOKEN}ELECTOKEN管理メニュー"),
+            Section(
+                TextDisplay("トークン数の確認を行います。"),
+                accessory=Point_Check_Button()
+            ),
+            Section(
+                TextDisplay("公開のトークン申請を行います。"),
+                accessory=Point_Request_Public_Button()
+            ),
+            Section(
+                TextDisplay("トークンの交換を行えます。"),
+                accessory=Point_Exchange_Button()
+            )
+        )
+
+class Point_Manage_Panel_View(LayoutView):
     def __init__(self):
         super().__init__(timeout=None)
-
-        self.add_item(
-            OpenViewButton(
-                label="申請",
-                emoji=DEFAULT.MEMO,
-                style=ButtonStyle.gray,
-                row=0,
-                embed_factory=Point_Request_Embed,
-                view_factory=lambda: SingleItemView(RequestSelect(), timeout=None),
-                custom_id_suffix="request",
-            )
-        )
-
-        self.add_item(
-            OpenViewButton(
-                label="確認",
-                emoji=DEFAULT.GRAPH,
-                style=ButtonStyle.gray,
-                row=0,
-                embed_factory=Point_Check_Embed,
-                view_factory=lambda: SingleItemView(CheckSelect(), timeout=None),
-                custom_id_suffix="check",
-            )
-        )
-
-        self.add_item(
-            OpenViewButton(
-                label="利用",
-                emoji=DEFAULT.CHECK,
-                style=ButtonStyle.gray,
-                row=0,
-                embed_factory=Point_Use_Embed,
-                view_factory=lambda: SingleItemView(UseSelect(), timeout=None),
-                custom_id_suffix="use",
-            )
-        )
+        self.add_item(Point_Manage_Panel_Container())

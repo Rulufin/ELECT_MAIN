@@ -1,9 +1,9 @@
 '''
 /root
-├─ extensions/
-│  ├─ on_message.py
-│  ├─ on_voice_state.py
-│  └─ on_channel.py              # on_guild_channel_delete でもOK
+├─ cogs/
+│  ├─ events/on_message.py
+│  ├─ events/on_voice_state.py
+│  └─ events/on_channel.py       # on_guild_channel_delete でもOK
 │
 ├─ services/
 │  └─ rank/

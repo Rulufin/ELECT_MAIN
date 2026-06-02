@@ -1,12 +1,4 @@
-# fs_points.py
-# ✅ Events(ledger) 1本化
-# ✅ totals_by_event(map) / totals_by_genre(map)
-# ✅ Points/{user_id} 直下に flat フィールドも保持（normal_vc_connect 等）
-# ✅ メソッド名を record_event にして意図を明確化（add_points_method は互換 alias）
-# ✅ 期間指定（Weekly / Monthly / All）で「確認集計」できる check_totals_by_period 追加
-# ✅ end_ts は end_exclusive として "< end_ts" に統一
-
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import hashlib
 import json
@@ -20,10 +12,12 @@ from zoneinfo import ZoneInfo
 
 from google.cloud.firestore_v1 import AsyncClient
 from google.cloud import firestore_v1 as firestore
+from google.cloud.firestore_v1.base_query import FieldFilter
 from google.api_core.datetime_helpers import DatetimeWithNanoseconds
 
 from configs.google_setup import client
-from queuemanagers.google.fs_queuemanager import firestore_queue
+from queuemanager.google.firestore import firestore_queue
+from firestores.base import FirestoreBase
 from utils.enum import Points_Type, Genre_Type
 
 logger = logging.getLogger(__name__)
@@ -34,16 +28,13 @@ DateTimeLike = Union[datetime, DatetimeWithNanoseconds]
 
 @dataclass(frozen=True)
 class _DeltaPack:
-    """
-    トップ集計に入れる増減をまとめたもの。
-    """
     total: int
     by_event: Dict[str, int]
     by_genre: Dict[str, int]
     flat_field: Optional[Tuple[str, int]] = None
 
 
-class FS_Points:
+class FS_Points(FirestoreBase):
     """
     汎用 Points（イベント台帳 / ledger）版。
 
@@ -55,7 +46,6 @@ class FS_Points:
       last_updated_at: Timestamp | None
       last_recalc_at: Timestamp | None
       (flat) normal_vc_connect: int
-      (flat) normal_vc_owner: int
       ...
 
       Events/{event_id}
@@ -63,7 +53,7 @@ class FS_Points:
         date_ymd: str
         event_type: str
         genre: str
-        delta: int  # +/- をここに入れる
+        delta: int
         note?: str
         source?: map
         meta?: map
@@ -81,12 +71,11 @@ class FS_Points:
         if not isinstance(client.firestore_db, AsyncClient):
             raise TypeError("client.firestore_db must be an AsyncClient (async Firestore).")
 
-        self.db: AsyncClient = client.firestore_db
+        super().__init__(queue_manager)
         self.root = root_collection
-        self.queue = queue_manager
 
     # ─────────────────────────
-    # Firestore refs / queue wrappers
+    # Firestore refs
     # ─────────────────────────
 
     def _user_doc(self, user_id: IntStr):
@@ -95,34 +84,12 @@ class FS_Points:
     def _events_col(self, user_id: IntStr):
         return self._user_doc(user_id).collection(self.EVENTS_SUBCOLLECTION)
 
-    async def _q(self, fn):
-        try:
-            return await self.queue.enqueue(fn)
-        except Exception as e:
-            logger.error(f"[FS_Points] queue error: {e}", exc_info=True)
-            return None
-
-    async def _q_get(self, doc_ref):
-        # ✅ QueueManager が coroutinefunction 判定できるように async def を渡す
-        async def _op():
-            return await doc_ref.get()
-
-        return await self._q(_op)
-
-    async def _q_set(self, doc_ref, data: Dict[str, Any], *, merge: bool = True):
-        # ✅ QueueManager が coroutinefunction 判定できるように async def を渡す
-        async def _op():
-            return await doc_ref.set(data, merge=merge)
-
-        return await self._q(_op)
-
     # ─────────────────────────
     # normalize helpers
     # ─────────────────────────
 
     @staticmethod
     def _norm_event_type(event_type: Points_Type | str) -> str:
-        # StrEnum は str(event_type) で value が返るが、明示的に統一
         return event_type.value if isinstance(event_type, Points_Type) else str(event_type)
 
     @staticmethod
@@ -163,10 +130,6 @@ class FS_Points:
         """
         period: "Weekly" | "Monthly" | "All"
         returns: (start_inclusive, end_exclusive, label)
-
-        - Weekly: 月曜00:00〜次週月曜00:00（= 月〜日）
-        - Monthly: 当月1日00:00〜翌月1日00:00
-        - All: None, None
         """
         p = str(period).strip()
         now_jst = (now or datetime.now(cls.TZ_JST)).astimezone(cls.TZ_JST)
@@ -187,40 +150,7 @@ class FS_Points:
                 end = start.replace(month=start.month + 1)
             return start, end, "今月"
 
-        # 想定外は All 扱い（必要なら ValueError にしてもOK）
         return None, None, f"不明({p})→全体"
-
-    # ─────────────────────────
-    # init / summary
-    # ─────────────────────────
-
-    async def init_user_if_needed(self, user_id: IntStr) -> None:
-        snap = await self._q_get(self._user_doc(user_id))
-        if snap and snap.exists:
-            return
-
-        init_data: Dict[str, Any] = {
-            "total_points": 0,
-            "totals_by_event": {},
-            "totals_by_genre": {},
-            "last_updated_at": None,
-            "last_recalc_at": None,
-        }
-        await self._q_set(self._user_doc(user_id), init_data, merge=True)
-
-    async def get_summary(self, user_id: IntStr) -> Dict[str, Any]:
-        snap = await self._q_get(self._user_doc(user_id))
-        if not snap or not snap.exists:
-            return {}
-
-        data = snap.to_dict() or {}
-        return {
-            "total_points": int(data.get("total_points", 0) or 0),
-            "totals_by_event": dict(data.get("totals_by_event") or {}),
-            "totals_by_genre": dict(data.get("totals_by_genre") or {}),
-            "last_updated_at": data.get("last_updated_at"),
-            "last_recalc_at": data.get("last_recalc_at"),
-        }
 
     # ─────────────────────────
     # flat field name helper
@@ -228,20 +158,13 @@ class FS_Points:
 
     @staticmethod
     def event_type_to_flat_field(event_type: str) -> str:
-        """
-        "Normal_VC_Connect" -> "normal_vc_connect"
-        """
         s = event_type.strip()
-
-        # "NormalVCConnect" みたいなのも救う
         s = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", s)
         s = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s)
-
         s = s.replace("-", "_").replace(" ", "_")
         s = re.sub(r"__+", "_", s)
         s = s.lower()
         s = re.sub(r"[^a-z0-9_]", "", s)
-
         return s or "unknown_event"
 
     # ─────────────────────────
@@ -259,12 +182,8 @@ class FS_Points:
         source: Optional[Mapping[str, Any]] = None,
         nonce: Optional[str] = None,
     ) -> str:
-        """
-        決定論的 event_id（同一入力→同一ID）
-        - json(sort_keys=True) を使って安定化
-        """
         dt = cls._to_jst(ts)
-        ts_key = dt.strftime("%Y%m%d%H%M%S")  # 秒
+        ts_key = dt.strftime("%Y%m%d%H%M%S")
 
         raw = {
             "user_id": str(user_id),
@@ -279,11 +198,12 @@ class FS_Points:
         return f"{ts_key}_{digest}"
 
     # ─────────────────────────
-    # internal: apply increments
+    # internal helpers
+    # (_run の中から呼ばれる前提。Firestore を直接呼ぶ)
     # ─────────────────────────
 
     async def _get_old_delta(self, doc_ref) -> int:
-        snap = await self._q_get(doc_ref)
+        snap = await doc_ref.get()
         if not snap or not snap.exists:
             return 0
         data = snap.to_dict() or {}
@@ -333,10 +253,59 @@ class FS_Points:
         updates["last_updated_at"] = ts
 
         if updates:
-            await self._q_set(self._user_doc(user_id), updates, merge=True)
+            await self._user_doc(user_id).set(updates, merge=True)
 
     # ─────────────────────────
-    # public: record event (main entry)
+    # init / summary
+    # ─────────────────────────
+
+    async def init_user_if_needed(self, user_id: IntStr) -> None:
+        async def runner():
+            return await self._init_user_if_needed(user_id)
+        try:
+            await self._run(runner)
+        except Exception as e:
+            logger.error(f"[FS_Points] init_user_if_needed queue error: {e}", exc_info=True)
+
+    async def _init_user_if_needed(self, user_id: IntStr) -> None:
+        snap = await self._user_doc(user_id).get()
+        if snap and snap.exists:
+            return
+
+        init_data: Dict[str, Any] = {
+            "total_points": 0,
+            "totals_by_event": {},
+            "totals_by_genre": {},
+            "last_updated_at": None,
+            "last_recalc_at": None,
+        }
+        await self._user_doc(user_id).set(init_data, merge=True)
+
+    async def get_summary(self, user_id: IntStr) -> Dict[str, Any]:
+        async def runner():
+            return await self._get_summary(user_id)
+        try:
+            return await self._run(runner) or {}
+        except Exception as e:
+            logger.error(f"[FS_Points] get_summary queue error: {e}", exc_info=True)
+            return {}
+
+    async def _get_summary(self, user_id: IntStr) -> Dict[str, Any]:
+        snap = await self._user_doc(user_id).get()
+        if not snap or not snap.exists:
+            return {}
+
+        data = snap.to_dict() or {}
+        return {
+            "total_points": int(data.get("total_points", 0) or 0),
+            "totals_by_event": dict(data.get("totals_by_event") or {}),
+            "totals_by_genre": dict(data.get("totals_by_genre") or {}),
+            "last_updated_at": data.get("last_updated_at"),
+            "last_recalc_at": data.get("last_recalc_at"),
+        }
+
+    # ─────────────────────────
+    # record event
     # ─────────────────────────
 
     async def record_event(
@@ -347,29 +316,56 @@ class FS_Points:
         genre: Genre_Type | str,
         delta: int,
         ts: DateTimeLike,
-        # 任意情報
         note: Optional[str] = None,
         source: Optional[Dict[str, Any]] = None,
         meta: Optional[Dict[str, Any]] = None,
-        # idempotency
         event_id: Optional[str] = None,
         nonce: Optional[str] = None,
-        # flat field
         also_write_flat_field: bool = True,
         flat_field_override: Optional[str] = None,
     ) -> str:
-        """
-        1イベントを記録し、トップ集計を「差分」で更新する。
+        async def runner():
+            return await self._record_event(
+                user_id,
+                event_type=event_type,
+                genre=genre,
+                delta=delta,
+                ts=ts,
+                note=note,
+                source=source,
+                meta=meta,
+                event_id=event_id,
+                nonce=nonce,
+                also_write_flat_field=also_write_flat_field,
+                flat_field_override=flat_field_override,
+            )
+        try:
+            return await self._run(runner) or ""
+        except Exception as e:
+            logger.error(f"[FS_Points] record_event queue error: {e}", exc_info=True)
+            return ""
 
-        delta:
-          +30: 加点
-          -10: 減点
-        """
+    async def _record_event(
+        self,
+        user_id: IntStr,
+        *,
+        event_type: Points_Type | str,
+        genre: Genre_Type | str,
+        delta: int,
+        ts: DateTimeLike,
+        note: Optional[str] = None,
+        source: Optional[Dict[str, Any]] = None,
+        meta: Optional[Dict[str, Any]] = None,
+        event_id: Optional[str] = None,
+        nonce: Optional[str] = None,
+        also_write_flat_field: bool = True,
+        flat_field_override: Optional[str] = None,
+    ) -> str:
         delta = int(delta)
         if delta == 0:
             return event_id or "NOOP"
 
-        await self.init_user_if_needed(user_id)
+        await self._init_user_if_needed(user_id)
 
         et = self._norm_event_type(event_type)
         gn = self._norm_genre(genre)
@@ -405,8 +401,7 @@ class FS_Points:
         if meta is not None:
             event_doc["meta"] = dict(meta)
 
-        # event_doc は上書き（矛盾を残さない）
-        await self._q_set(doc_ref, event_doc, merge=False)
+        await doc_ref.set(event_doc, merge=False)
 
         flat_field: Optional[str] = None
         if also_write_flat_field:
@@ -417,9 +412,28 @@ class FS_Points:
 
         return event_id
 
-    # 互換: 旧名を残したい場合（不要なら消してOK）
-    async def add_points_method(self, *args, **kwargs) -> str:  # type: ignore[override]
+    async def add_points_method(self, *args, **kwargs) -> str:
         return await self.record_event(*args, **kwargs)
+
+    async def delete_event(self, user_id: IntStr, event_id: str) -> bool:
+        async def runner():
+            return await self._delete_event(user_id, event_id)
+        try:
+            return await self._run(runner) or False
+        except Exception as e:
+            logger.error(f"[FS_Points] delete_event queue error: {e}", exc_info=True)
+            return False
+
+    async def _delete_event(self, user_id: IntStr, event_id: str) -> bool:
+        try:
+            doc_ref = self._events_col(user_id).document(event_id)
+            snap = await doc_ref.get()
+            if snap.exists:
+                await doc_ref.delete()
+            return True
+        except Exception as e:
+            logger.error(f"[FS_Points] _delete_event failed: {e}", exc_info=True)
+            return False
 
     # ─────────────────────────
     # queries
@@ -435,18 +449,43 @@ class FS_Points:
         genre: Optional[Genre_Type | str] = None,
         limit: int = 200,
     ) -> List[Dict[str, Any]]:
+        async def runner():
+            return await self._list_events(
+                user_id,
+                start_ts=start_ts,
+                end_ts=end_ts,
+                event_type=event_type,
+                genre=genre,
+                limit=limit,
+            )
+        try:
+            return await self._run(runner) or []
+        except Exception as e:
+            logger.error(f"[FS_Points] list_events queue error: {e}", exc_info=True)
+            return []
+
+    async def _list_events(
+        self,
+        user_id: IntStr,
+        *,
+        start_ts: Optional[DateTimeLike] = None,
+        end_ts: Optional[DateTimeLike] = None,
+        event_type: Optional[Points_Type | str] = None,
+        genre: Optional[Genre_Type | str] = None,
+        limit: int = 200,
+    ) -> List[Dict[str, Any]]:
         col = self._events_col(user_id)
         q = col
 
         if start_ts is not None:
-            q = q.where("ts", ">=", start_ts)
+            q = q.where(filter=FieldFilter("ts", ">=", start_ts))
         if end_ts is not None:
-            q = q.where("ts", "<", end_ts)  # ✅ end_exclusive
+            q = q.where(filter=FieldFilter("ts", "<", end_ts))
 
         if event_type is not None:
-            q = q.where("event_type", "==", self._norm_event_type(event_type))
+            q = q.where(filter=FieldFilter("event_type", "==", self._norm_event_type(event_type)))
         if genre is not None:
-            q = q.where("genre", "==", self._norm_genre(genre))
+            q = q.where(filter=FieldFilter("genre", "==", self._norm_genre(genre)))
 
         q = q.order_by("ts")
 
@@ -455,7 +494,7 @@ class FS_Points:
             async for snap in q.limit(int(limit)).stream():
                 out.append(snap.to_dict() or {})
         except Exception as e:
-            logger.error(f"[FS_Points] list_events error: {e}", exc_info=True)
+            logger.error(f"[FS_Points] _list_events error: {e}", exc_info=True)
 
         return out
 
@@ -468,13 +507,36 @@ class FS_Points:
         genre: Optional[Genre_Type | str] = None,
         limit: int = 400,
     ) -> List[Dict[str, Any]]:
+        async def runner():
+            return await self._list_events_by_date(
+                user_id,
+                date_ymd=date_ymd,
+                event_type=event_type,
+                genre=genre,
+                limit=limit,
+            )
+        try:
+            return await self._run(runner) or []
+        except Exception as e:
+            logger.error(f"[FS_Points] list_events_by_date queue error: {e}", exc_info=True)
+            return []
+
+    async def _list_events_by_date(
+        self,
+        user_id: IntStr,
+        *,
+        date_ymd: str,
+        event_type: Optional[Points_Type | str] = None,
+        genre: Optional[Genre_Type | str] = None,
+        limit: int = 400,
+    ) -> List[Dict[str, Any]]:
         col = self._events_col(user_id)
-        q = col.where("date_ymd", "==", date_ymd)
+        q = col.where(filter=FieldFilter("date_ymd", "==", date_ymd))
 
         if event_type is not None:
-            q = q.where("event_type", "==", self._norm_event_type(event_type))
+            q = q.where(filter=FieldFilter("event_type", "==", self._norm_event_type(event_type)))
         if genre is not None:
-            q = q.where("genre", "==", self._norm_genre(genre))
+            q = q.where(filter=FieldFilter("genre", "==", self._norm_genre(genre)))
 
         q = q.order_by("ts")
 
@@ -483,7 +545,7 @@ class FS_Points:
             async for snap in q.limit(int(limit)).stream():
                 out.append(snap.to_dict() or {})
         except Exception as e:
-            logger.error(f"[FS_Points] list_events_by_date error: {e}", exc_info=True)
+            logger.error(f"[FS_Points] _list_events_by_date error: {e}", exc_info=True)
 
         return out
 
@@ -501,10 +563,31 @@ class FS_Points:
         also_flat: bool = True,
         only_flat_event_types: Optional[List[Points_Type | str]] = None,
     ) -> Dict[str, Any]:
-        """
-        Events を舐めて期間集計だけ返す（トップは更新しない）。
-        end_ts は end_exclusive（< end_ts）
-        """
+        async def runner():
+            return await self._calc_totals_in_range(
+                user_id,
+                start_ts=start_ts,
+                end_ts=end_ts,
+                limit=limit,
+                also_flat=also_flat,
+                only_flat_event_types=only_flat_event_types,
+            )
+        try:
+            return await self._run(runner) or {"ok": False, "error": "no result"}
+        except Exception as e:
+            logger.error(f"[FS_Points] calc_totals_in_range queue error: {e}", exc_info=True)
+            return {"ok": False, "error": str(e)}
+
+    async def _calc_totals_in_range(
+        self,
+        user_id: IntStr,
+        *,
+        start_ts: Optional[DateTimeLike] = None,
+        end_ts: Optional[DateTimeLike] = None,
+        limit: int = 20000,
+        also_flat: bool = True,
+        only_flat_event_types: Optional[List[Points_Type | str]] = None,
+    ) -> Dict[str, Any]:
         allow_flat: Optional[set[str]] = None
         if only_flat_event_types is not None:
             allow_flat = {self._norm_event_type(x) for x in only_flat_event_types}
@@ -512,9 +595,9 @@ class FS_Points:
         col = self._events_col(user_id)
         q = col
         if start_ts is not None:
-            q = q.where("ts", ">=", start_ts)
+            q = q.where(filter=FieldFilter("ts", ">=", start_ts))
         if end_ts is not None:
-            q = q.where("ts", "<", end_ts)  # ✅ end_exclusive
+            q = q.where(filter=FieldFilter("ts", "<", end_ts))
         q = q.order_by("ts")
 
         total = 0
@@ -549,7 +632,7 @@ class FS_Points:
                     last_ts = ts
 
         except Exception as e:
-            logger.error(f"[FS_Points] calc_totals_in_range error: {e}", exc_info=True)
+            logger.error(f"[FS_Points] _calc_totals_in_range error: {e}", exc_info=True)
             return {"ok": False, "error": str(e)}
 
         return {
@@ -565,17 +648,34 @@ class FS_Points:
         self,
         user_id: IntStr,
         *,
-        period: str,  # "Weekly" / "Monthly" / "All"
+        period: str,
         limit: int = 20000,
         compare_with_top_when_all: bool = True,
     ) -> Dict[str, Any]:
-        """
-        period を受け取り、期間集計（確認用）を返す。
-        All の場合はトップ集計とも突き合わせできる。
-        """
+        async def runner():
+            return await self._check_totals_by_period(
+                user_id,
+                period=period,
+                limit=limit,
+                compare_with_top_when_all=compare_with_top_when_all,
+            )
+        try:
+            return await self._run(runner) or {"ok": False, "error": "no result"}
+        except Exception as e:
+            logger.error(f"[FS_Points] check_totals_by_period queue error: {e}", exc_info=True)
+            return {"ok": False, "error": str(e)}
+
+    async def _check_totals_by_period(
+        self,
+        user_id: IntStr,
+        *,
+        period: str,
+        limit: int = 20000,
+        compare_with_top_when_all: bool = True,
+    ) -> Dict[str, Any]:
         start, end, label = self.build_period_range(period)
 
-        calc = await self.calc_totals_in_range(
+        calc = await self._calc_totals_in_range(
             user_id,
             start_ts=start,
             end_ts=end,
@@ -595,7 +695,7 @@ class FS_Points:
         }
 
         if period == "All" and compare_with_top_when_all:
-            top = await self.get_summary(user_id)
+            top = await self._get_summary(user_id)
 
             def _as_int_map(x: Any) -> Dict[str, int]:
                 m = dict(x or {})
@@ -627,11 +727,32 @@ class FS_Points:
         also_rebuild_flat_fields: bool = True,
         only_flat_event_types: Optional[List[Points_Type | str]] = None,
     ) -> Dict[str, Any]:
-        """
-        Events を舐めて totals を再計算し、トップへ上書き保存する（整合性担保用）。
-        end_ts は end_exclusive（< end_ts）
-        """
-        await self.init_user_if_needed(user_id)
+        async def runner():
+            return await self._recalc_user_totals(
+                user_id,
+                start_ts=start_ts,
+                end_ts=end_ts,
+                limit=limit,
+                also_rebuild_flat_fields=also_rebuild_flat_fields,
+                only_flat_event_types=only_flat_event_types,
+            )
+        try:
+            return await self._run(runner) or {"ok": False, "error": "no result"}
+        except Exception as e:
+            logger.error(f"[FS_Points] recalc_user_totals queue error: {e}", exc_info=True)
+            return {"ok": False, "error": str(e)}
+
+    async def _recalc_user_totals(
+        self,
+        user_id: IntStr,
+        *,
+        start_ts: Optional[DateTimeLike] = None,
+        end_ts: Optional[DateTimeLike] = None,
+        limit: int = 20000,
+        also_rebuild_flat_fields: bool = True,
+        only_flat_event_types: Optional[List[Points_Type | str]] = None,
+    ) -> Dict[str, Any]:
+        await self._init_user_if_needed(user_id)
 
         allow_flat: Optional[set[str]] = None
         if only_flat_event_types is not None:
@@ -640,16 +761,15 @@ class FS_Points:
         col = self._events_col(user_id)
         q = col
         if start_ts is not None:
-            q = q.where("ts", ">=", start_ts)
+            q = q.where(filter=FieldFilter("ts", ">=", start_ts))
         if end_ts is not None:
-            q = q.where("ts", "<", end_ts)  # ✅ end_exclusive
+            q = q.where(filter=FieldFilter("ts", "<", end_ts))
         q = q.order_by("ts")
 
         total = 0
         by_event: Dict[str, int] = {}
         by_genre: Dict[str, int] = {}
         by_flat: Dict[str, int] = {}
-
         last_ts: Optional[DateTimeLike] = None
 
         try:
@@ -678,7 +798,7 @@ class FS_Points:
                     last_ts = ts
 
         except Exception as e:
-            logger.error(f"[FS_Points] recalc_user_totals error: {e}", exc_info=True)
+            logger.error(f"[FS_Points] _recalc_user_totals error: {e}", exc_info=True)
             return {"ok": False, "error": str(e)}
 
         now = datetime.now(self.TZ_JST)
@@ -691,11 +811,10 @@ class FS_Points:
             "last_updated_at": last_ts or now,
         }
 
-        # フラットフィールド rebuild（古い不要フィールドの削除まではしない）
         if also_rebuild_flat_fields:
             updates.update(by_flat)
 
-        await self._q_set(self._user_doc(user_id), updates, merge=True)
+        await self._user_doc(user_id).set(updates, merge=True)
 
         return {
             "ok": True,
@@ -716,32 +835,34 @@ class FS_Points:
         order_desc: bool = True,
         include_zero: bool = True,
     ) -> List[Dict[str, Any]]:
-        """
-        全ユーザーの total_points を一覧で返す。
+        async def runner():
+            return await self._list_all_user_totals(
+                limit=limit,
+                order_desc=order_desc,
+                include_zero=include_zero,
+            )
+        try:
+            return await self._run(runner) or []
+        except Exception as e:
+            logger.error(f"[FS_Points] list_all_user_totals queue error: {e}", exc_info=True)
+            return []
 
-        returns:
-            [
-                {
-                    "user_id": "1234567890",
-                    "total_points": 150,
-                    "last_updated_at": ...,
-                    "last_recalc_at": ...,
-                },
-                ...
-            ]
-        """
+    async def _list_all_user_totals(
+        self,
+        *,
+        limit: int = 5000,
+        order_desc: bool = True,
+        include_zero: bool = True,
+    ) -> List[Dict[str, Any]]:
         out: List[Dict[str, Any]] = []
 
         try:
-            q = self.db.collection(self.root)
-
-            # total_points 順で見たいケースが多いので並び替え対応
             direction = (
                 firestore.Query.DESCENDING
                 if order_desc
                 else firestore.Query.ASCENDING
             )
-            q = q.order_by("total_points", direction=direction)
+            q = self.db.collection(self.root).order_by("total_points", direction=direction)
 
             i = 0
             async for snap in q.stream():
@@ -765,7 +886,7 @@ class FS_Points:
                 )
 
         except Exception as e:
-            logger.error(f"[FS_Points] list_all_user_totals error: {e}", exc_info=True)
+            logger.error(f"[FS_Points] _list_all_user_totals error: {e}", exc_info=True)
 
         return out
 
@@ -775,10 +896,24 @@ class FS_Points:
         limit: int = 5000,
         include_zero: bool = True,
     ) -> Dict[str, int]:
-        """
-        全ユーザーの total_points を {user_id: total_points} で返す。
-        """
-        rows = await self.list_all_user_totals(
+        async def runner():
+            return await self._list_all_user_totals_map(
+                limit=limit,
+                include_zero=include_zero,
+            )
+        try:
+            return await self._run(runner) or {}
+        except Exception as e:
+            logger.error(f"[FS_Points] list_all_user_totals_map queue error: {e}", exc_info=True)
+            return {}
+
+    async def _list_all_user_totals_map(
+        self,
+        *,
+        limit: int = 5000,
+        include_zero: bool = True,
+    ) -> Dict[str, int]:
+        rows = await self._list_all_user_totals(
             limit=limit,
             order_desc=True,
             include_zero=include_zero,

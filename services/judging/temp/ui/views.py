@@ -20,7 +20,7 @@ from services.judging.temp.ui.embeds import (
 from utils.emojis import *
 from utils.colorcodes import *
 from utils.ids import *
-from utils.discord.role import resolve_role
+from utils.discord.helpers.resolve import resolve_role
 
 from datetime import datetime
 from zoneinfo import ZoneInfo

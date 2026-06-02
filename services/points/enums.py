@@ -17,6 +17,7 @@ class Points_Type(StrEnum):
 
     # USER
     USER_EVENT = "UserEvent"
+    VOICE_APPEAL = "VoiceAppeal"
     PHOTO = "Photo"
 
     # ADMIN
@@ -40,6 +41,7 @@ class Genre_Type(StrEnum):
     VC = "VC"
     PLAY = "PLAY"
     USER = "USER"
+    VOICE_APPEAL = "VOICE_APPEAL"
     PHOTO = "PHOTO"
     ADMIN = "ADMIN"
     USE = "USE"

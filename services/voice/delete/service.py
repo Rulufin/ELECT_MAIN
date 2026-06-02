@@ -6,7 +6,7 @@ import logging
 import discord
 from discord import VoiceChannel
 
-from on_event.on_voice.context import VoiceStateContext
+from services.voice.state.event import VoiceStateContext
 from utils.ids import MAIN_CATEGORIES
 
 logger = logging.getLogger(__name__)

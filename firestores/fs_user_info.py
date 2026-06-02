@@ -1,4 +1,4 @@
-# firestores/fs_profile.py
+﻿# firestores/fs_profile.py
 
 import logging
 from typing import Any, Dict, Optional
@@ -6,12 +6,13 @@ from typing import Any, Dict, Optional
 from google.cloud.firestore_v1 import AsyncClient
 
 from configs.google_setup import client
-from queuemanagers.google.fs_queuemanager import firestore_queue
+from queuemanager.google.firestore import firestore_queue
+from firestores.base import FirestoreBase
 
 logger = logging.getLogger(__name__)
 
 
-class FS_Profile:
+class FS_Profile(FirestoreBase):
     def __init__(self, queue_manager=firestore_queue) -> None:
         """
         Firestore プロフィール用ラッパー。
@@ -22,8 +23,7 @@ class FS_Profile:
         if not isinstance(client.firestore_db, AsyncClient):
             raise TypeError("client.firestore_db must be an AsyncClient (async Firestore).")
 
-        self.db: AsyncClient = client.firestore_db
-        self.queue = queue_manager
+        super().__init__(queue_manager)
 
     # ─────────────────────────
     # Profile 追加 / 更新
@@ -45,7 +45,7 @@ class FS_Profile:
             return await self._add_profile_data(author_id, author_name, message_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Profile] add_profile_data queue error: {e}", exc_info=True)
             return False
@@ -119,7 +119,7 @@ class FS_Profile:
             return await self._get_profile_data(author_id)
 
         try:
-            return await self.queue.enqueue(runner)
+            return await self._run(runner)
         except Exception as e:
             logger.error(f"[FS_Profile] get_profile_data queue error: {e}", exc_info=True)
             return None

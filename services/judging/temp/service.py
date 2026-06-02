@@ -15,7 +15,7 @@ from discord import (
 from services.judging.temp.ui.embeds import JT_Panel_Embed
 from services.judging.temp.ui.views import JT_User_View, JT_Result_View
 
-from utils.discord_helpers.resolve import resolve_member
+from utils.discord.helpers.resolve import resolve_member
 
 from utils.ids import MAIN_CHANNELS, MAIN_ROLES, JUDGE_TAGS
 from firestores.fs_judging_temp import FS_Judging_Temp

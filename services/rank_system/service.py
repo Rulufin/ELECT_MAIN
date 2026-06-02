@@ -140,7 +140,7 @@ class AddPointsResult:
 
 class RankService:
     """
-    extensions から呼ぶ “ユースケース” 層。
+    cogs から呼ぶ “ユースケース” 層。
     - pointsを加算して永続化
     - 合算pointsから level_math で progress を返す
     """
