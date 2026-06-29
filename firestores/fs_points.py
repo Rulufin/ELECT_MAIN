@@ -931,9 +931,8 @@ class FS_Points(FirestoreBase):
         """
         _apply_increments が .set() で誤生成した dotted literal fields（例: totals_by_genre.VC）を
         削除し、全ユーザーの totals を Events から再計算する。
+        FieldPath を使わず、ドット入りキーを除いた clean data で set() 完全上書きする。
         """
-        from google.cloud.firestore_v1.field_path import FieldPath as _FieldPath
-
         user_count = 0
         cleaned_total = 0
 
@@ -944,12 +943,12 @@ class FS_Points(FirestoreBase):
             stale_keys = [k for k in data.keys() if "." in k]
 
             if stale_keys:
-                delete_updates = {_FieldPath(k): firestore.DELETE_FIELD for k in stale_keys}
+                clean_data = {k: v for k, v in data.items() if "." not in k}
 
-                async def _del(ref=snap.reference, upd=delete_updates):
-                    await ref.update(upd)
+                async def _overwrite(ref=snap.reference, cd=clean_data):
+                    await ref.set(cd)
 
-                await self._run(_del)
+                await self._run(_overwrite)
                 cleaned_total += len(stale_keys)
 
             await self.recalc_user_totals(user_id)
