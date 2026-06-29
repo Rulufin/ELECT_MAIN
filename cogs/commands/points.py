@@ -176,6 +176,23 @@ class Points_Main_Cog(commands.Cog):
             ephemeral=True,
         )
 
+    @app_commands.command(name="migrate_point_fields", description="dotted literal fieldsを削除して全ユーザーのtotalsを再計算します")
+    @app_commands.guild_only()
+    @app_commands.default_permissions(administrator=True)
+    async def migrate_point_fields_command(self, interaction: Interaction):
+        await interaction.response.defer(ephemeral=True)
+
+        result = await self.fs_points.migrate_fix_dotted_fields()
+
+        if not result.get("ok"):
+            await interaction.followup.send(f"エラー: {result.get('error')}", ephemeral=True)
+            return
+
+        await interaction.followup.send(
+            f"移行完了: {result['user_count']} ユーザー処理 / {result['cleaned_fields']} フィールド削除",
+            ephemeral=True,
+        )
+
     @app_commands.command(name="set_pic_point", description="写真投稿チャンネルを全精査して未付与のポイントを遡及付与します")
     @app_commands.guild_only()
     @app_commands.default_permissions(administrator=True)

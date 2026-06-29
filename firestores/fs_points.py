@@ -253,7 +253,7 @@ class FS_Points(FirestoreBase):
         updates["last_updated_at"] = ts
 
         if updates:
-            await self._user_doc(user_id).set(updates, merge=True)
+            await self._user_doc(user_id).update(updates)
 
     # ─────────────────────────
     # init / summary
@@ -922,3 +922,37 @@ class FS_Points(FirestoreBase):
             str(row["user_id"]): int(row.get("total_points", 0) or 0)
             for row in rows
         }
+
+    # ─────────────────────────
+    # migration
+    # ─────────────────────────
+
+    async def migrate_fix_dotted_fields(self) -> Dict[str, Any]:
+        """
+        _apply_increments が .set() で誤生成した dotted literal fields（例: totals_by_genre.VC）を
+        削除し、全ユーザーの totals を Events から再計算する。
+        """
+        from google.cloud.firestore_v1.field_path import FieldPath as _FieldPath
+
+        user_count = 0
+        cleaned_total = 0
+
+        async for snap in self.db.collection(self.root).stream():
+            user_id = snap.id
+            data = snap.to_dict() or {}
+
+            stale_keys = [k for k in data.keys() if "." in k]
+
+            if stale_keys:
+                delete_updates = {_FieldPath(k): firestore.DELETE_FIELD for k in stale_keys}
+
+                async def _del(ref=snap.reference, upd=delete_updates):
+                    await ref.update(upd)
+
+                await self._run(_del)
+                cleaned_total += len(stale_keys)
+
+            await self.recalc_user_totals(user_id)
+            user_count += 1
+
+        return {"ok": True, "user_count": user_count, "cleaned_fields": cleaned_total}
