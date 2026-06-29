@@ -50,7 +50,7 @@ class On_Message_Main_Cog(commands.Cog):
                 message_id=message.id,
             )
 
-            await self.post_point_service.grant_post_points(message)
+        await self.post_point_service.grant_post_points(message)
 
     @commands.Cog.listener()
     async def on_raw_message_delete(self, payload: discord.RawMessageDeleteEvent):
