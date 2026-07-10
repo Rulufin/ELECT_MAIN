@@ -40,7 +40,6 @@ class On_Reaction_Main_Cog(commands.Cog):
 
         guild: Guild | None = await resolve_guild(self.bot, payload.guild_id)
         if guild is None:
-            # DM などギルド外はスキップ
             return
 
         member: Member | None = await resolve_member(
@@ -51,7 +50,7 @@ class On_Reaction_Main_Cog(commands.Cog):
         if member is None:
             return
 
-        # ADMINISTRATOR_IDS のロールを持っているか
+        # 管理者ロールを持っていない場合はスキップ
         if not has_any_role(member, ADMINISTRATOR_IDS):
             return
 
@@ -65,6 +64,11 @@ class On_Reaction_Main_Cog(commands.Cog):
 
         message: Message | None = await resolve_message(channel, payload.message_id)
         if message is None:
+            return
+
+        # リアクションが既に付いている場合はスキップ（2回目以降）
+        total_reactions = sum(r.count for r in message.reactions)
+        if total_reactions > 1:
             return
 
         await self.profile_judge_service.start_from_reaction(
