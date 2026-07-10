@@ -1,5 +1,7 @@
 import logging
+import re
 import textwrap
+from datetime import date
 from typing import Optional
 
 import discord
@@ -53,6 +55,73 @@ LABEL_MAP = {
     "cross": "❌️",
     "caution": "注意",
 }
+
+# =========================================================
+# 干支・元号ヘルパー
+# =========================================================
+
+ZODIAC = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]
+
+def eto_from_year_simple(year: int) -> str:
+    return ZODIAC[(year - 2020) % 12]
+
+GENGO_START = {"S": 1926, "H": 1989, "R": 2019}
+GENGO_NAME = {"S": "昭和", "H": "平成", "R": "令和"}
+
+def seireki_to_gengo(year: int) -> str:
+    if year >= 2019:
+        return f"令和{year - 2019 + 1}年"
+    if year >= 1989:
+        return f"平成{year - 1989 + 1}年"
+    if year >= 1926:
+        return f"昭和{year - 1926 + 1}年"
+    return "（対応外）"
+
+def parse_birth_year(text: str) -> tuple[int, str]:
+    t = text.strip()
+    if not t:
+        raise ValueError("empty")
+    if re.fullmatch(r"\d{4}", t):
+        y = int(t)
+        return y, seireki_to_gengo(y)
+    t2 = t.upper().replace("昭和", "S").replace("平成", "H").replace("令和", "R")
+    m = re.fullmatch(r"([SHR])\s*(\d{1,2})", t2)
+    if m:
+        code, n = m.group(1), int(m.group(2))
+        y = GENGO_START[code] + (n - 1)
+        return y, f"{GENGO_NAME[code]}{n}年"
+    raise ValueError("format")
+
+def parse_monthday(mmdd: str) -> tuple[int, int]:
+    s = mmdd.strip()
+    if not re.fullmatch(r"\d{4}", s):
+        raise ValueError("mmdd")
+    mo, d = int(s[:2]), int(s[2:])
+    date(2000, mo, d)
+    return mo, d
+
+def calc_age_from_monthday(birth_year: int, birth_month: int, birth_day: int, today: date | None = None) -> int:
+    today = today or date.today()
+    age = today.year - birth_year
+    if (today.month, today.day) < (birth_month, birth_day):
+        age -= 1
+    return age
+
+ETO_MAP = {
+    "ねずみ": "子", "うし": "丑", "とら": "寅", "うさぎ": "卯",
+    "たつ": "辰", "へび": "巳", "うま": "午", "ひつじ": "未",
+    "さる": "申", "とり": "酉", "いぬ": "戌", "いのしし": "亥",
+}
+
+def normalize_eto(s: str) -> str:
+    s = s.strip()
+    for e in ZODIAC:
+        if e in s:
+            return e
+    for k, v in ETO_MAP.items():
+        if k in s:
+            return v
+    return s
 
 
 # =========================================================
@@ -919,11 +988,111 @@ class Prof_Fail_Button(Button):
 # Interview
 # =========================================================
 
+class Eto_Check_Button(Button):
+    def __init__(self, label, emoji, style, row):
+        super().__init__(
+            label=label,
+            emoji=emoji,
+            style=style,
+            row=row,
+            custom_id=f"{FILENAME}_{self.__class__.__name__}",
+        )
+
+    async def callback(self, interaction: Interaction):
+        await interaction.response.send_modal(Eto_Check_Modal())
+
+
+class Eto_Check_Modal(Modal):
+    def __init__(self):
+        super().__init__(title="干支チェック", timeout=None)
+        self.year_input = TextInput(
+            label="生まれ年（西暦 or 元号）",
+            placeholder="例: 2003 / H15 / 平成15 / R3",
+            required=False,
+        )
+        self.monthday_input = TextInput(
+            label="生まれ月日（0101～1231）",
+            placeholder="例: 0721",
+            required=True,
+            max_length=4,
+        )
+        self.age_input = TextInput(
+            label="年齢",
+            placeholder="例: 22",
+            required=False,
+            max_length=3,
+        )
+        self.eto_input = TextInput(
+            label="干支（ひらがな）",
+            required=True,
+        )
+        self.add_item(self.year_input)
+        self.add_item(self.monthday_input)
+        self.add_item(self.age_input)
+        self.add_item(self.eto_input)
+
+    async def on_submit(self, interaction: Interaction):
+        try:
+            seireki_year, gengo_str = parse_birth_year(self.year_input.value)
+            month, day = parse_monthday(self.monthday_input.value)
+        except Exception:
+            await interaction.response.send_message(
+                "入力形式が違うよ。例：年=「2003」or「H15」、月日=「0721」みたいに入れてね。",
+                ephemeral=True,
+            )
+            return
+
+        eto_calc = eto_from_year_simple(seireki_year)
+        age_calc = calc_age_from_monthday(seireki_year, month, day)
+
+        eto_user = normalize_eto(self.eto_input.value) if self.eto_input.value.strip() else ""
+        age_user = int(self.age_input.value) if self.age_input.value.strip().isdigit() else None
+
+        eto_match = (eto_user == eto_calc) if eto_user else None
+        age_match = (age_user == age_calc) if age_user is not None else None
+
+        def mark(v: bool | None) -> str:
+            if v is None:
+                return "—"
+            return "✅一致" if v else "❌不一致"
+
+        yyyy = f"{seireki_year}年（{gengo_str}）"
+        mmdd = f"{month:02d}/{day:02d}"
+
+        embed = discord.Embed(title="__干支チェック__", color=0x2B90D9)
+        embed.add_field(
+            name="入力値",
+            value=(
+                f"生年月: **{yyyy} {mmdd}**\n"
+                f"年齢: **{age_user if age_user is not None else '未入力'}**\n"
+                f"干支: **{eto_user if eto_user else '未入力'}**"
+            ),
+            inline=False,
+        )
+        embed.add_field(
+            name="Bot計算値",
+            value=(
+                f"生年月: **{yyyy} {mmdd}**\n"
+                f"推定年齢: **{age_calc}**\n"
+                f"干支: **{eto_calc}**"
+            ),
+            inline=False,
+        )
+        embed.add_field(
+            name="判定",
+            value=f"干支: {mark(eto_match)}\n年齢: {mark(age_match)}",
+            inline=False,
+        )
+
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
 class Interview_Panel_View(View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.add_item(Interview_Pass_Button(label="面接合格", emoji=DEFAULT.CIRCLE, style=ButtonStyle.green, row=0))
-        self.add_item(Interview_Fail_Button(label="面接不合格", emoji=DEFAULT.TRASH, style=ButtonStyle.red, row=0))
+        self.add_item(Eto_Check_Button(label="干支チェック", emoji=DEFAULT.EYES, style=ButtonStyle.gray, row=0))
+        self.add_item(Interview_Pass_Button(label="面接合格", emoji=DEFAULT.CIRCLE, style=ButtonStyle.green, row=1))
+        self.add_item(Interview_Fail_Button(label="面接不合格", emoji=DEFAULT.TRASH, style=ButtonStyle.red, row=1))
 
 
 class Interview_Pass_Button(Button):
