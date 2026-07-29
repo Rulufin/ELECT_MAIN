@@ -21,6 +21,12 @@ POST_POINT_RULES: dict[int, PostPointRule] = {
         event_type=Points_Type.VOICE_APPEAL,
         genre=Genre_Type.VOICE_APPEAL,
     ),
+    MAIN_CHANNELS.VOICE_APPEAL_ADULT: PostPointRule(
+        point=50,
+        note="18禁ボイスアピール投稿",
+        event_type=Points_Type.VOICE_APPEAL,
+        genre=Genre_Type.VOICE_APPEAL,
+    ),    
     MAIN_CHANNELS.PHOTO_ADULT: PostPointRule(
         point=50,
         note="18禁画像投稿",
