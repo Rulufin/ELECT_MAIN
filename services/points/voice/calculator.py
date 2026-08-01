@@ -95,8 +95,6 @@ class VoicePointCalculator:
                 )
                 return
 
-            rule: VC_Point_Rule = VC_POINT_RULES[vc_type]
-
             deleted_at = (
                 self._to_jst(deleted_at_raw)
                 if deleted_at_raw is not None
@@ -107,6 +105,8 @@ class VoicePointCalculator:
                 if created_at_raw is not None
                 else None
             )
+
+            rule: VC_Point_Rule = VC_POINT_RULES[vc_type].resolve(created_at or deleted_at)
 
             events_per_user = self._build_events_per_user(members)
 

@@ -45031,3 +45031,185 @@ blacklist_from: []
 行番号: 113
 メッセージ: [on_ready_main] talk_history recovered done vcs=2 users=4
 -------------------------------
+日時: 2026-06-11 06:30:11,929
+ファイル名: firestore.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2026-06-11 06:30:11,940
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2026-06-11 06:30:12,027
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2026-06-11 06:30:12,110
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2026-06-11 07:12:17,799
+ファイル名: proactor_events.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 633
+メッセージ: Using proactor: IocpProactor
+-------------------------------
+日時: 2026-06-11 07:12:17,801
+ファイル名: client.py
+関数名: login
+ログレベル: INFO
+行番号: 666
+メッセージ: logging in using static token
+-------------------------------
+日時: 2026-06-11 07:12:18,490
+ファイル名: google_setup.py
+関数名: init_firestore
+ログレベル: INFO
+行番号: 38
+メッセージ: Firestore非同期クライアントが初期化されました
+-------------------------------
+日時: 2026-06-11 07:12:20,579
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 570
+メッセージ: Shard ID None has connected to Gateway (Session ID: adb85f747616e5e81b4195ae3448cdb4).
+-------------------------------
+日時: 2026-06-11 07:12:22,925
+ファイル名: on_ready.py
+関数名: _recover_talk_history
+ログレベル: INFO
+行番号: 113
+メッセージ: [on_ready_main] talk_history recovered done vcs=2 users=4
+-------------------------------
+日時: 2026-06-11 07:26:20,782
+ファイル名: firestore.py
+関数名: start_workers
+ログレベル: INFO
+行番号: 69
+メッセージ: Starting workers...
+-------------------------------
+日時: 2026-06-11 07:26:20,785
+ファイル名: _channel.py
+関数名: __init__
+ログレベル: DEBUG
+行番号: 368
+メッセージ: Using AsyncIOEngine.POLLER as I/O engine
+-------------------------------
+日時: 2026-06-11 07:26:20,836
+ファイル名: connectionpool.py
+関数名: _new_conn
+ログレベル: DEBUG
+行番号: 1049
+メッセージ: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+-------------------------------
+日時: 2026-06-11 07:26:20,903
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
+日時: 2026-06-11 07:33:01,659
+ファイル名: service.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 85
+メッセージ: [voice_log_service] JOIN user=592713132791562260 vc=1504039832052039700 category_id=1423777741697974292
+-------------------------------
+日時: 2026-06-11 07:40:30,796
+ファイル名: service.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 127
+メッセージ: [voice_log_service] LEAVE user=592713132791562260 vc=1504039832052039700 category_id=1423777741697974292
+-------------------------------
+日時: 2026-06-11 07:51:56,896
+ファイル名: gateway.py
+関数名: received_message
+ログレベル: INFO
+行番号: 575
+メッセージ: Shard ID None has successfully RESUMED session adb85f747616e5e81b4195ae3448cdb4.
+-------------------------------
+日時: 2026-06-11 07:57:20,036
+ファイル名: service.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 85
+メッセージ: [voice_log_service] JOIN user=311795941281628160 vc=1514402446661652533 category_id=1423777741697974292
+-------------------------------
+日時: 2026-06-11 08:05:16,260
+ファイル名: service.py
+関数名: _apply_delta
+ログレベル: DEBUG
+行番号: 70
+メッセージ: [voice_user_limit_service] ch=1514405098766471189 user_limit 5 -> 6 (delta=1)
+-------------------------------
+日時: 2026-06-11 08:12:07,647
+ファイル名: service.py
+関数名: _apply_delta
+ログレベル: DEBUG
+行番号: 70
+メッセージ: [voice_user_limit_service] ch=1514405098766471189 user_limit 6 -> 5 (delta=-1)
+-------------------------------
+日時: 2026-06-11 08:12:12,290
+ファイル名: service.py
+関数名: _apply_delta
+ログレベル: DEBUG
+行番号: 70
+メッセージ: [voice_user_limit_service] ch=1514405098766471189 user_limit 5 -> 6 (delta=1)
+-------------------------------
+日時: 2026-06-11 08:17:44,568
+ファイル名: service.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 127
+メッセージ: [voice_log_service] LEAVE user=358588847493218307 vc=1514402446661652533 category_id=1423777741697974292
+-------------------------------
+日時: 2026-06-11 08:18:08,856
+ファイル名: service.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 127
+メッセージ: [voice_log_service] LEAVE user=311795941281628160 vc=1514402446661652533 category_id=1423777741697974292
+-------------------------------
+日時: 2026-06-11 08:18:09,663
+ファイル名: calculator.py
+関数名: process_vc_closed
+ログレベル: INFO
+行番号: 199
+メッセージ: [VoicePointCalculator] Processed VC 1514402446661652533: type=normal category_id=1423777741697974292 owner=358588847493218307 owner_points=60 connect_saved=2
+-------------------------------
+日時: 2026-06-11 08:21:03,559
+ファイル名: service.py
+関数名: log_channel_changes
+ログレベル: INFO
+行番号: 127
+メッセージ: [voice_log_service] LEAVE user=1115611037006311444 vc=1514260284351447110 category_id=1423780294305124362
+-------------------------------
+日時: 2026-06-11 08:25:45,275
+ファイル名: connectionpool.py
+関数名: _get_conn
+ログレベル: DEBUG
+行番号: 289
+メッセージ: Resetting dropped connection: oauth2.googleapis.com
+-------------------------------
+日時: 2026-06-11 08:25:45,353
+ファイル名: connectionpool.py
+関数名: _make_request
+ログレベル: DEBUG
+行番号: 544
+メッセージ: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+-------------------------------
