@@ -24,6 +24,7 @@ cogs_commands = (
     'secret_recruit',
     'points',
     'vc_create',
+    'rank',
 )
 
 class MyBot(commands.Bot):

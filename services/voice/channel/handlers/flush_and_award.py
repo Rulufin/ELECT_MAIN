@@ -84,6 +84,9 @@ async def flush_and_award_on_voice_delete(
         total_raw_seconds += raw_sec
         total_points += int(gained)
 
+        # NOTE: VCRankService (on_voice_state経由) がすでに退出時に付与している。
+        # flush_and_award が on_guild_channel_delete に接続された場合は
+        # この行が二重カウントになるため削除すること。
         add_coros.append(
             ctx.fs_rank.add_vc_points(user_id=int(user_id), add=int(gained))
         )

@@ -1,240 +1,201 @@
-# services/rank/service.py
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
-from typing import Optional, Literal
+from datetime import datetime, timezone
+from typing import Optional
 
-import time
+import discord
 
-from .level_math import RankProgress, progress_from_points
+from firestores.fs_rank import FS_Rank
+from services.rank_system._rank_config import (
+    resolve_vc_rule, resolve_tc_rule, is_eligible, resolve_role_multiplier,
+)
+from services.rank_system.voice_points import SECONDS_PER_POINT, seconds_to_points
+from services.rank_system.text_points import TextPointRule, calc_text_points
+
+TC_COOLDOWN_SEC: int = 30  # 同一ユーザーへの付与間隔（秒）
+_TC_RULE = TextPointRule()  # デフォルト: 15〜25pt, min_chars=3
+
+logger = logging.getLogger(__name__)
 
 
-RankKind = Literal["tc", "vc"]
-
-
-@dataclass(frozen=True)
-class RankState:
-    """永続化する想定のユーザーランク状態（最小構成）。"""
+@dataclass
+class _VCSession:
+    join_time: datetime
     guild_id: int
-    user_id: int
-
-    tc_points: int
-    vc_points: int
-
-    updated_at: float  # unix seconds
+    channel_id: int
+    multiplier: float
+    mic_mute_ok: bool   # True = ミュートでも加算対象
+    credited_points: int = 0
 
 
-class RankRepository:
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def _due_points(session: _VCSession, now: datetime) -> int:
+    elapsed = (now - session.join_time).total_seconds()
+    return seconds_to_points(elapsed * session.multiplier, seconds_per_point=SECONDS_PER_POINT)
+
+
+class VCRankService:
+    """VCランクポイントのセッション管理・付与ロジック。
+
+    - start_session / flush_session でセッションを管理する。
+    - tick() を定期的に呼ぶことで累計ポイントを段階付与する。
     """
-    永続化の抽象I/F。
-    Firestore実装は repo_firestore.py でこのI/Fを満たすクラスにする想定。
-    """
 
-    async def get_state(self, guild_id: int, user_id: int) -> Optional[RankState]:
-        raise NotImplementedError
+    def __init__(self, fs_rank: FS_Rank) -> None:
+        self.fs_rank = fs_rank
+        self._sessions: dict[int, _VCSession] = {}  # user_id → session
 
-    async def upsert_state(self, state: RankState) -> None:
-        raise NotImplementedError
+    # ─────────────────────────────────────────────────────────
+    # session management
+    # ─────────────────────────────────────────────────────────
 
-    async def add_points(
+    def _effective_multiplier(self, member: discord.Member, rule) -> float:
+        base = max(float(rule.multiplier or 1.0), 0.0) or 1.0
+        return base * resolve_role_multiplier(member, rule.role_multipliers)
+
+    def start_session(
         self,
-        guild_id: int,
-        user_id: int,
-        *,
-        add_tc: int = 0,
-        add_vc: int = 0,
-        now: Optional[float] = None,
-    ) -> RankState:
-        """
-        競合しにくい形で加算したいので、repo側でtransaction/atomic incrementにするのが理想。
-        仮実装では get→加算→upsert でもOK。
-        """
-        raise NotImplementedError
-
-
-class InMemoryRankRepository(RankRepository):
-    """
-    まず動かす用（再起動で消える）。
-    guild_id, user_id ごとの RankState を保持。
-    """
-
-    def __init__(self) -> None:
-        self._data: dict[tuple[int, int], RankState] = {}
-
-    async def get_state(self, guild_id: int, user_id: int) -> Optional[RankState]:
-        return self._data.get((guild_id, user_id))
-
-    async def upsert_state(self, state: RankState) -> None:
-        self._data[(state.guild_id, state.user_id)] = state
-
-    async def add_points(
-        self,
-        guild_id: int,
-        user_id: int,
-        *,
-        add_tc: int = 0,
-        add_vc: int = 0,
-        now: Optional[float] = None,
-    ) -> RankState:
-        now = time.time() if now is None else float(now)
-
-        cur = self._data.get((guild_id, user_id))
-        if cur is None:
-            cur = RankState(
-                guild_id=guild_id,
-                user_id=user_id,
-                tc_points=0,
-                vc_points=0,
-                updated_at=now,
-            )
-
-        tc = max(0, cur.tc_points + int(add_tc))
-        vc = max(0, cur.vc_points + int(add_vc))
-
-        new_state = RankState(
-            guild_id=guild_id,
-            user_id=user_id,
-            tc_points=tc,
-            vc_points=vc,
-            updated_at=now,
-        )
-        self._data[(guild_id, user_id)] = new_state
-        return new_state
-
-
-class CooldownStore:
-    """
-    TCなどで「ユーザーごとのクールダウン」を持ちたい場合の最小I/F。
-    - Firestoreに持たずメモリでOKなら、このまま InMemoryCooldownStore を使う。
-    """
-
-    async def get_last_ts(self, key: str) -> Optional[float]:
-        raise NotImplementedError
-
-    async def set_last_ts(self, key: str, ts: float) -> None:
-        raise NotImplementedError
-
-
-class InMemoryCooldownStore(CooldownStore):
-    def __init__(self) -> None:
-        self._last: dict[str, float] = {}
-
-    async def get_last_ts(self, key: str) -> Optional[float]:
-        return self._last.get(key)
-
-    async def set_last_ts(self, key: str, ts: float) -> None:
-        self._last[key] = ts
-
-
-@dataclass(frozen=True)
-class AddPointsResult:
-    """points加算後に返す情報（embed表示用など）。"""
-    state: RankState
-
-    # 合算（TC+VC）
-    total_points: int
-
-    # 進捗（合算を元に算出）
-    progress: RankProgress
-
-
-class RankService:
-    """
-    cogs から呼ぶ “ユースケース” 層。
-    - pointsを加算して永続化
-    - 合算pointsから level_math で progress を返す
-    """
-
-    def __init__(
-        self,
-        repo: RankRepository,
-        *,
-        max_level: Optional[int] = 100,
-        cooldown_store: Optional[CooldownStore] = None,
+        member: discord.Member,
+        channel: discord.abc.GuildChannel,
+        at: Optional[datetime] = None,
     ) -> None:
-        self.repo = repo
-        self.max_level = max_level
-        self.cooldowns = cooldown_store or InMemoryCooldownStore()
-
-    def _cooldown_key(self, guild_id: int, user_id: int, kind: RankKind) -> str:
-        return f"rank:{guild_id}:{user_id}:{kind}"
-
-    async def add_points(
-        self,
-        guild_id: int,
-        user_id: int,
-        *,
-        tc_points: int = 0,
-        vc_points: int = 0,
-        now: Optional[float] = None,
-    ) -> AddPointsResult:
-        """
-        純粋に加算して結果を返す（クールダウン判定なし）。
-        """
-        state = await self.repo.add_points(
-            guild_id,
-            user_id,
-            add_tc=int(tc_points),
-            add_vc=int(vc_points),
-            now=now,
+        rule = resolve_vc_rule(channel)
+        if not is_eligible(member, rule):
+            return
+        self._sessions[member.id] = _VCSession(
+            join_time=at or _utcnow(),
+            guild_id=int(member.guild.id),
+            channel_id=int(channel.id),
+            multiplier=self._effective_multiplier(member, rule),
+            mic_mute_ok=bool(rule.mic_mute),
         )
 
-        total = state.tc_points + state.vc_points
-        pr = progress_from_points(total, max_level=self.max_level)
+    async def flush_session(self, user_id: int, now: Optional[datetime] = None) -> int:
+        """残ポイントを付与してセッションを削除する。付与したポイント数を返す。"""
+        session = self._sessions.pop(user_id, None)
+        if session is None:
+            return 0
+        due = _due_points(session, now or _utcnow())
+        to_grant = due - session.credited_points
+        if to_grant > 0:
+            await self.fs_rank.add_vc_points(user_id, to_grant)
+        return max(to_grant, 0)
 
-        return AddPointsResult(
-            state=state,
-            total_points=total,
-            progress=pr,
-        )
+    def seed_guild(self, guild: discord.Guild, at: Optional[datetime] = None) -> None:
+        """起動時などに、すでにVCにいるメンバーのセッションを初期化する。"""
+        now = at or _utcnow()
+        channels = [*guild.voice_channels, *guild.stage_channels]
+        for channel in channels:
+            rule = resolve_vc_rule(channel)
+            if not rule.enabled:
+                continue
+            for member in channel.members:
+                if member.bot:
+                    continue
+                self.start_session(member, channel, at=now)
 
-    async def add_points_with_cooldown(
+    # ─────────────────────────────────────────────────────────
+    # periodic tick (5分ごとにcogから呼ぶ)
+    # ─────────────────────────────────────────────────────────
+
+    async def tick(self, bot: discord.Client) -> None:
+        """5分ごとに差分ポイントを加算する。cogのtasks.loopから呼ぶ。"""
+        now = _utcnow()
+        for user_id, session in list(self._sessions.items()):
+            if not session.mic_mute_ok and _is_muted(bot, session, user_id):
+                continue
+
+            due = _due_points(session, now)
+            to_grant = due - session.credited_points
+            if to_grant > 0:
+                session.credited_points += to_grant  # await 前に確定（flush との二重カウント防止）
+                await self.fs_rank.add_vc_points(user_id, to_grant)
+
+    # ─────────────────────────────────────────────────────────
+    # voice state routing
+    # ─────────────────────────────────────────────────────────
+
+    async def handle_voice_state(
         self,
-        guild_id: int,
-        user_id: int,
-        *,
-        kind: RankKind,
-        add_points: int,
-        cooldown_sec: float,
-        now: Optional[float] = None,
-    ) -> Optional[AddPointsResult]:
-        """
-        例: on_message のTC付与で使う想定。
-        - kind="tc" に対して cooldown を適用
-        - クールダウン中なら None を返す
-        """
-        now = time.time() if now is None else float(now)
-        key = self._cooldown_key(guild_id, user_id, kind)
-        last = await self.cooldowns.get_last_ts(key)
+        member: discord.Member,
+        before: discord.VoiceState,
+        after: discord.VoiceState,
+    ) -> None:
+        if member.bot:
+            return
 
-        if last is not None and (now - last) < float(cooldown_sec):
-            return None
+        before_ch = before.channel
+        after_ch = after.channel
 
-        await self.cooldowns.set_last_ts(key, now)
+        if before_ch == after_ch:
+            return  # ミュート/スピーカー切替のみ
 
-        if kind == "tc":
-            return await self.add_points(guild_id, user_id, tc_points=add_points, now=now)
-        else:
-            return await self.add_points(guild_id, user_id, vc_points=add_points, now=now)
+        if before_ch is not None:
+            await self.flush_session(member.id)
 
-    async def get_progress(
-        self,
-        guild_id: int,
-        user_id: int,
-    ) -> AddPointsResult:
-        """
-        現在値だけ読み出して progress を返す（付与なし）。
-        """
-        st = await self.repo.get_state(guild_id, user_id)
-        now = time.time()
-        if st is None:
-            st = RankState(guild_id=guild_id, user_id=user_id, tc_points=0, vc_points=0, updated_at=now)
+        if after_ch is not None:
+            self.start_session(member, after_ch)
 
-        total = st.tc_points + st.vc_points
-        pr = progress_from_points(total, max_level=self.max_level)
 
-        return AddPointsResult(
-            state=st,
-            total_points=total,
-            progress=pr,
-        )
+class TCRankService:
+    """TCランクポイントのメッセージ付与ロジック。
+
+    - メッセージごとに rule を解決し、クールダウンを挟みながら付与する。
+    - クールダウンはインメモリ管理（再起動でリセット）。
+    """
+
+    def __init__(self, fs_rank: FS_Rank) -> None:
+        self.fs_rank = fs_rank
+        self._cooldowns: dict[int, datetime] = {}  # user_id → last granted time
+
+    def _effective_multiplier(self, member: discord.Member, rule) -> float:
+        base = max(float(rule.multiplier or 1.0), 0.0) or 1.0
+        return base * resolve_role_multiplier(member, rule.role_multipliers)
+
+    async def handle_message(self, message: discord.Message) -> int:
+        """1メッセージに対してTCポイントを付与する。付与したポイント数を返す。"""
+        member = message.author
+        if not isinstance(member, discord.Member):
+            return 0
+
+        channel = message.channel
+        if not isinstance(channel, discord.abc.GuildChannel):
+            return 0
+
+        rank_rule = resolve_tc_rule(channel)
+        if not is_eligible(member, rank_rule):
+            return 0
+
+        # クールダウンチェック
+        now = _utcnow()
+        last = self._cooldowns.get(member.id)
+        if last is not None and (now - last).total_seconds() < TC_COOLDOWN_SEC:
+            return 0
+
+        # ランダムポイント計算（15〜25pt, 3文字未満は0）
+        base = calc_text_points(message.content or "", rule=_TC_RULE)
+        if base == 0:
+            return 0
+
+        # カテゴリ・ロール倍率を適用
+        mult = self._effective_multiplier(member, rank_rule)
+        points = max(1, int(base * mult))
+
+        self._cooldowns[member.id] = now  # await 前に確定（連打二重付与防止）
+        await self.fs_rank.add_tc_points(member.id, points)
+        return points
+
+
+def _is_muted(bot: discord.Client, session: _VCSession, user_id: int) -> bool:
+    guild = bot.get_guild(session.guild_id)
+    if guild is None:
+        return False
+    member = guild.get_member(user_id)
+    if member is None or member.voice is None:
+        return False
+    return bool(member.voice.self_mute or member.voice.mute)

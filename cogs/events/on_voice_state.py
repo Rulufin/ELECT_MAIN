@@ -1,11 +1,12 @@
 import logging
 from datetime import datetime
 
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord import Member, VoiceState
 
 from firestores.fs_vc_tc_sync import FS_VC_TC_SYNC
 from firestores.fs_voice_log import FS_Voice_Log
+from firestores.fs_rank import FS_Rank
 
 from services.voice.state.configs import TIMEZONE
 from services.voice.state.event import build_context
@@ -18,6 +19,7 @@ from services.voice.delete.service import Delete_Service
 from services.voice.talk_history.service import TalkHistoryService
 from services.voice.join_notice.registry import build_join_notice_handlers
 from services.voice.join_notice.service import JoinNoticeService
+from services.rank_system.service import VCRankService
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +49,26 @@ class On_Voice_State_Main_Cog(commands.Cog):
             rejoin_suppress_seconds=60,
         )
 
+        self.vc_rank_service = VCRankService(fs_rank=FS_Rank())
+        self._vc_rank_tick.start()
+
+    def cog_unload(self) -> None:
+        self._vc_rank_tick.cancel()
+
+    @tasks.loop(minutes=5)
+    async def _vc_rank_tick(self) -> None:
+        try:
+            await self.vc_rank_service.tick(self.bot)
+        except Exception as e:
+            logger.error(f"[{FILENAME}] _vc_rank_tick error: {e}", exc_info=True)
+
+    @_vc_rank_tick.before_loop
+    async def _before_vc_rank_tick(self) -> None:
+        await self.bot.wait_until_ready()
+        now = datetime.now(TIMEZONE)
+        for guild in self.bot.guilds:
+            self.vc_rank_service.seed_guild(guild, at=now)
+
     @commands.Cog.listener()
     async def on_voice_state_update(
         self,
@@ -70,6 +92,10 @@ class On_Voice_State_Main_Cog(commands.Cog):
             # 以降は人間ユーザーのみ
             if member.bot:
                 return
+
+            # VCランクポイント: knock early return より前に処理（セッション整合性のため）
+            if channel_changed:
+                await self.vc_rank_service.handle_voice_state(member, before, after)
 
             # ノック系で処理完結なら後続を止める
             if channel_changed:

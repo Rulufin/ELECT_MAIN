@@ -5,8 +5,10 @@ from discord import Message
 from utils.ids import MAIN_CHANNELS
 
 from firestores.fs_user_info import FS_Profile
+from firestores.fs_rank import FS_Rank
 from services.message.sleep.service import SleepService
 from services.points.post.service import PostPointService
+from services.rank_system.service import TCRankService
 
 import logging
 
@@ -26,6 +28,7 @@ class On_Message_Main_Cog(commands.Cog):
         self.fs_profile = FS_Profile()
         self.sleep_service = SleepService()
         self.post_point_service = PostPointService()
+        self.tc_rank_service = TCRankService(fs_rank=FS_Rank())
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
@@ -51,6 +54,7 @@ class On_Message_Main_Cog(commands.Cog):
             )
 
         await self.post_point_service.grant_post_points(message)
+        await self.tc_rank_service.handle_message(message)
 
     @commands.Cog.listener()
     async def on_raw_message_delete(self, payload: discord.RawMessageDeleteEvent):

@@ -13,39 +13,55 @@ class RankRule:
     RankRule の Docstring
     ―――――――――――――――――――――――――
     enabled: True(稼働する) or False(稼働させない)
-    multiplier: 倍率
+    multiplier: カテゴリ/チャンネル単位の倍率
     mic_mute: True(計算にいれる) or False(計算にいれない)
     allow_role_ids: ロール所持者を対象にする
     deny_role_ids: ロール所持者を対象外にする
-    ''' 
+    role_multipliers: ロールごとの倍率 {role_id: multiplier}
+                      複数ロールが一致した場合は最小値を採用
+                      空の場合は 1.0 (変化なし)
+    '''
     enabled: bool = True
     multiplier: float = 1.0
     mic_mute: bool = True
     allow_role_ids: set[int] = field(default_factory=set)
     deny_role_ids: set[int] = field(default_factory=set)
+    role_multipliers: dict[int, float] = field(default_factory=dict)
 
 
 VC_CATEGORY_RULES: dict[int, RankRule] = {
 
-    MAIN_CATEGORIES.PUBLIC_QMs: RankRule(
+    MAIN_CATEGORIES.FREE_CATEGORY: RankRule(
         enabled=True,
         multiplier=1.0,
         mic_mute=True,
-        deny_role_ids={MAIN_ROLES.P_MEMBER},
     ),
-    MAIN_CATEGORIES.SECRET_ROOMs: RankRule(
+    MAIN_CATEGORIES.KNOCK_CATEGORY: RankRule(
         enabled=True,
-        multiplier=0.5,
+        multiplier=1.0,
         mic_mute=True,
-        deny_role_ids={MAIN_ROLES.P_MEMBER},
     ),
-    MAIN_CATEGORIES.SUB_SECRET_ROOMs: RankRule(
+    MAIN_CATEGORIES.PUBLIC_QM: RankRule(
         enabled=True,
-        multiplier=0.5,
+        multiplier=1.0,
         mic_mute=True,
-        deny_role_ids={MAIN_ROLES.P_MEMBER},
     ),
-    MAIN_CATEGORIES.PUBLIC_PLAYs: RankRule(
+    MAIN_CATEGORIES.SECRET_QM: RankRule(
+        enabled=True,
+        multiplier=1.0,
+        mic_mute=True,
+    ),
+    MAIN_CATEGORIES.PUBLIC_ROOM: RankRule(
+        enabled=True,
+        multiplier=1.0,
+        mic_mute=True,
+    ),
+    MAIN_CATEGORIES.SECRET_ROOM: RankRule(
+        enabled=True,
+        multiplier=1.0,
+        mic_mute=True,
+    ),
+    MAIN_CATEGORIES.PUBLIC_PLAY: RankRule(
         enabled=True,
         multiplier=5.0,
         mic_mute=False,
@@ -53,26 +69,26 @@ VC_CATEGORY_RULES: dict[int, RankRule] = {
 
     # 無効
     MAIN_CATEGORIES.WELCOMEs: RankRule(enabled=False),
-    MAIN_CATEGORIES.TALK_ROOM_CREATEs: RankRule(enabled=False),
-    MAIN_CATEGORIES.FREE_ROOM_CREATEs: RankRule(enabled=False),
-    MAIN_CATEGORIES.PUBLIC_QM_CREATEs: RankRule(enabled=False),
-    MAIN_CATEGORIES.PUBLIC_ROOM_CREATEs: RankRule(enabled=False),
 }
 
 VC_CHANNEL_RULES: dict[int, RankRule] = {
-    # vc_id: RankRule(enabled=False),
+    MAIN_CHANNELS.PUBLIC: RankRule(enabled=False),
+    MAIN_CHANNELS.FREE_ROOM: RankRule(enabled=False),
+    MAIN_CHANNELS.KNOCK_ROOM: RankRule(enabled=False),
+    MAIN_CHANNELS.QM: RankRule(enabled=False),
+    MAIN_CHANNELS.ROOM: RankRule(enabled=False),
+    MAIN_CHANNELS.SLEEP_VC: RankRule(enabled=False)
 }
 
 # services/rank_system/rank_config.py に追記（VC用と同居でOK）
 
 TC_CATEGORY_RULES: dict[int, RankRule] = {
-    MAIN_CATEGORIES.PUBLIC_PLAYs: RankRule(
+    MAIN_CATEGORIES.PUBLIC_PLAY: RankRule(
         enabled=True,
         multiplier=2
     ),
 
-    MAIN_CATEGORIES.MANAGEMENT: RankRule(enabled=False),
-    MAIN_CATEGORIES.ASSISTANT: RankRule(enabled=False),
+    MAIN_CATEGORIES.MANAGEMENTs: RankRule(enabled=False),
     MAIN_CATEGORIES.WELCOMEs: RankRule(enabled=False),
     MAIN_CATEGORIES.INFORMATIONs: RankRule(enabled=False)
 }
@@ -128,6 +144,16 @@ def is_eligible(member: discord.Member, rule: RankRule) -> bool:
         return bool(role_ids & rule.allow_role_ids)
 
     return True
+
+
+def resolve_role_multiplier(member: discord.abc.User, multipliers: dict[int, float]) -> float:
+    """ロールごとの倍率を解決する。複数一致した場合は最小値を採用。
+    Member 以外（退鯖済み等）は 1.0 を返す。"""
+    if not multipliers or not isinstance(member, discord.Member):
+        return 1.0
+    role_ids = {r.id for r in member.roles}
+    matches = [mult for role_id, mult in multipliers.items() if role_id in role_ids]
+    return min(matches) if matches else 1.0
 
 
 
