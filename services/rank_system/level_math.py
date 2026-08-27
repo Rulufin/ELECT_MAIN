@@ -41,15 +41,15 @@ DEFAULT_MAX_LEVEL: Final[Optional[int]] = 100
 
 # ★ここだけ触ればOK（text / voice 個別）
 TEXT_PARAMS: Final[CurveParams] = CurveParams(
-    A=20,
+    A=30,
     B=0.36,
     SCALE_LEVEL=100.0,
     default_max_level=DEFAULT_MAX_LEVEL,
 )
 
 VOICE_PARAMS: Final[CurveParams] = CurveParams(
-    A=18,
-    B=0.36,
+    A=64,
+    B=0.83,
     SCALE_LEVEL=100.0,
     default_max_level=DEFAULT_MAX_LEVEL,
 )

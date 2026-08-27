@@ -4,7 +4,7 @@ from typing import Final
 import math
 
 
-SECONDS_PER_POINT: Final[int] = 60
+SECONDS_PER_POINT: Final[int] = 30
 
 
 def _safe_float(x: float | int) -> float:
