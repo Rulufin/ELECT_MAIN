@@ -42,7 +42,7 @@ class Rank_Cog(commands.Cog):
 
     @app_commands.command(name="rank", description="ランクカードを表示します。")
     @app_commands.guild_only()
-    @app_commands.describe(対象ユーザー="確認したいユーザー（メンションまたはID、省略時は自分）")
+    @app_commands.describe(user="確認したいユーザー（メンションまたはID、省略時は自分）")
     async def rank_command(
         self,
         interaction: Interaction,
