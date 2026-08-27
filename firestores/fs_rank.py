@@ -61,12 +61,12 @@ class FS_Rank(FirestoreBase):
     async def add_tc_points(self, user_id: IntStr, add: int) -> None:
         if add == 0:
             return
-        await self._update(self._doc(user_id), {"total_tc": Increment(int(add))})
+        await self._save(self._doc(user_id), {"total_tc": Increment(int(add))}, merge=True)
 
     async def add_vc_points(self, user_id: IntStr, add: int) -> None:
         if add == 0:
             return
-        await self._update(self._doc(user_id), {"total_vc": Increment(int(add))})
+        await self._save(self._doc(user_id), {"total_vc": Increment(int(add))}, merge=True)
 
     async def set_points(
         self,
