@@ -35,7 +35,7 @@ JOIN_NOTICE_HANDLER_CONFIGS: dict[str, JoinNoticeHandlerConfig] = {
         allow_category_ids=set(),
         exclude_vc_ids={
             MAIN_CHANNELS.PUBLIC, MAIN_CHANNELS.FREE_ROOM,
-            MAIN_CHANNELS.QM, MAIN_CHANNELS.S_QM_MALE, MAIN_CHANNELS.S_QM_FEMALE,
+            MAIN_CHANNELS.QM,
             MAIN_CHANNELS.ROOM, MAIN_CHANNELS.KNOCK_ROOM,
             MAIN_CHANNELS.SLEEP_VC
         },
