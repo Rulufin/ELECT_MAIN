@@ -63,7 +63,7 @@ class ElectRankCardImager:
 
     # ── TC セクション ────────────────────────────
     TC_LVL_X   = 405          # 背景 "TC" の右に level 番号
-    TC_LVL_Y   = 42
+    TC_LVL_Y   = 40
     TC_BAR_X   = 330
     TC_BAR_Y   = 80
     TC_BAR_W   = 335          # 100% で右端 x=665
