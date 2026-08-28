@@ -25,7 +25,8 @@ ASSETS = PROJECT_ROOT / "assets"
 TEMPLATE_PATH = ASSETS / "images" / "elect_rank_back.png"
 FONT_NAME     = ASSETS / "fonts" / "UDDigiKyokashoN-R.ttc"
 FONT_NUM      = ASSETS / "fonts" / "Cinzel-Regular.ttf"
-FONT_SERIF    = ASSETS / "fonts" / "BodoniModa-VariableFont_opsz,wght.ttf"
+FONT_SERIF    = ASSETS / "fonts" / "NotoSerif-VariableFont_wdth,wght.ttf"
+FONT_NUM_WGHT = 700  # NotoSerif variable weight
 
 for _p in (TEMPLATE_PATH, FONT_NAME, FONT_NUM, FONT_SERIF):
     if not _p.exists():
@@ -62,7 +63,7 @@ class ElectRankCardImager:
 
     # ── TC セクション ────────────────────────────
     TC_LVL_X   = 405          # 背景 "TC" の右に level 番号
-    TC_LVL_Y   = 36
+    TC_LVL_Y   = 38
     TC_BAR_X   = 330
     TC_BAR_Y   = 80
     TC_BAR_W   = 335          # 100% で右端 x=665
@@ -72,7 +73,7 @@ class ElectRankCardImager:
 
     # ── VC セクション ────────────────────────────
     VC_LVL_X   = 405
-    VC_LVL_Y   = 138
+    VC_LVL_Y   = 140
     VC_BAR_X   = 330
     VC_BAR_Y   = 180
     VC_BAR_W   = 335
@@ -98,9 +99,21 @@ class ElectRankCardImager:
     NEXT_SIZE = 15   # "next XXXXX"
 
     def __init__(self) -> None:
-        self.f_lvl  = ImageFont.truetype(str(FONT_SERIF), self.LVL_SIZE)
-        self.f_stat = ImageFont.truetype(str(FONT_SERIF), self.STAT_SIZE)
-        self.f_next = ImageFont.truetype(str(FONT_SERIF), self.NEXT_SIZE)
+        self.f_lvl  = self._load_num_font(self.LVL_SIZE)
+        self.f_stat = self._load_num_font(self.STAT_SIZE)
+        self.f_next = self._load_num_font(self.NEXT_SIZE)
+
+    @staticmethod
+    def _load_num_font(size: int) -> ImageFont.FreeTypeFont:
+        f = ImageFont.truetype(str(FONT_SERIF), size)
+        try:
+            f.set_variation_by_axes([FONT_NUM_WGHT, 100])
+        except Exception:
+            try:
+                f.set_variation_by_axes([FONT_NUM_WGHT])
+            except Exception:
+                pass
+        return f
 
     async def build(self, *, user: discord.abc.User, data: ElectRankCardData) -> discord.File:
         base = Image.open(TEMPLATE_PATH).convert("RGBA")
