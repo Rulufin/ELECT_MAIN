@@ -21,8 +21,7 @@ Python 3.13 + discord.py 2.6 + Google Cloud Firestore で動作し、Railway に
 ## ドキュメント構成
 
 ```
-_docs/
-├── README.md                    ← このファイル
+_docs/                  
 ├── architecture/
 │   └── overview.md              アーキテクチャ設計方針・共通パターン
 ├── cogs/
