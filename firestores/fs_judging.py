@@ -3,7 +3,7 @@ from typing import Dict, Optional, Tuple, Union
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from google.cloud.firestore_v1 import AsyncClient
+from google.cloud.firestore_v1 import AsyncClient, DELETE_FIELD
 from google.cloud import firestore_v1 as firestore  # noqa: F401  # 将来の拡張用に残しておく
 
 from configs.google_setup import client
@@ -43,7 +43,10 @@ class FS_Judging(FirestoreBase):
 
     @staticmethod
     def _next_index(category_map: Dict) -> str:
-        return str(len(category_map))
+        if not category_map:
+            return "0"
+        keys = [int(k) for k in category_map.keys() if isinstance(k, str) and k.isdigit()]
+        return str(max(keys) + 1) if keys else "0"
 
     def _day_doc(self, target_id: str, message_id: str, date_ymd: str):
         return (
@@ -222,63 +225,39 @@ class FS_Judging(FirestoreBase):
             # 同じカテゴリを押した → 取り消し
             if category == "favorite":
                 current_idx = favorite_idx
-                current_map = favorite
             elif category == "circle":
                 current_idx = circle_idx
-                current_map = circle
             else:  # "cross"
                 current_idx = cross_idx
-                current_map = cross
 
             if current_idx is not None:
-                current_map.pop(current_idx, None)
-                await doc_ref.set(
-                    {
-                        "favorite": favorite,
-                        "circle": circle,
-                        "cross": cross,
-                        "caution": caution,
-                    },
-                    merge=True,
-                )
+                # 同カテゴリを再押し → 該当エントリのみ削除（DELETE_FIELD で原子的に）
+                await doc_ref.update({f"{category}.{current_idx}": DELETE_FIELD})
                 return "remove"
 
-            # それ以外 → 排他（他カテゴリから削除）
+            # それ以外 → 排他（他カテゴリから削除）してから新規追加
             removed_from_other = any(
                 idx is not None
                 for idx in [favorite_idx, circle_idx, cross_idx, caution_idx]
             )
 
-            if favorite_idx is not None:
-                favorite.pop(favorite_idx)
-            if circle_idx is not None:
-                circle.pop(circle_idx)
-            if cross_idx is not None:
-                cross.pop(cross_idx)
-            if caution_idx is not None:
-                caution.pop(caution_idx)
-
-            # 新規追加
+            # 追加先のインデックスを決定
+            target_map = {"favorite": favorite, "circle": circle, "cross": cross}[category]
+            new_idx = self._next_index(target_map)
             payload = {"user_id": user_id, "user_name": user_name}
-            if category == "favorite":
-                new_idx = self._next_index(favorite)
-                favorite[new_idx] = payload
-            elif category == "circle":
-                new_idx = self._next_index(circle)
-                circle[new_idx] = payload
-            else:
-                new_idx = self._next_index(cross)
-                cross[new_idx] = payload
 
-            await doc_ref.set(
-                {
-                    "favorite": favorite,
-                    "circle": circle,
-                    "cross": cross,
-                    "caution": caution,
-                },
-                merge=True,
-            )
+            # 原子的に「他カテゴリ削除 + 新規追加」を1回の update で実行
+            update_data: Dict = {f"{category}.{new_idx}": payload}
+            if favorite_idx is not None and category != "favorite":
+                update_data[f"favorite.{favorite_idx}"] = DELETE_FIELD
+            if circle_idx is not None and category != "circle":
+                update_data[f"circle.{circle_idx}"] = DELETE_FIELD
+            if cross_idx is not None and category != "cross":
+                update_data[f"cross.{cross_idx}"] = DELETE_FIELD
+            if caution_idx is not None:
+                update_data[f"caution.{caution_idx}"] = DELETE_FIELD
+
+            await doc_ref.update(update_data)
 
             return "change" if removed_from_other else "add"
         except Exception as e:
@@ -327,8 +306,7 @@ class FS_Judging(FirestoreBase):
         # コメント空白 → CAUTION のみ削除
         if norm == "":
             if caution_idx is not None:
-                caution.pop(caution_idx, None)
-                await doc_ref.set({"caution": caution}, merge=True)
+                await doc_ref.update({f"caution.{caution_idx}": DELETE_FIELD})
                 return "remove"
             return "no_change"
 
@@ -338,13 +316,14 @@ class FS_Judging(FirestoreBase):
             if old_comment == norm:
                 return "no_change"
 
-            # コメント上書き
-            caution[caution_idx] = {
-                "user_id": user_id,
-                "user_name": user_name,
-                "comment": norm,
-            }
-            await doc_ref.set({"caution": caution}, merge=True)
+            # コメント上書き（フィールド単位で更新）
+            await doc_ref.update({
+                f"caution.{caution_idx}": {
+                    "user_id": user_id,
+                    "user_name": user_name,
+                    "comment": norm,
+                }
+            })
             return "change"
 
         # 他カテゴリ → CAUTIONに移動（排他）
@@ -352,29 +331,24 @@ class FS_Judging(FirestoreBase):
             idx is not None for idx in [circle_idx, favorite_idx, cross_idx]
         )
 
-        if favorite_idx is not None:
-            favorite.pop(favorite_idx)
-        if circle_idx is not None:
-            circle.pop(circle_idx)
-        if cross_idx is not None:
-            cross.pop(cross_idx)
-
         new_idx = self._next_index(caution)
-        caution[new_idx] = {
-            "user_id": user_id,
-            "user_name": user_name,
-            "comment": norm,
-        }
 
-        await doc_ref.set(
-            {
-                "favorite": favorite,
-                "circle": circle,
-                "cross": cross,
-                "caution": caution,
-            },
-            merge=True,
-        )
+        # 原子的に「他カテゴリ削除 + CAUTION追加」を1回の update で実行
+        update_data: Dict = {
+            f"caution.{new_idx}": {
+                "user_id": user_id,
+                "user_name": user_name,
+                "comment": norm,
+            }
+        }
+        if favorite_idx is not None:
+            update_data[f"favorite.{favorite_idx}"] = DELETE_FIELD
+        if circle_idx is not None:
+            update_data[f"circle.{circle_idx}"] = DELETE_FIELD
+        if cross_idx is not None:
+            update_data[f"cross.{cross_idx}"] = DELETE_FIELD
+
+        await doc_ref.update(update_data)
 
         return "change" if removed_from_other else "add"
 
