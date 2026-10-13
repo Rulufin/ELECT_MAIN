@@ -151,8 +151,8 @@ class JoinNoticeService:
         if channel is None:
             return
 
-        # 退出→再入室が短時間なら通知しない
-        if self._is_recent_rejoin(guild_id=guild_id, user_id=user_id):
+        # 退出→再入室が短時間なら通知しない（JOIN のみ; MOVE は対象外）
+        if before.channel is None and self._is_recent_rejoin(guild_id=guild_id, user_id=user_id):
             logger.info(
                 "[%s] skip join notice by recent rejoin guild_id=%s user_id=%s channel_id=%s",
                 FILENAME,
