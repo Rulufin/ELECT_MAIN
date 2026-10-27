@@ -44,12 +44,12 @@ class Point_Request_Public_Embed(Embed):
         )
 
 class Point_Request_Confirm_Check_Embed(Embed):
-    def __init__(self, mention_list):
+    def __init__(self, mention_list: str, point: int):
         super().__init__(
             title="__公開ELECTOKEN - 申請確認__",
             description=textwrap.dedent(
                 f'''
-                以下のユーザーに公開ELECTOKENを付与します。
+                以下のユーザーに **{point:,}pt** を付与します。
                 問題ないですか？
                 -# ――――――――――――――――――――
                 {mention_list}

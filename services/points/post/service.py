@@ -43,6 +43,7 @@ class PostPointService:
             return
 
         now = datetime.now(TIMEZONE)
+        rule = rule.resolve(now)
         event_id = f"post_{message.id}"
 
         await self.fs_points.record_event(

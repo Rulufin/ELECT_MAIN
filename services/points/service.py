@@ -59,6 +59,7 @@ async def record_public_play_points(
     interaction: Interaction,
     user_ids: Sequence[int],
     fs_points: FS_Points,
+    point: int = REQUEST_POINT_PUBLIC,
 ) -> GrantResult:
     if not user_ids:
         await send_ephemeral_error(interaction, "対象ユーザーが見つかりませんでした。")
@@ -75,13 +76,13 @@ async def record_public_play_points(
             user_id=uid,
             event_type=Points_Type.PUBLIC_PLAY,
             genre=Genre_Type.PLAY,
-            delta=REQUEST_POINT_PUBLIC,
+            delta=point,
             note=REQUEST_NOTE_PUBLIC,
             ts=now,
             meta=build_points_meta(
                 interaction=interaction,
                 code=REQUEST_CODE_PUBLIC,
-                price=REQUEST_POINT_PUBLIC,
+                price=point,
                 target_user_ids=user_ids,
                 thread_id=thread_id,
             ),

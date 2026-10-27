@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Optional
 
 from discord import ButtonStyle, Interaction, Member, SelectOption
-from discord.ui import Button, Select, UserSelect, View, LayoutView, TextDisplay, Section
+from discord.ui import Button, Modal, Select, TextInput, UserSelect, View, LayoutView, TextDisplay, Section
 
 from firestores.fs_points import FS_Points
 
@@ -234,25 +234,51 @@ class Point_Request_Public_Grant_Button(Button):
         )
 
     async def callback(self, interaction: Interaction):
-        await safe_defer(interaction=interaction, ephemeral=True)
-
         user = interaction.user
         if not has_any_role(user, [MAIN_ROLES.ADMINISTRATOR_ONE, MAIN_ROLES.ADMINISTRATOR_TWO]):
-            await safe_followup_send(
+            await safe_response_send(
                 interaction=interaction,
                 embed=No_Permission_Embed(),
-                ephemeral=True
+                ephemeral=True,
             )
             return
 
-        msg = interaction.message
-        content = msg.content
+        user_ids = coerce_user_ids(interaction.message.content)
+        await interaction.response.send_modal(
+            Point_Request_Public_Point_Modal(user_ids=user_ids)
+        )
 
-        user_ids = coerce_user_ids(content)
+
+class Point_Request_Public_Point_Modal(Modal, title="付与ポイント設定"):
+    point_input: TextInput = TextInput(
+        label="付与ポイント数",
+        default="100",
+        min_length=1,
+        max_length=6,
+    )
+
+    def __init__(self, user_ids: list[int]):
+        super().__init__()
+        self.user_ids = user_ids
+
+    async def on_submit(self, interaction: Interaction):
+        await safe_defer(interaction=interaction, ephemeral=True)
+
+        try:
+            point = int(self.point_input.value.strip().replace(",", ""))
+            if point <= 0:
+                raise ValueError
+        except ValueError:
+            await safe_followup_send(
+                interaction=interaction,
+                content="正の整数を入力してください。",
+                ephemeral=True,
+            )
+            return
+
         guild = interaction.guild
-
         members = []
-        for user_id in user_ids:
+        for user_id in self.user_ids:
             member = await resolve_member(guild=guild, user_id=user_id)
             if member:
                 members.append(member)
@@ -262,25 +288,21 @@ class Point_Request_Public_Grant_Button(Button):
             for i, m in enumerate(members)
         )
 
-        embed = Point_Request_Confirm_Check_Embed(
-            mention_list=mention_list
-        )
-        view = Point_Request_Public_Grant_View(user_ids=user_ids)
-
         await safe_followup_send(
             interaction=interaction,
-            embed=embed,
-            view=view,
-            ephemeral=True
+            embed=Point_Request_Confirm_Check_Embed(mention_list=mention_list, point=point),
+            view=Point_Request_Public_Grant_View(user_ids=self.user_ids, point=point),
+            ephemeral=True,
         )
 
+
 class Point_Request_Public_Grant_View(View):
-    def __init__(self, user_ids):
+    def __init__(self, user_ids: list[int], point: int):
         super().__init__(timeout=None)
-        self.add_item(Point_Request_Public_Grant_Confirm_Button(user_ids))
+        self.add_item(Point_Request_Public_Grant_Confirm_Button(user_ids=user_ids, point=point))
 
 class Point_Request_Public_Grant_Confirm_Button(Button):
-    def __init__(self, user_ids):
+    def __init__(self, user_ids: list[int], point: int):
         super().__init__(
             label="おっけー",
             emoji=DEFAULT.CHECK,
@@ -289,14 +311,16 @@ class Point_Request_Public_Grant_Confirm_Button(Button):
             custom_id=f"{FILENAME}_{self.__class__.__name__}"
         )
         self.user_ids = user_ids
+        self.point = point
         self.fs_points = FS_Points()
-    
+
     async def callback(self, interaction: Interaction):
         await safe_defer(interaction=interaction, ephemeral=True)
 
         result = await record_public_play_points(
             interaction=interaction,
             user_ids=self.user_ids,
+            point=self.point,
             fs_points=self.fs_points,
         )
 

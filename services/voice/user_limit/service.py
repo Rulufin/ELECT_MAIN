@@ -58,6 +58,8 @@ class UserLimitService:
 
         if new_limit < 0:
             new_limit = 0
+        elif new_limit > 99:
+            new_limit = 99
 
         if new_limit == old_limit:
             return
