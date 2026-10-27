@@ -34,6 +34,7 @@ from services.recruit.ui.embeds import *
 from services.system.embeds import System_Profile_NotFoud_Embed, System_Error_Embed
 
 from utils.discord.helpers.latelimit import check_button_cooldown
+from utils.discord.helpers.resolve import resolve_member
 
 FILENAME = "Secret_Recruit"
 
@@ -981,7 +982,10 @@ class Recruit_Check_Result_Menu(Select):
                 raise
 
         # --- (2) ここから先は既存の流れと同じ ---
-        owner = interaction.guild.get_member(int(self.values[0]))
+        owner = await resolve_member(guild=interaction.guild, user_id=int(self.values[0]))
+        if owner is None:
+            await interaction.followup.send(content="募集者が見つかりませんでした。", ephemeral=True)
+            return
 
         if MAIN_ROLES.MALE in [role.id for role in owner.roles]:
             color = SERVER_COLORS.MALE
